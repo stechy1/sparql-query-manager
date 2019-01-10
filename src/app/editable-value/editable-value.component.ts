@@ -11,6 +11,7 @@ export class EditableValueComponent implements OnInit {
   @Input() useTextarea: boolean;
   isEditing: boolean;
   @Output() valueChanged = new EventEmitter<string|number>();
+  hover: boolean;
 
   constructor() { }
 

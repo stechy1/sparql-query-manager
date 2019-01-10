@@ -1,12 +1,15 @@
 <div style="display: block;">
-  <span (dblclick)="isEditing = !isEditing">{{value}}</span>
+  <a (dblclick)="isEditing = !isEditing" *ngIf="!isEditing" (mouseenter)="hover=true" (mouseleave)="hover=false">
+    {{value}}
+    <i class="material-icons tiny" *ngIf="hover">create</i>
+  </a>
   <div class="row" *ngIf="isEditing">
     <div class="col m7">
-      <input type="text" *ngIf="!useTextarea" [(ngModel)]="value" (keydown)="onKeyDown($event)">
+      <input type="text" class="tiny-input" *ngIf="!useTextarea" [(ngModel)]="value" (keydown)="onKeyDown($event)">
       <textarea *ngIf="useTextarea" [(ngModel)]="value"></textarea>
     </div>
     <div class="col m2">
-      <button class="btn btn-small green" (click)="handleClick()">Potvrdit</button>
+      <button class="btn btn-tiny green" (click)="handleClick()">Potvrdit</button>
     </div>
   </div>
 </div>

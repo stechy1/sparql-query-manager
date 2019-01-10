@@ -28,3 +28,9 @@ nav {
   border: none;
   border-radius: 0;
 }
+
+.btn-tiny {
+  height: 24px;
+  line-height: 24px;
+  font-size: 11px;
+}
