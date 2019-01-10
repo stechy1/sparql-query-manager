@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+@import "~materialize-css/dist/css/materialize.min.css";
+
+body {
+  background-color: darkgray;
+}
+
+nav {
+  background-color: darkgreen;
+}
+
+.card .card-title {
+  font-size: 22px;
+}
+
+.card .card-content {
+  padding: 8px;
+}
+
+.card .card-action {
+  padding: 8px 16px;
+}
+
+.row {
+  margin-bottom: 0;
+}
+

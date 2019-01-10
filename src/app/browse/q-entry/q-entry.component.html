@@ -1,0 +1,6 @@
+<a href="edit/{{query.id}}">
+<div (mouseenter)="visible=true" (mouseleave)="visible=false">
+  <span>{{query.name}}</span>
+  <button class="btn btn-small btn-flat materialize-red right" *ngIf="_visible">Smazat</button>
+</div>
+</a>

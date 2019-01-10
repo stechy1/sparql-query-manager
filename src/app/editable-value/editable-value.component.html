@@ -1,0 +1,12 @@
+<div style="display: block;">
+  <span (dblclick)="isEditing = !isEditing">{{value}}</span>
+  <div class="row" *ngIf="isEditing">
+    <div class="col m7">
+      <input type="text" *ngIf="!useTextarea" [(ngModel)]="value" (keydown)="onKeyDown($event)">
+      <textarea *ngIf="useTextarea" [(ngModel)]="value"></textarea>
+    </div>
+    <div class="col m2">
+      <button class="btn btn-small green" (click)="handleClick()">Potvrdit</button>
+    </div>
+  </div>
+</div>
