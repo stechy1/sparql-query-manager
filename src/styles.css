@@ -24,3 +24,7 @@ nav {
   margin-bottom: 0;
 }
 
+.collection {
+  border: none;
+  border-radius: 0;
+}

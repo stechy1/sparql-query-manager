@@ -1,6 +1,8 @@
-<a href="edit/{{query.id}}">
-<div (mouseenter)="visible=true" (mouseleave)="visible=false">
-  <span>{{query.name}}</span>
-  <button class="btn btn-small btn-flat materialize-red right" *ngIf="_visible">Smazat</button>
+<div (mouseenter)="visible=true" (mouseleave)="visible=false" class="valign-wrapper">
+  <div class="col s8" style="margin-left: 0;">
+    <a href="edit/{{query.id}}"><span>{{query.name}}</span></a>
+  </div>
+  <div class="col s2">
+    <button class="btn btn-small btn-flat materialize-red right">Smazat</button>
+  </div>
 </div>
-</a>

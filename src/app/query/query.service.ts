@@ -20,6 +20,21 @@ export class QueryService {
   private _queries = new Array<Query>();
 
   constructor(private storage: LocalStorageService) {
+    storage.set(QueryService.STORAGE_KEY, JSON.stringify([
+      {
+        'id': '_y4379asvp',
+        'name': 'Skript 1',
+        'description': 'Popis 1. skriptu',
+        'endpoint': '/ds1/query',
+        'content': 'SELECT ?subject ?predicate ?object\nWHERE {\n  ?subject ?predicate ?object\n}\nLIMIT 25'
+      },
+      {
+        'id': '_giaolge8p',
+        'name': 'Skript 2',
+        'description': 'Popis 2. skriptu',
+        'endpoint': '/ds2/query',
+        'content': 'SELECT ?subject ?predicate ?object\nWHERE {\n  ?subject ?predicate ?object\n}\nLIMIT 25'
+      }]));
     this._loadQueries();
   }
 
@@ -31,8 +46,8 @@ export class QueryService {
    * Načte data z localStorage
    */
   private _loadQueries(): void {
-    const dataRaw = this.storage.get<string>(QueryService.STORAGE_KEY) || '';
-    const data = <QueryStorageEntry[]> JSON.parse(dataRaw);
+    const dataRaw = this.storage.get<string>(QueryService.STORAGE_KEY) || '[]';
+    const data = <QueryStorageEntry[]>JSON.parse(dataRaw);
 
     for (const query of data) {
       console.log(query);
