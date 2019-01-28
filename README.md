@@ -1,27 +1,63 @@
 # Unknown
+Webový nástroj pro uchovávání a správu databáze SPARQL dotazů. 
+Nástroj umožní jednotlivé dotazy vykonat vůči vybraným typům 
+SPARQL endpointů a zobrazit jejich výsledek.
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.3.
+## Základní funkcionalita
+- vytvoření / editace / mazání dotazu včetně metadat
 
-## Development server
+- **metadata**: 
+  - název
+  - popis
+  - cílový endpoint
+  - datum vytvoření
+  - datum posledního běhu
+  - tagy (volný text)
+  - autor
+- jako paměť pro dotazy bude použita HTML5 Web Storage
+- export / import databáze dotazů do / z textového souboru
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- **možnosti importu**:
+  - kompletní přepsání
+  - přidání na konec (s poloautomatickým řešením duplicit)
+- podpora API dotazu na SPARQL endpointy z:
+  - Jena Fuseki 3.10
+  - Virtuoso 07.20.3217
+- výsledek dotazu se zobrazí do HTML, případně CSS / TTL
+- zobrazení chyby přijaté ze serveru:
+  - syntax error
+  - server down
+  - timeout
+  - jiná obecná chyba
+- podpora pro parametrizované dotazy - v textu dotazu se bude nacházet pseudoproměnná `$VARIABLE_NAME$`, za kterou uživatel v GUI dosadí hodnotu, případně se nahradí za výchozí hodnotu
+- dotazy lze seskupovat dle:
+  - endpointu
+  - tagu (dotaz s více tagy zobrazit ve všech skupinách)
+- řažení dotazů v seznamu dle:
+  - posledního spuštění
+  - datumu vytvoření
+  - počtu spuštění
+  - abecedně (dle názvu)
+- podpora pro fulltextové vyhledávání v dotazu a jeho metadatech
 
-## Code scaffolding
+### Extra funkcionalita
+Tyto funkce budou možná zahrnuty do projektu, ale nemusí
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- export / import databáze dotazů z cloudu, nebo vzdáleného serveru
+- vložení části metadat do těla dotazu (zakomentované za '#')
+- k uloženému dotazu budou vedeny statistiky pro každé vykonání dotazu:
+  - datum a čas
+  - doba běhu
+  - ok/ko (úspěšnost dotazu)
+  - počet řádek (select)
+  - počet trojic (construct)
+  - parametry dotazu
 
-## Build
+## Technické informace
+Aplikace je psaná v TypeScriptu a využívá framework [Angular 7](https://angular.io/).
+Pro základní styly je použit responzivní framework [Materialize](https://materializecss.com/)
+Jako persistentní uložiště je použit [HTML5 Web Storage](https://www.w3schools.com/HTML/html5_webstorage.asp)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
-
-## Running unit tests
-
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+### Spuštění vývojového serveru
+Pro spuštění vývojového serveru je potřeba mít nainstalovaný [Angular CLI](https://cli.angular.io/).
+Poté se server spustí příkazem `ng serve`.
