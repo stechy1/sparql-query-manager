@@ -31,6 +31,7 @@ export class EditableValueComponent implements OnInit {
   set value(value: string | number) {
     this._value = value;
     this._original = this._original === undefined ? this._value : this._original;
+    this.hover = this._value === '';
   }
 
   handleClick() {
@@ -50,6 +51,12 @@ export class EditableValueComponent implements OnInit {
 
     if (event.key === 'Enter') {
       this.handleClick();
+    }
+  }
+
+  handleMouseLeave() {
+    if (this._value !== '') {
+      this.hover = false;
     }
   }
 }

@@ -20,21 +20,6 @@ export class QueryService {
   private _queries = new Array<Query>();
 
   constructor(private storage: LocalStorageService) {
-    // storage.set(QueryService.STORAGE_KEY, JSON.stringify([
-    //   {
-    //     'id': '_y4379asvp',
-    //     'name': 'Skript 1',
-    //     'description': 'Popis 1. skriptu',
-    //     'endpoint': '/ds1/query',
-    //     'content': 'SELECT ?subject ?predicate ?object\nWHERE {\n  ?subject ?predicate ?object\n}\nLIMIT 25'
-    //   },
-    //   {
-    //     'id': '_giaolge8p',
-    //     'name': 'Skript 2',
-    //     'description': 'Popis 2. skriptu',
-    //     'endpoint': '/ds2/query',
-    //     'content': 'SELECT ?subject ?predicate ?object\nWHERE {\n  ?subject ?predicate ?object\n}\nLIMIT 25'
-    //   }]));
     this._loadQueries();
   }
 
@@ -93,7 +78,6 @@ export class QueryService {
    * @param variables Proměnné, které se vyskytují v dotazu
    */
   create(name: string, endpoint: string, description: string, tags: string[], content: string, variables: {}) {
-    description = description || 'Prázdný popis';
     const query = new Query(QueryService.makeID(), name, endpoint, content, description);
     this._queries.push(query);
     this._saveQueries();

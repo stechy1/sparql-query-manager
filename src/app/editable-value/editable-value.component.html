@@ -1,5 +1,5 @@
 <div style="display: block;">
-  <a (dblclick)="isEditing = !isEditing" *ngIf="!isEditing" (mouseenter)="hover=true" (mouseleave)="hover=false">
+  <a (dblclick)="isEditing = !isEditing" *ngIf="!isEditing" (mouseenter)="hover=true" (mouseleave)="handleMouseLeave()">
     {{value}}
     <i class="material-icons tiny" *ngIf="hover">create</i>
   </a>
