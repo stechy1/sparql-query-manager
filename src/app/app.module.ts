@@ -15,6 +15,9 @@ import { LocalStorageModule } from 'angular-2-local-storage';
 import { QEntryComponent } from './browse/q-entry/q-entry.component';
 import { EditableValueComponent } from './editable-value/editable-value.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonModule, MatFormFieldModule, MatInputModule, MatStepperModule } from '@angular/material';
+import { NewQueryComponent } from './new-query/new-query.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +27,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     EditComponent,
     PageNotFoundComponent,
     QEntryComponent,
-    EditableValueComponent
+    EditableValueComponent,
+    NewQueryComponent,
   ],
   imports: [
     BrowserModule,
@@ -34,7 +38,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     LocalStorageModule.withConfig({
       prefix: 'unknown',
       storageType: 'localStorage'
-    })
+    }),
+    BrowserAnimationsModule,
+    MatStepperModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent]
