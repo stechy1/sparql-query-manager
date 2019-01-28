@@ -14,7 +14,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { LocalStorageModule } from 'angular-2-local-storage';
 import { QEntryComponent } from './browse/q-entry/q-entry.component';
 import { EditableValueComponent } from './editable-value/editable-value.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -30,6 +30,7 @@ import { FormsModule } from '@angular/forms';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     LocalStorageModule.withConfig({
       prefix: 'unknown',
       storageType: 'localStorage'

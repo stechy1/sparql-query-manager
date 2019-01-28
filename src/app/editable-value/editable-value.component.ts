@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { FormControl} from '@angular/forms';
 
 @Component({
   selector: 'app-editable-value',
@@ -8,10 +9,12 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 export class EditableValueComponent implements OnInit {
 
   private _value: string|number;
+  private _original: string|number;
   @Input() useTextarea: boolean;
   isEditing: boolean;
   @Output() valueChanged = new EventEmitter<string|number>();
   hover: boolean;
+  inputElement = new FormControl('');
 
   constructor() { }
 
@@ -27,14 +30,24 @@ export class EditableValueComponent implements OnInit {
   @Input()
   set value(value: string | number) {
     this._value = value;
+    this._original = this._original === undefined ? this._value : this._original;
   }
 
   handleClick() {
-    this.valueChanged.emit(this._value);
+    if (this._value !== this._original) {
+      this._original = this._value;
+      this.valueChanged.emit(this._value);
+    }
     this.isEditing = false;
   }
 
   onKeyDown(event: any) {
+    if (event.key === 'Escape') {
+      this._value = this._original;
+      this.isEditing = false;
+      return;
+    }
+
     if (event.key === 'Enter') {
       this.handleClick();
     }
