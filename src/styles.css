@@ -1,4 +1,5 @@
 @import "~materialize-css/dist/css/materialize.min.css";
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
 
 body {
   background-color: darkgray;
