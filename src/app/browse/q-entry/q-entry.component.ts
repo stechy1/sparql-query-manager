@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Query } from '../../query/query';
 
 @Component({
@@ -10,6 +10,9 @@ export class QEntryComponent implements OnInit {
 
   private _query: Query;
   private _visible: boolean;
+
+  @Output()
+  deleteRequest = new EventEmitter<string>();
 
   constructor() {
   }
@@ -35,4 +38,7 @@ export class QEntryComponent implements OnInit {
     return this._visible;
   }
 
+  handleDelete() {
+    this.deleteRequest.emit(this._query.id);
+  }
 }

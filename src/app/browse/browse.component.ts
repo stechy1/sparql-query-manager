@@ -20,4 +20,8 @@ export class BrowseComponent implements OnInit {
   get queries() {
     return this._queries;
   }
+
+  handleDeleteRequest(id: string) {
+    this._qservice.delete(id);
+  }
 }

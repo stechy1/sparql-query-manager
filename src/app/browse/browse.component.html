@@ -10,7 +10,7 @@
         <div class="collection">
           <div class="collection-header"><h4>Nalezené dotazy</h4></div>
           <a *ngFor="let query of queries" class="collection-item">
-            <app-q-entry [query]="query"></app-q-entry>
+            <app-q-entry [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
           </a>
         </div>
       </div>

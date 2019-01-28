@@ -82,4 +82,15 @@ export class QueryService {
     this._queries.push(query);
     this._saveQueries();
   }
+
+  /**
+   * Odstraní záznam podle ID
+   *
+   * @param id ID záznamu, který se má odstranit
+   */
+  delete(id: string) {
+    const index = this._queries.findIndex(value => value.id === id);
+    this._queries.splice(index, 1);
+    this._saveQueries();
+  }
 }
