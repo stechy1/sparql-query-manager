@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Query } from '../query';
 
 @Component({
@@ -11,7 +11,9 @@ export class QContentComponent implements OnInit {
   @ViewChild('query_content')
   private _textArea: ElementRef;
   private _query: Query;
+  private _content: string;
   loading: boolean;
+  @Output() dataChanged = new EventEmitter<Query>();
 
   constructor() { }
 
@@ -22,6 +24,7 @@ export class QContentComponent implements OnInit {
   @Input()
   set query(value: Query) {
     this._query = value;
+    this._content = this._query.content;
     this.loading = true;
     setTimeout(() => {
       const natElement = <HTMLTextAreaElement> this._textArea.nativeElement;
@@ -34,10 +37,19 @@ export class QContentComponent implements OnInit {
   }
 
   get content() {
-    return this._query.content;
+    return this._content;
   }
 
   set content(value: string) {
-    this._query.content = value;
+    this._content = value;
+  }
+
+  handleSaveContent() {
+    if (this._query.content === this.content) {
+      return;
+    }
+
+    this._query.content = this.content;
+    this.dataChanged.emit(this._query);
   }
 }

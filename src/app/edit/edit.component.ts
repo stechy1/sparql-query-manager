@@ -49,4 +49,9 @@ export class EditComponent implements OnInit {
     const self = this;
     setTimeout(() => {self.saveProgress = 'saved'; }, 100);
   }
+
+  handleManualQuerySave() {
+    this.saveProgress = 'notSaved';
+    this._qservice.performSave();
+  }
 }
