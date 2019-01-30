@@ -94,4 +94,8 @@ export class QueryService {
     this._queries.splice(index, 1);
     this._saveQueries();
   }
+
+  performSave() {
+    this._saveQueries();
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Query } from '../query';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material';
@@ -16,6 +16,7 @@ export class QTagsComponent implements OnInit {
   removable = true;
   addOnBlur = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  @Output() dataChanged = new EventEmitter<string[]>();
 
   constructor() { }
 
@@ -37,6 +38,7 @@ export class QTagsComponent implements OnInit {
 
     if ((value || '').trim()) {
       this.tags.push(value.trim());
+      this.dataChanged.emit(this.tags);
     }
 
     if (input) {
@@ -49,6 +51,7 @@ export class QTagsComponent implements OnInit {
 
     if (index >= 0) {
       this._tags.splice(index, 1);
+      this.dataChanged.emit(this.tags);
     }
   }
 

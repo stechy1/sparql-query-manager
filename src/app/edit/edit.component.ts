@@ -35,16 +35,18 @@ export class EditComponent implements OnInit {
     return this._query;
   }
 
-  toggleProgress() {
-    this.saveProgress = this.saveProgress === 'notSaved' ? 'saved' : 'notSaved';
-  }
-
   handleSaveQuery() {
     if (this.saveProgress === 'notSaved') {
       return;
     }
 
-    console.log('Ukládám dotaz...');
+    this._qservice.performSave();
     this.saveProgress = 'notSaved';
+  }
+
+  handleQueryChange() {
+    this.saveProgress = 'notSaved';
+    const self = this;
+    setTimeout(() => {self.saveProgress = 'saved'; }, 100);
   }
 }

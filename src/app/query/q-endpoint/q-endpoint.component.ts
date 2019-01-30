@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Query } from '../query';
 
 @Component({
@@ -9,6 +9,7 @@ import { Query } from '../query';
 export class QEndpointComponent implements OnInit {
 
   private _query: Query;
+  @Output() dataChanged = new EventEmitter<Query>();
 
   constructor() { }
 
@@ -27,6 +28,7 @@ export class QEndpointComponent implements OnInit {
   endpointChanged(value: string) {
     if (this._query.endpoint !== value) {
       this._query.endpoint = value;
+      this.dataChanged.emit(this._query);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Query } from '../query';
 
 @Component({
@@ -9,6 +9,7 @@ import { Query } from '../query';
 export class QNameComponent implements OnInit {
 
   private _query: Query;
+  @Output() dataChanged = new EventEmitter<Query>();
 
   constructor() { }
 
@@ -27,6 +28,7 @@ export class QNameComponent implements OnInit {
   nameChanged(value: string) {
     if (this._query.name !== value) {
       this._query.name = value;
+      this.dataChanged.emit(this._query);
     }
   }
 }

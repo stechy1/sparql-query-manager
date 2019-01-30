@@ -1,13 +1,13 @@
 <div id="saveBar" [@saveProgress]="saveProgress" (@saveProgress.done)="handleSaveQuery()"></div>
 <div class="row">
   <div class="col s12 m7 offset-l1">
-    <app-q-endpoint [query]="query"></app-q-endpoint>
+    <app-q-endpoint [query]="query" (dataChanged)="handleQueryChange()"></app-q-endpoint>
     <app-q-content [query]="query"></app-q-content>
   </div>
   <div class="col s12 m5 l3">
-    <app-q-name [query]="query"></app-q-name>
-    <app-q-description [query]="query"></app-q-description>
-    <app-q-tags [tags]="query.tags"></app-q-tags>
+    <app-q-name [query]="query" (dataChanged)="handleQueryChange()"></app-q-name>
+    <app-q-description [query]="query" (dataChanged)="handleQueryChange()"></app-q-description>
+    <app-q-tags [tags]="query.tags" (dataChanged)="handleQueryChange()"></app-q-tags>
     <app-q-params></app-q-params>
   </div>
 </div>

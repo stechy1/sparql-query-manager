@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Query } from '../query';
 
 @Component({
@@ -9,6 +9,7 @@ import { Query } from '../query';
 export class QDescriptionComponent implements OnInit {
 
   private _query: Query;
+  @Output() dataChanged = new EventEmitter<Query>();
 
   constructor() { }
 
@@ -27,6 +28,7 @@ export class QDescriptionComponent implements OnInit {
   descriptionChanged(value: string) {
     if (this._query.description !== value) {
       this._query.description = value;
+      this.dataChanged.emit(this._query);
     }
   }
 }
