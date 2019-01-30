@@ -6,6 +6,7 @@ interface QueryStorageEntry {
   _id: string;
   _name: string;
   _description: string;
+  _tags: string[];
   _endpoint: string;
   _content: string;
 }
@@ -24,7 +25,7 @@ export class QueryService {
   }
 
   private static parseQuery(input: QueryStorageEntry): Query {
-    return new Query(input._id, input._name, input._endpoint, input._content, input._description);
+    return new Query(input._id, input._name, input._endpoint, input._tags, input._content, input._description);
   }
 
   private static makeID(): string {
@@ -78,7 +79,7 @@ export class QueryService {
    * @param variables Proměnné, které se vyskytují v dotazu
    */
   create(name: string, endpoint: string, description: string, tags: string[], content: string, variables: {}) {
-    const query = new Query(QueryService.makeID(), name, endpoint, content, description);
+    const query = new Query(QueryService.makeID(), name, endpoint, tags, content, description);
     this._queries.push(query);
     this._saveQueries();
   }

@@ -10,9 +10,8 @@ import { MatChipInputEvent } from '@angular/material';
 })
 export class QTagsComponent implements OnInit {
 
-  private _query: Query;
+  private _tags: string[];
 
-  visible = true;
   selectable = true;
   removable = true;
   addOnBlur = true;
@@ -24,12 +23,12 @@ export class QTagsComponent implements OnInit {
   }
 
   @Input()
-  set query(value: Query) {
-    this._query = value;
+  set tags(value: string[]) {
+    this._tags = value;
   }
 
-  get tags() {
-    return this._query.tags;
+  get tags(): string[] {
+    return this._tags;
   }
 
   add(event: MatChipInputEvent): void {
@@ -37,17 +36,20 @@ export class QTagsComponent implements OnInit {
     const value = event.value;
 
     if ((value || '').trim()) {
-      this._query.addTag(value.trim());
+      this.tags.push(value.trim());
     }
 
-    // Reset the input value
     if (input) {
       input.value = '';
     }
   }
 
   remove(tag: string): void {
-    this._query.removeTag(tag);
+    const index = this._tags.indexOf(tag);
+
+    if (index >= 0) {
+      this._tags.splice(index, 1);
+    }
   }
 
 }
