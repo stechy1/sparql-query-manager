@@ -1,4 +1,7 @@
 # Unknown
+
+![Browser](https://github.com/stechy1/sparql-query-manager/blob/master/img/sparql_browser.png)
+
 Webový nástroj pro uchovávání a správu databáze SPARQL dotazů. 
 Nástroj umožní jednotlivé dotazy vykonat vůči vybraným typům 
 SPARQL endpointů a zobrazit jejich výsledek.
