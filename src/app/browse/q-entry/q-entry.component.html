@@ -1,6 +1,9 @@
 <div (mouseenter)="visible=true" (mouseleave)="visible=false" class="valign-wrapper">
   <div class="col s8" style="margin-left: 0;">
     <a href="edit/{{query.id}}"><span>{{query.name}}</span></a>
+    <mat-chip-list>
+      <mat-chip *ngFor="let tag of query.tags">{{tag}}</mat-chip>
+    </mat-chip-list>
   </div>
   <div class="col s2">
     <button class="btn btn-small btn-flat materialize-red right" (click)="handleDelete()">Smazat</button>

@@ -1,5 +1,5 @@
 export class Query {
-  constructor(private _id: string, private _name: string, private _endpoint: string,
+  constructor(private _id: string, private _name: string, private _endpoint: string, private _tags: string[],
               private _content: string, private _description: string) { }
 
   get id(): string {
@@ -24,6 +24,18 @@ export class Query {
 
   set endpoint(value: string) {
     this._endpoint = value;
+  }
+
+  get tags(): string[] {
+    return this._tags;
+  }
+
+  addTag(tag: string): void {
+    this._tags.push(tag);
+  }
+
+  removeTag(tag: string): void {
+    this._tags.splice(this._tags.findIndex(value => value === tag), 1);
   }
 
   get content(): string {

@@ -16,8 +16,9 @@ import { QEntryComponent } from './browse/q-entry/q-entry.component';
 import { EditableValueComponent } from './editable-value/editable-value.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule, MatFormFieldModule, MatInputModule, MatStepperModule } from '@angular/material';
+import { MatButtonModule, MatChipsModule, MatFormFieldModule, MatIconModule, MatInputModule, MatStepperModule } from '@angular/material';
 import { NewQueryComponent } from './new-query/new-query.component';
+import { QTagsComponent } from './query/q-tags/q-tags.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { NewQueryComponent } from './new-query/new-query.component';
     QEntryComponent,
     EditableValueComponent,
     NewQueryComponent,
+    QTagsComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,7 +45,9 @@ import { NewQueryComponent } from './new-query/new-query.component';
     MatStepperModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    MatChipsModule,
+    MatIconModule
   ],
   providers: [],
   bootstrap: [AppComponent]

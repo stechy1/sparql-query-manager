@@ -1,18 +1,12 @@
 <div class="row">
-  <section>
+  <div class="col s12 m7 offset-l1">
     <app-q-endpoint [query]="query"></app-q-endpoint>
-  </section>
-  <aside>
-    <app-q-name [query]="query"></app-q-name>
-  </aside>
-</div>
-
-<div class="row">
-  <section>
     <app-q-content [query]="query"></app-q-content>
-  </section>
-  <aside>
+  </div>
+  <div class="col s12 m5 l3">
+    <app-q-name [query]="query"></app-q-name>
     <app-q-description [query]="query"></app-q-description>
+    <app-q-tags [query]="query"></app-q-tags>
     <app-q-params></app-q-params>
-  </aside>
+  </div>
 </div>

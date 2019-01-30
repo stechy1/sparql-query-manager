@@ -1,0 +1,16 @@
+<div class="card blue-grey darken-1">
+  <div class="card-content white-text">
+    <mat-chip-list #chipTagList>
+      <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
+                [removable]="removable" (removed)="remove(tag)">
+        {{tag}}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+      <input placeholder="Nový tag..."
+             [matChipInputFor]="chipTagList"
+             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+             [matChipInputAddOnBlur]="addOnBlur"
+             (matChipInputTokenEnd)="add($event)">
+    </mat-chip-list>
+  </div>
+</div>

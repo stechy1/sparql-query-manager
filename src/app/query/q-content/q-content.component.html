@@ -1,12 +1,10 @@
-<div class="col s12 offset-m1 m6 offset-l1 l7">
-  <div class="card blue-grey darken-1">
-    <div class="card-content white-text">
-      <span class="card-title">Editor SPARQL dotazu</span>
-      <textarea #query_content name="query-content" disabled id="query-content" cols="30" rows="30">{{content}}</textarea>
-      <i *ngIf="loading" id="autorenew" class="material-icons" style="position: absolute; left: 50%; top: 30%;" >autorenew</i>
-    </div>
-    <div class="card-action">
-      <span class="btn btn-tiny green">Vykonat</span>
-    </div>
+<div class="card blue-grey darken-1">
+  <div class="card-content white-text">
+    <span class="card-title">Editor SPARQL dotazu</span>
+    <textarea #query_content name="query-content" disabled id="query-content" cols="30" rows="30">{{content}}</textarea>
+    <i *ngIf="loading" id="autorenew" class="material-icons" style="position: absolute; left: 50%; top: 30%;" >autorenew</i>
+  </div>
+  <div class="card-action">
+    <span class="btn btn-tiny green">Vykonat</span>
   </div>
 </div>
