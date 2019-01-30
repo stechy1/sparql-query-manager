@@ -13,11 +13,13 @@ export class NewQueryComponent implements OnInit {
 
   nameFormGroup: FormGroup;
   informationFormGroup: FormGroup;
-  tagsFormGroup: FormGroup;
+  tags: string[];
   queryFormGroup: FormGroup;
   variablesFormGroup: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder, private _queryService: QueryService, private _router: Router) { }
+  constructor(private _formBuilder: FormBuilder, private _queryService: QueryService, private _router: Router) {
+    this.tags = [];
+  }
 
   ngOnInit() {
     this.nameFormGroup = this._formBuilder.group({
@@ -26,9 +28,6 @@ export class NewQueryComponent implements OnInit {
     this.informationFormGroup = this._formBuilder.group({
       queryEndpoint: ['', Validators.required],
       queryDescription: [''],
-    });
-    this.tagsFormGroup = this._formBuilder.group({
-      queryTags: []
     });
     this.queryFormGroup = this._formBuilder.group({
       queryContent: ['', Validators.required]
@@ -42,13 +41,11 @@ export class NewQueryComponent implements OnInit {
     const name = this.nameFormGroup.value['queryName'];
     const endpoint = this.informationFormGroup.value['queryEndpoint'];
     const description = this.informationFormGroup.value['queryDescription'];
-    // const tags = this.tagsFormGroup.value['tags'];
-    const tags = [];
     const content = this.queryFormGroup.value['queryContent'];
     // const variables = this.variablesFormGroup.value['variables'];
     const variables = {};
 
-    this._queryService.create(name, endpoint, description, tags, content, variables);
+    this._queryService.create(name, endpoint, description, this.tags, content, variables);
 
     this._router.navigate(['/browse']);
   }

@@ -41,9 +41,11 @@
         </form>
       </mat-step>
 
-      <mat-step [stepControl]="tagsFormGroup">
-        <form [formGroup]="tagsFormGroup">
+      <mat-step>
+        <form>
           <ng-template matStepLabel>Tagy</ng-template>
+
+          <app-q-tags [tags]="tags"></app-q-tags>
 
           <div>
             <button mat-button matStepperPrevious class="btn btn-small red">Zpět</button>
