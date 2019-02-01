@@ -1,21 +1,29 @@
 <section>
-  <div class="row">
+  <div class="row" *ngIf="queries.length !== 0">
     <div class="col s12 offset-m2 m8">
       <label>
         <input type="text" placeholder="Najít dotaz...">
       </label>
     </div>
+  </div>
     <div class="row">
       <div class="col s12 offset-m2 m8">
-        <div class="collection">
+        <div class="collection" *ngIf="queries.length !== 0">
           <div class="collection-header"><h4>Nalezené dotazy</h4></div>
-          <a *ngFor="let query of queries" class="collection-item">
-            <app-q-entry [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
-          </a>
+          <mat-selection-list>
+            <div class="collection-item">
+            <mat-list-option *ngFor="let query of queries">
+              <app-q-entry [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
+            </mat-list-option>
+            </div>
+          </mat-selection-list>
+        </div>
+        <div *ngIf="queries.length === 0" class="col s12 center-align">
+          <h1>Nebyly nalezeny žádné dotazy.</h1>
         </div>
       </div>
     </div>
-  </div>
+
 </section>
 
 <a routerLink="/new" id="new-query" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
