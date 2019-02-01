@@ -10,13 +10,14 @@
       <div class="col s12 offset-m2 m8">
         <div class="collection" *ngIf="queries.length !== 0">
           <div class="collection-header"><h4>Nalezené dotazy</h4></div>
-          <mat-selection-list>
+          <mat-selection-list #selectedQueries>
             <div class="collection-item">
             <mat-list-option *ngFor="let query of queries">
               <app-q-entry [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
             </mat-list-option>
             </div>
           </mat-selection-list>
+          Označeno dotazů: {{selectedQueries.selectedOptions.selected.length}}
         </div>
         <div *ngIf="queries.length === 0" class="col s12 center-align">
           <h1>Nebyly nalezeny žádné dotazy.</h1>
