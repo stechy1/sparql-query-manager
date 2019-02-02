@@ -6,47 +6,62 @@
       </label>
     </div>
   </div>
-    <div class="row">
-      <div class="col s12 offset-m2 m8">
-        <div class="collection" *ngIf="queries.length !== 0">
-          <mat-selection-list #querySelectionList (selectionChange)="handleQuerySelectionChange($event)">
-            <div class="collection-item">
+  <div class="row">
+    <div class="col s12 offset-m2 m8">
+      <div class="collection" *ngIf="queries.length !== 0">
+        <mat-selection-list #querySelectionList (selectionChange)="handleQuerySelectionChange($event)">
+          <div class="collection-item">
             <mat-list-option *ngFor="let query of queries" [value]="query.id">
               <app-q-entry [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
             </mat-list-option>
-            </div>
-          </mat-selection-list>
-          Označeno dotazů: {{querySelectionList.selectedOptions.selected.length}}
-          <div>
-            <button class="btn btn-small" (click)="handleExport()" [disabled]="selectedQueries.length === 0">Export</button>
-            <button [matMenuTriggerFor]="importMenu" class="btn btn-small ">Import</button>
-            <mat-menu #importMenu="matMenu">
-              <label for="btnImportOverride" mat-menu-item>
-                Přepsat
-                <input id="btnImportOverride" type="file" style="display: none" (change)="handleImportOverride($event)"/>
-              </label>
-              <label mat-menu-item>
-                Připnout
-                <input id="btnImportAppend" type="file" style="display: none;" (change)="handleImportAppend($event)"/>
-              </label>
-            </mat-menu>
-            <button class="btn btn-small red" (click)="handleDeleteAll()">Smazat vše</button>
-            <button class="btn btn-small right" (click)="handleSelectAll()" [disabled]="selectedQueries.length === queries.length">Vybrat vše</button>
-            <button class="btn btn-small right" (click)="handleSelectNone()" [disabled]="selectedQueries.length === 0">Zrušit vše</button>
           </div>
-
-        </div>
-        <div *ngIf="queries.length === 0" class="col s12 center-align">
-          <h1>Nebyly nalezeny žádné dotazy.</h1>
-          <a routerLink="/new">Vytvořte nový dotaz</a>
-          nebo
-          <label for="btnImport" class="btn btn-small">
-            Importovat databázi
-            <input id="btnImport" type="file" style="display: none" (change)="handleImportOverride($event)"/>
-          </label>
+        </mat-selection-list>
+        Označeno dotazů: {{querySelectionList.selectedOptions.selected.length}}
+        <div class="col s12 button-bar-wrapper">
+          <div class="button-bar">
+            <div class="col s6 m1 center-on-small-only">
+              <button class="btn btn-tiny" (click)="handleExport()" [disabled]="selectedQueries.length === 0">Export</button>
+            </div>
+            <div class="col s6 m1 offset-m1 center-on-small-only">
+              <button [matMenuTriggerFor]="importMenu" class="btn btn-tiny center-align">Import</button>
+              <mat-menu #importMenu="matMenu">
+                <label for="btnImportOverride" mat-menu-item>
+                  Přepsat
+                  <input id="btnImportOverride" type="file" style="display: none" (change)="handleImportOverride($event)"/>
+                </label>
+                <label mat-menu-item>
+                  Připnout
+                  <input id="btnImportAppend" type="file" style="display: none;" (change)="handleImportAppend($event)"/>
+                </label>
+              </mat-menu>
+            </div>
+            <div class="col s4 m2 offset-m3 offset-l3 center-on-small-only">
+              <button class="btn btn-tiny" (click)="handleSelectAll()" [disabled]="selectedQueries.length === queries.length">Vybrat vše</button>
+            </div>
+            <div class="col s4 m2 center-on-small-only">
+              <button class="btn btn-tiny" (click)="handleSelectNone()" [disabled]="selectedQueries.length === 0">Zrušit vše</button>
+            </div>
+            <div class="col s4 m2 center-on-small-only">
+              <button class="btn btn-tiny red" (click)="handleDeleteAll()">Smazat vše</button>
+            </div>
+          </div>
         </div>
       </div>
+      <div *ngIf="queries.length === 0" class="col s12 center-align">
+        <h1>Nebyly nalezeny žádné dotazy.</h1>
+        <a routerLink="/new">Vytvořte nový dotaz</a>
+        nebo
+        <label for="btnImport" class="btn btn-small">
+          Importovat databázi
+          <input id="btnImport" type="file" style="display: none" (change)="handleImportOverride($event)"/>
+        </label>
+      </div>
     </div>
+  </div>
+
+  <div class="row" *ngIf="queries.length !== 0">
+
+  </div>
 
 </section>
 
