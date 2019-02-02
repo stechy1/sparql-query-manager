@@ -103,10 +103,18 @@ export class QueryService {
     this._saveQueries();
   }
 
+  /**
+   * Vynucení uložení dotazů na disk
+   */
   performSave() {
     this._saveQueries();
   }
 
+  /**
+   * Serializuje vybrané dotazy do textové podoby
+   *
+   * @param ids Pole ID dotazů, které se mají serializovat
+   */
   export(ids: string[]): string {
     const result = [];
     this._queries.forEach(query => {
@@ -139,7 +147,6 @@ export class QueryService {
       this._loadQueriesInternal(JSON.parse(text));
     } else {
       this._loadQueriesInternal(JSON.parse(text));
-      // TODO vymyslet, jak zpracovat duplicitní záznamy
     }
 
     this._saveQueries();
