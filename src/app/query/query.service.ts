@@ -98,4 +98,24 @@ export class QueryService {
   performSave() {
     this._saveQueries();
   }
+
+  export(ids: string[]): string {
+    const result = [];
+    this._queries.forEach(query => {
+      if (ids.indexOf(query.id) < 0) {
+        return;
+      }
+
+      result.push({
+        'id': query.id,
+        'name': query.name,
+        'description': query.description,
+        'tags': query.tags,
+        'endpoint': query.endpoint,
+        'content': query.content
+      });
+    });
+
+    return JSON.stringify(result);
+  }
 }

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { QueryService } from '../query/query.service';
 import { Query } from '../query/query';
+import { MatSelectionList, MatSelectionListChange } from '@angular/material';
 
 @Component({
   selector: 'app-browse',
@@ -10,6 +11,8 @@ import { Query } from '../query/query';
 export class BrowseComponent implements OnInit {
 
   private _queries: Query[];
+  @ViewChild('querySelectionList') private _queryList: MatSelectionList;
+  selectedQueries: string[] = [];
 
   constructor(private _qservice: QueryService) { }
 
@@ -25,6 +28,14 @@ export class BrowseComponent implements OnInit {
     this._qservice.delete(id);
   }
 
+  handleExport() {
+    const a = document.createElement('a');
+    const file = new Blob([this._qservice.export(this.selectedQueries)], {type: 'text/plain'});
+    a.href = URL.createObjectURL(file);
+    a.download = prompt('Zadejte název souboru...', 'queries.json');
+    a.click();
+  }
+
   handleImportOverride() {
     // TODO implementovat import dat s přepsáním lokální databáze
   }
@@ -34,10 +45,24 @@ export class BrowseComponent implements OnInit {
   }
 
   handleSelectAll() {
-    // TODO implementovat výběr všech dotazů
+    this._queryList.selectAll();
+    this.selectedQueries.splice(0, this.selectedQueries.length);
+    this._queries.forEach(query => this.selectedQueries.push(query.id));
   }
 
   handleSelectNone() {
-    // TODO implementovat zrušení výběru všech dotazů
+    this._queryList.deselectAll();
+    this.selectedQueries.splice(0, this.selectedQueries.length);
+  }
+
+  handleQuerySelectionChange(event: MatSelectionListChange) {
+    console.log(event);
+    const queryId = event.option.value;
+    const selected = event.option.selected;
+    if (selected) {
+      this.selectedQueries.push(queryId);
+    } else {
+      this.selectedQueries.splice(this.selectedQueries.indexOf(queryId), 1);
+    }
   }
 }
