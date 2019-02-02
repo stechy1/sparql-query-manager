@@ -9,7 +9,6 @@
     <div class="row">
       <div class="col s12 offset-m2 m8">
         <div class="collection" *ngIf="queries.length !== 0">
-          <div class="collection-header"><h4>Nalezené dotazy</h4></div>
           <mat-selection-list #selectedQueries>
             <div class="collection-item">
             <mat-list-option *ngFor="let query of queries">
@@ -18,9 +17,21 @@
             </div>
           </mat-selection-list>
           Označeno dotazů: {{selectedQueries.selectedOptions.selected.length}}
+          <div>
+            <button class="btn btn-small ">Export</button>
+            <button [matMenuTriggerFor]="importMenu" class="btn btn-small ">Import</button>
+            <mat-menu #importMenu="matMenu">
+              <button mat-menu-item (click)="handleImportOverride()">Přepsat</button>
+              <button mat-menu-item (click)="handleImportAppend()">Připnout</button>
+            </mat-menu>
+            <button class="btn btn-small right" (click)="handleSelectAll()">Vybrat vše</button>
+            <button class="btn btn-small right" (click)="handleSelectNone()">Zrušit vše</button>
+          </div>
+
         </div>
         <div *ngIf="queries.length === 0" class="col s12 center-align">
           <h1>Nebyly nalezeny žádné dotazy.</h1>
+          <a routerLink="/new">Vytvořte nový...</a>
         </div>
       </div>
     </div>

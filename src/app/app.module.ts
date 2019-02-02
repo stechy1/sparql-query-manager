@@ -21,7 +21,7 @@ import {
   MatChipsModule,
   MatFormFieldModule,
   MatIconModule,
-  MatInputModule, MatListModule,
+  MatInputModule, MatListModule, MatMenuModule,
   MatSelectModule,
   MatStepperModule
 } from '@angular/material';
@@ -56,7 +56,8 @@ import { QTagsComponent } from './query/q-tags/q-tags.component';
     MatInputModule,
     MatChipsModule,
     MatIconModule,
-    MatListModule
+    MatListModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [AppComponent]
