@@ -30,6 +30,7 @@
                 <input id="btnImportAppend" type="file" style="display: none;" (change)="handleImportAppend($event)"/>
               </label>
             </mat-menu>
+            <button class="btn btn-small red" (click)="handleDeleteAll()">Smazat vše</button>
             <button class="btn btn-small right" (click)="handleSelectAll()" [disabled]="selectedQueries.length === queries.length">Vybrat vše</button>
             <button class="btn btn-small right" (click)="handleSelectNone()" [disabled]="selectedQueries.length === 0">Zrušit vše</button>
           </div>

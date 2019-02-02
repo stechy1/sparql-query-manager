@@ -144,4 +144,12 @@ export class QueryService {
 
     this._saveQueries();
   }
+
+  /**
+   * Vymaže celou lokální databázi
+   */
+  clear() {
+    this._queries.splice(0, this._queries.length);
+    this._saveQueries();
+  }
 }

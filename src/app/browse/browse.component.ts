@@ -75,4 +75,10 @@ export class BrowseComponent implements OnInit {
       this.selectedQueries.splice(this.selectedQueries.indexOf(queryId), 1);
     }
   }
+
+  handleDeleteAll() {
+    if (confirm('Opravdu si přejete smazat celou databázi?')) {
+      this._qservice.clear();
+    }
+  }
 }
