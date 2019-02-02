@@ -18,11 +18,17 @@
           </mat-selection-list>
           Označeno dotazů: {{querySelectionList.selectedOptions.selected.length}}
           <div>
-            <button class="btn btn-small" (click)="handleExport()">Export</button>
+            <button class="btn btn-small" (click)="handleExport()" [disabled]="selectedQueries.length === 0">Export</button>
             <button [matMenuTriggerFor]="importMenu" class="btn btn-small ">Import</button>
             <mat-menu #importMenu="matMenu">
-              <button mat-menu-item (click)="handleImportOverride()">Přepsat</button>
-              <button mat-menu-item (click)="handleImportAppend()">Připnout</button>
+              <label for="btnImportOverride" mat-menu-item>
+                Přepsat
+                <input id="btnImportOverride" type="file" style="display: none" (change)="handleImportOverride($event)"/>
+              </label>
+              <label mat-menu-item>
+                Připnout
+                <input id="btnImportAppend" type="file" style="display: none;" (change)="handleImportAppend($event)"/>
+              </label>
             </mat-menu>
             <button class="btn btn-small right" (click)="handleSelectAll()" [disabled]="selectedQueries.length === queries.length">Vybrat vše</button>
             <button class="btn btn-small right" (click)="handleSelectNone()" [disabled]="selectedQueries.length === 0">Zrušit vše</button>
@@ -31,7 +37,12 @@
         </div>
         <div *ngIf="queries.length === 0" class="col s12 center-align">
           <h1>Nebyly nalezeny žádné dotazy.</h1>
-          <a routerLink="/new">Vytvořte nový...</a>
+          <a routerLink="/new">Vytvořte nový dotaz</a>
+          nebo
+          <label for="btnImport" class="btn btn-small">
+            Importovat databázi
+            <input id="btnImport" type="file" style="display: none" (change)="handleImportOverride($event)"/>
+          </label>
         </div>
       </div>
     </div>

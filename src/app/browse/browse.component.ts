@@ -16,6 +16,16 @@ export class BrowseComponent implements OnInit {
 
   constructor(private _qservice: QueryService) { }
 
+  private _import(input: HTMLInputElement, override: boolean) {
+    const reader = new FileReader();
+    const self = this;
+    reader.onload = () => {
+      const text = <string> reader.result;
+      self._qservice.import(text, override);
+    };
+    reader.readAsText(input.files[0]);
+  }
+
   ngOnInit() {
     this._queries = this._qservice.allQueries();
   }
@@ -36,12 +46,12 @@ export class BrowseComponent implements OnInit {
     a.click();
   }
 
-  handleImportOverride() {
-    // TODO implementovat import dat s přepsáním lokální databáze
+  handleImportOverride(event: Event) {
+    this._import(<HTMLInputElement> event.target, true);
   }
 
-  handleImportAppend() {
-    // TODO implementovat import dat metodou mergování
+  handleImportAppend(event: Event) {
+    this._import(<HTMLInputElement> event.target, false);
   }
 
   handleSelectAll() {

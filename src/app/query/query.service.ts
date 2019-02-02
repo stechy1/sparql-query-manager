@@ -33,16 +33,24 @@ export class QueryService {
   }
 
   /**
+   * Interní metoda pro načtení dotazů do paměti
+   *
+   * @param queries Pole dotazů
+   */
+  private _loadQueriesInternal(queries: QueryStorageEntry[]): void {
+    for (const query of queries) {
+      console.log(query);
+      this._queries.push(QueryService.parseQuery(query));
+    }
+  }
+
+  /**
    * Načte data z localStorage
    */
   private _loadQueries(): void {
     const dataRaw = this.storage.get<string>(QueryService.STORAGE_KEY) || '[]';
     const data = <QueryStorageEntry[]>JSON.parse(dataRaw);
-
-    for (const query of data) {
-      console.log(query);
-      this._queries.push(QueryService.parseQuery(query));
-    }
+    this._loadQueriesInternal(data);
   }
 
   /**
@@ -107,15 +115,33 @@ export class QueryService {
       }
 
       result.push({
-        'id': query.id,
-        'name': query.name,
-        'description': query.description,
-        'tags': query.tags,
-        'endpoint': query.endpoint,
-        'content': query.content
+        '_id': query.id,
+        '_name': query.name,
+        '_description': query.description,
+        '_tags': query.tags,
+        '_endpoint': query.endpoint,
+        '_content': query.content
       });
     });
 
     return JSON.stringify(result);
+  }
+
+  /**
+   * Importuje dotazy
+   *
+   * @param text Serializované dotazy
+   * @param override True, pokud importované dotazy mají přepsat lokální databázi, jinak false
+   */
+  import(text: string, override: boolean) {
+    if (override) {
+      this._queries.splice(0, this._queries.length);
+      this._loadQueriesInternal(JSON.parse(text));
+    } else {
+      this._loadQueriesInternal(JSON.parse(text));
+      // TODO vymyslet, jak zpracovat duplicitní záznamy
+    }
+
+    this._saveQueries();
   }
 }
