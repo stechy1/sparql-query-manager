@@ -11,16 +11,16 @@
       <span>Seskupit dotazy podle:</span>
       <form action="#" [formGroup]="formGroupBy" style="display: inline;">
       <label>
-        <input type="radio" formControlName="groupBy" value="none" checked/>
-        <span>Ničeho</span>
+        <input type="radio" formControlName="groupBy" value="none"/>
+        <span class="group-by-select">Ničeho</span>
       </label>
       <label>
         <input type="radio" formControlName="groupBy" value="endpoint"/>
-        <span>Endpointu</span>
+        <span class="group-by-select">Endpointu</span>
       </label>
       <label>
         <input type="radio" formControlName="groupBy" value="tag"/>
-        <span>Tagu</span>
+        <span class="group-by-select">Tagu</span>
       </label>
       </form>
     </div>
