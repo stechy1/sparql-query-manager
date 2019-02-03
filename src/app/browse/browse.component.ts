@@ -3,6 +3,7 @@ import { QueryService } from '../query/query.service';
 import { Query } from '../query/query';
 import { MatSelectionList, MatSelectionListChange } from '@angular/material';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-browse',
@@ -16,7 +17,7 @@ export class BrowseComponent implements OnInit {
   selectedQueries: string[] = [];
   formGroupBy: FormGroup;
 
-  constructor(private _qservice: QueryService) { }
+  constructor(private _qservice: QueryService, private _route: ActivatedRoute, private _router: Router) { }
 
   private _import(input: HTMLInputElement, override: boolean) {
     const reader = new FileReader();
@@ -32,6 +33,14 @@ export class BrowseComponent implements OnInit {
     this._queries = this._qservice.allQueries();
     this.formGroupBy = new FormGroup({
       groupBy: new FormControl('none')
+    });
+    this._route.params.subscribe(params => {
+      this.formGroupBy.setValue({'groupBy': params['groupBy'] || 'none'});
+    });
+
+    this.formGroupBy.valueChanges.subscribe(change => {
+      const groupBy = change['groupBy'];
+      this._router.navigate([{'groupBy': groupBy}]);
     });
   }
 
