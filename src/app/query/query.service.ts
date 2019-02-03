@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Query } from './query';
 import { LocalStorageService } from 'angular-2-local-storage';
+import { query } from '@angular/animations';
 
 interface QueryStorageEntry {
   _id: string;
@@ -158,5 +159,25 @@ export class QueryService {
   clear() {
     this._queries.splice(0, this._queries.length);
     this._saveQueries();
+  }
+
+  get endpoints(): string[] {
+    const endpointArray: string[] = [];
+    this._queries.forEach(query => {
+      endpointArray.push(query.endpoint);
+    });
+
+    return endpointArray.filter(((value, index, array) => array.indexOf(value) === index));
+  }
+
+  get tags(): string[] {
+    const tagArray: string[] = [];
+    this._queries.forEach(query => {
+      query.tags.forEach(tag => {
+        tagArray.push(tag);
+      });
+    });
+
+    return tagArray.filter(((value, index, array) => array.indexOf(value) === index));
   }
 }

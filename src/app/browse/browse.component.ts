@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { QueryService } from '../query/query.service';
 import { Query } from '../query/query';
 import { MatSelectionList, MatSelectionListChange } from '@angular/material';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-browse',
@@ -13,6 +14,7 @@ export class BrowseComponent implements OnInit {
   private _queries: Query[];
   @ViewChild('querySelectionList') private _queryList: MatSelectionList;
   selectedQueries: string[] = [];
+  formGroupBy: FormGroup;
 
   constructor(private _qservice: QueryService) { }
 
@@ -28,6 +30,9 @@ export class BrowseComponent implements OnInit {
 
   ngOnInit() {
     this._queries = this._qservice.allQueries();
+    this.formGroupBy = new FormGroup({
+      groupBy: new FormControl('none')
+    });
   }
 
   get queries() {
@@ -80,5 +85,21 @@ export class BrowseComponent implements OnInit {
     if (confirm('Opravdu si přejete smazat celou databázi?')) {
       this._qservice.clear();
     }
+  }
+
+  get endpoints(): string[] {
+    return this._qservice.endpoints;
+  }
+
+  get tags(): string[] {
+    return this._qservice.tags;
+  }
+
+  getQueriesByEndpoint(endpoint: string): Query[] {
+    return this._queries.filter(query => query.endpoint === endpoint);
+  }
+
+  getQueriesByTag(tag: string): Query[] {
+    return this._queries.filter(query => query.tags.indexOf(tag) !== -1);
   }
 }

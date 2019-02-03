@@ -17,11 +17,11 @@ import { EditableValueComponent } from './editable-value/editable-value.componen
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  MatButtonModule,
+  MatButtonModule, MatCheckboxModule,
   MatChipsModule,
   MatFormFieldModule,
   MatIconModule,
-  MatInputModule, MatListModule, MatMenuModule,
+  MatInputModule, MatListModule, MatMenuModule, MatRadioModule,
   MatSelectModule,
   MatStepperModule
 } from '@angular/material';
@@ -57,6 +57,7 @@ import { QTagsComponent } from './query/q-tags/q-tags.component';
     MatChipsModule,
     MatIconModule,
     MatListModule,
+    MatRadioModule,
     MatMenuModule
   ],
   providers: [],
