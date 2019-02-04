@@ -6,7 +6,7 @@
       </label>
     </div>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="queries.length !== 0">
     <div class="col s12 center-align">
       <span>Seskupit dotazy podle:</span>
       <form action="#" [formGroup]="formGroupBy" style="display: inline;">
@@ -25,6 +25,29 @@
       </form>
     </div>
   </div>
+  <div class="row" *ngIf="queries.length !== 0">
+    <div class="col s12 center-align">
+      <span>Seřadit dotazy podle:</span>
+      <form action="#" [formGroup]="formOrderBy" style="display: inline;">
+        <label>
+          <input type="radio" formControlName="orderBy" value="last_run"/>
+          <span class="group-by-select">Posledního spuštění</span>
+        </label>
+        <label>
+          <input type="radio" formControlName="orderBy" value="date_of_creation"/>
+          <span class="group-by-select">Datumu vytvoření</span>
+        </label>
+        <label>
+          <input type="radio" formControlName="orderBy" value="count_of_run"/>
+          <span class="group-by-select">Počtu spuštění</span>
+        </label>
+        <label>
+          <input type="radio" formControlName="orderBy" value="alphabeticaly"/>
+          <span class="group-by-select">Abecedně</span>
+        </label>
+      </form>
+    </div>
+  </div>
   <div class="row">
     <div class="col s12 offset-m2 m8">
       <div class="collection" *ngIf="queries.length !== 0">
@@ -40,6 +63,7 @@
               <mat-list-option *ngFor="let query of getQueriesByEndpoint(endpoint)" [value]="query.id">
                 <app-q-entry [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
               </mat-list-option>
+              <div class="divider"></div>
             </div>
           </div>
           <div class="collection-item" *ngIf="formGroupBy.value['groupBy'] === 'tag'">
@@ -48,6 +72,7 @@
               <mat-list-option *ngFor="let query of getQueriesByTag(tag)" [value]="query.id">
                 <app-q-entry [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
               </mat-list-option>
+              <div class="divider"></div>
             </div>
           </div>
         </mat-selection-list>

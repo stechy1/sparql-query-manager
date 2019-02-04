@@ -4,6 +4,7 @@ import { Query } from '../query/query';
 import { MatSelectionList, MatSelectionListChange } from '@angular/material';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { groupBy } from 'rxjs/operators';
 
 @Component({
   selector: 'app-browse',
@@ -13,9 +14,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class BrowseComponent implements OnInit {
 
   private _queries: Query[];
+  private _filteredQueries: Query[];
   @ViewChild('querySelectionList') private _queryList: MatSelectionList;
   selectedQueries: string[] = [];
   formGroupBy: FormGroup;
+  formOrderBy: FormGroup;
 
   constructor(private _qservice: QueryService, private _route: ActivatedRoute, private _router: Router) { }
 
@@ -29,23 +32,43 @@ export class BrowseComponent implements OnInit {
     reader.readAsText(input.files[0]);
   }
 
+  private _handleOrderBy(orderBy: string) {
+    this._filteredQueries = this._queries;
+    switch (orderBy) {
+      case 'alphabeticaly':
+        this._filteredQueries.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+    }
+  }
+
   ngOnInit() {
     this._queries = this._qservice.allQueries();
+    this._filteredQueries = this._queries;
     this.formGroupBy = new FormGroup({
       groupBy: new FormControl('none')
     });
+    this.formOrderBy = new FormGroup({
+      orderBy: new FormControl('alphabeticaly')
+    });
     this._route.params.subscribe(params => {
-      this.formGroupBy.setValue({'groupBy': params['groupBy'] || 'none'});
+      const groupBy = params['groupBy'] || 'none';
+      const orderBy = params['orderBy'] || 'alphabeticaly';
+      this.formGroupBy.setValue({'groupBy': groupBy});
+      this.formOrderBy.setValue({'orderBy': orderBy});
+
+      this._handleOrderBy(orderBy);
     });
 
     this.formGroupBy.valueChanges.subscribe(change => {
       const groupBy = change['groupBy'];
-      this._router.navigate([{'groupBy': groupBy}]);
+      const orderBy = this._route.snapshot.params['orderBy'] || 'alphabeticaly';
+      this._router.navigate([{'groupBy': groupBy, 'orderBy': orderBy}]);
     });
-  }
-
-  get queries() {
-    return this._queries;
+    this.formOrderBy.valueChanges.subscribe(change => {
+      const orderBy = change['orderBy'];
+      const groupBy = this._route.snapshot.params['groupBy'] || 'none';
+      this._router.navigate([{'groupBy': groupBy, 'orderBy': orderBy}]);
+    });
   }
 
   handleDeleteRequest(id: string) {
@@ -96,6 +119,10 @@ export class BrowseComponent implements OnInit {
     }
   }
 
+  get queries() {
+    return this._filteredQueries;
+  }
+
   get endpoints(): string[] {
     return this._qservice.endpoints;
   }
@@ -105,10 +132,10 @@ export class BrowseComponent implements OnInit {
   }
 
   getQueriesByEndpoint(endpoint: string): Query[] {
-    return this._queries.filter(query => query.endpoint === endpoint);
+    return this._filteredQueries.filter(query => query.endpoint === endpoint);
   }
 
   getQueriesByTag(tag: string): Query[] {
-    return this._queries.filter(query => query.tags.indexOf(tag) !== -1);
+    return this._filteredQueries.filter(query => query.tags.indexOf(tag) !== -1);
   }
 }
