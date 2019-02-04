@@ -10,6 +10,9 @@ interface QueryStorageEntry {
   _tags: string[];
   _endpoint: string;
   _content: string;
+  _created: number;
+  _lastRun: number;
+  _runCount: number;
 }
 
 @Injectable({
@@ -26,7 +29,8 @@ export class QueryService {
   }
 
   private static parseQuery(input: QueryStorageEntry): Query {
-    return new Query(input._id, input._name, input._endpoint, input._tags, input._content, input._description);
+    return new Query(input._id, input._name, input._endpoint, input._tags, input._content, input._description,
+      input._created, input._lastRun, input._runCount);
   }
 
   private static makeID(): string {
@@ -88,7 +92,7 @@ export class QueryService {
    * @param variables Proměnné, které se vyskytují v dotazu
    */
   create(name: string, endpoint: string, description: string, tags: string[], content: string, variables: {}) {
-    const query = new Query(QueryService.makeID(), name, endpoint, tags, content, description);
+    const query = new Query(QueryService.makeID(), name, endpoint, tags, content, description, new Date().getTime(), null, 0);
     this._queries.push(query);
     this._saveQueries();
   }
@@ -167,7 +171,9 @@ export class QueryService {
       endpointArray.push(query.endpoint);
     });
 
-    return endpointArray.filter(((value, index, array) => array.indexOf(value) === index));
+    return endpointArray
+    .filter(((value, index, array) => array.indexOf(value) === index))
+    .sort((a, b) => a.localeCompare(b));
   }
 
   get tags(): string[] {
@@ -178,6 +184,8 @@ export class QueryService {
       });
     });
 
-    return tagArray.filter(((value, index, array) => array.indexOf(value) === index));
+    return tagArray
+    .filter(((value, index, array) => array.indexOf(value) === index))
+    .sort((a, b) => a.localeCompare(b));
   }
 }

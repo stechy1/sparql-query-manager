@@ -1,6 +1,7 @@
 export class Query {
   constructor(private _id: string, private _name: string, private _endpoint: string, private _tags: string[],
-              private _content: string, private _description: string) { }
+              private _content: string, private _description: string,
+              private _created: number, private _lastRun: number, private _runCount: number) { }
 
   get id(): string {
     return this._id;
@@ -52,5 +53,29 @@ export class Query {
 
   set description(value: string) {
     this._description = value;
+  }
+
+  get created(): number {
+    return this._created;
+  }
+
+  set created(value: number) {
+    this._created = value;
+  }
+
+  get lastRun(): number {
+    return this._lastRun;
+  }
+
+  set lastRun(value: number) {
+    this._lastRun = value;
+  }
+
+  get runCount() {
+    return this._runCount;
+  }
+
+  set runCount(value) {
+    this._runCount = value;
   }
 }

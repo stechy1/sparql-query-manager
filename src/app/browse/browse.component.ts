@@ -14,7 +14,6 @@ import { groupBy } from 'rxjs/operators';
 export class BrowseComponent implements OnInit {
 
   private _queries: Query[];
-  private _filteredQueries: Query[];
   @ViewChild('querySelectionList') private _queryList: MatSelectionList;
   selectedQueries: string[] = [];
   formGroupBy: FormGroup;
@@ -33,17 +32,24 @@ export class BrowseComponent implements OnInit {
   }
 
   private _handleOrderBy(orderBy: string) {
-    this._filteredQueries = this._queries;
     switch (orderBy) {
+      case 'last_run':
+        this._queries.sort((a, b) => a.lastRun - b.lastRun);
+        break;
+      case 'date_of_creation':
+        this._queries.sort((a, b) => a.created - b.created);
+        break;
+      case 'count_of_run':
+        this._queries.sort((a, b) => a.runCount - b.runCount);
+        break;
       case 'alphabeticaly':
-        this._filteredQueries.sort((a, b) => a.name.localeCompare(b.name));
+        this._queries.sort((a, b) => a.name.localeCompare(b.name));
         break;
     }
   }
 
   ngOnInit() {
     this._queries = this._qservice.allQueries();
-    this._filteredQueries = this._queries;
     this.formGroupBy = new FormGroup({
       groupBy: new FormControl('none')
     });
@@ -120,7 +126,7 @@ export class BrowseComponent implements OnInit {
   }
 
   get queries() {
-    return this._filteredQueries;
+    return this._queries;
   }
 
   get endpoints(): string[] {
@@ -132,10 +138,10 @@ export class BrowseComponent implements OnInit {
   }
 
   getQueriesByEndpoint(endpoint: string): Query[] {
-    return this._filteredQueries.filter(query => query.endpoint === endpoint);
+    return this._queries.filter(query => query.endpoint === endpoint);
   }
 
   getQueriesByTag(tag: string): Query[] {
-    return this._filteredQueries.filter(query => query.tags.indexOf(tag) !== -1);
+    return this._queries.filter(query => query.tags.indexOf(tag) !== -1);
   }
 }

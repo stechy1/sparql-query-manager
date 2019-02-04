@@ -41,4 +41,9 @@ export class QEntryComponent implements OnInit {
   handleDelete() {
     this.deleteRequest.emit(this._query.id);
   }
+
+  get formatedDateOfCreation() {
+    const date = new Date(this._query.created);
+    return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
+  }
 }
