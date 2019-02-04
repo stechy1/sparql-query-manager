@@ -32,7 +32,7 @@ export class BrowseComponent implements OnInit {
     reader.readAsText(input.files[0]);
   }
 
-  private _handleOrderBy(orderBy: string) {
+  private _handleOrderBy(orderBy: string, orderType: string) {
     switch (orderBy) {
       case 'last_run':
         this._queries.sort((a, b) => a.lastRun - b.lastRun);
@@ -46,6 +46,9 @@ export class BrowseComponent implements OnInit {
       case 'alphabeticaly':
         this._queries.sort((a, b) => a.name.localeCompare(b.name));
         break;
+    }
+    if (orderType === 'descending') {
+      this._queries.reverse();
     }
   }
 
@@ -68,7 +71,7 @@ export class BrowseComponent implements OnInit {
       this.formOrderBy.setValue({'orderBy': orderBy});
       this.formOrderType.setValue({'orderType': orderType});
 
-      this._handleOrderBy(orderBy);
+      this._handleOrderBy(orderBy, orderType);
     });
 
     this.formGroupBy.valueChanges.subscribe(change => {
