@@ -18,6 +18,7 @@ export class BrowseComponent implements OnInit {
   selectedQueries: string[] = [];
   formGroupBy: FormGroup;
   formOrderBy: FormGroup;
+  formOrderType: FormGroup;
 
   constructor(private _qservice: QueryService, private _route: ActivatedRoute, private _router: Router) { }
 
@@ -56,11 +57,16 @@ export class BrowseComponent implements OnInit {
     this.formOrderBy = new FormGroup({
       orderBy: new FormControl('alphabeticaly')
     });
+    this.formOrderType = new FormGroup({
+      orderType: new FormControl('ascending')
+    });
     this._route.params.subscribe(params => {
       const groupBy = params['groupBy'] || 'none';
       const orderBy = params['orderBy'] || 'alphabeticaly';
+      const orderType = params['orderType'] || 'ascending';
       this.formGroupBy.setValue({'groupBy': groupBy});
       this.formOrderBy.setValue({'orderBy': orderBy});
+      this.formOrderType.setValue({'orderType': orderType});
 
       this._handleOrderBy(orderBy);
     });
@@ -68,12 +74,20 @@ export class BrowseComponent implements OnInit {
     this.formGroupBy.valueChanges.subscribe(change => {
       const groupBy = change['groupBy'];
       const orderBy = this._route.snapshot.params['orderBy'] || 'alphabeticaly';
-      this._router.navigate([{'groupBy': groupBy, 'orderBy': orderBy}]);
+      const orderType = this._route.snapshot.params['orderType'] || 'ascending';
+      this._router.navigate([{'groupBy': groupBy, 'orderBy': orderBy, 'orderType': orderType}]);
     });
     this.formOrderBy.valueChanges.subscribe(change => {
       const orderBy = change['orderBy'];
       const groupBy = this._route.snapshot.params['groupBy'] || 'none';
-      this._router.navigate([{'groupBy': groupBy, 'orderBy': orderBy}]);
+      const orderType = this._route.snapshot.params['orderType'] || 'ascending';
+      this._router.navigate([{'groupBy': groupBy, 'orderBy': orderBy, 'orderType': orderType}]);
+    });
+    this.formOrderType.valueChanges.subscribe(change => {
+      const orderType = change['orderType'];
+      const orderBy = this._route.snapshot.params['orderBy'] || 'alphabeticaly';
+      const groupBy = this._route.snapshot.params['groupBy'] || 'none';
+      this._router.navigate([{'groupBy': groupBy, 'orderBy': orderBy, 'orderType': orderType}]);
     });
   }
 

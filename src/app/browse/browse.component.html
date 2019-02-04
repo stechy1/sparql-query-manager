@@ -48,6 +48,21 @@
       </form>
     </div>
   </div>
+  <div class="row" *ngIf="queries.length !== 0">
+    <div class="col s12 center-align">
+      <span>Orientace řazení:</span>
+      <form action="#" [formGroup]="formOrderType" style="display: inline;">
+        <label>
+          <input type="radio" formControlName="orderType" value="ascending"/>
+          <span class="group-by-select">Vzestupně</span>
+        </label>
+        <label>
+          <input type="radio" formControlName="orderType" value="descending"/>
+          <span class="group-by-select">Sestupně</span>
+        </label>
+      </form>
+    </div>
+  </div>
   <div class="row">
     <div class="col s12 offset-m2 m8">
       <div class="collection" *ngIf="queries.length !== 0">
