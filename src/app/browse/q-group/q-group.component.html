@@ -1,0 +1,13 @@
+<div class="collection-item">
+  <div *ngFor="let value of values">
+    <div class="row">
+      <div class="col s12">
+        <label>
+          <input type="checkbox" class="filled-in" [(ngModel)]="groupInformations[value].checked" (change)="handleCheckboxChange($event)" value="{{value}}"><span>{{value}}</span>
+        </label>
+      </div>
+    </div>
+    <app-q-entry *ngFor="let query of getQueries(value)" [query]="query" (deleteRequest)="handleDeleteRequest(query)"></app-q-entry>
+    <div class="divider"></div>
+  </div>
+</div>
