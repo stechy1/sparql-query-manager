@@ -62,7 +62,7 @@ export class QueryService {
    * Uloží data do localStorage
    */
   private _saveQueries(): void {
-    this.storage.set(QueryService.STORAGE_KEY, JSON.stringify(this._queries));
+    this.storage.set(QueryService.STORAGE_KEY, JSON.stringify(this._queries, Query.structureGuard));
   }
 
   /**
@@ -118,26 +118,12 @@ export class QueryService {
   /**
    * Serializuje vybrané dotazy do textové podoby
    *
-   * @param ids Pole ID dotazů, které se mají serializovat
+   * @param queries Pole všech dotazů, které se budou exportovat
    */
-  export(ids: string[]): string {
-    const result = [];
-    this._queries.forEach(query => {
-      if (ids.indexOf(query.id) < 0) {
-        return;
-      }
-
-      result.push({
-        '_id': query.id,
-        '_name': query.name,
-        '_description': query.description,
-        '_tags': query.tags,
-        '_endpoint': query.endpoint,
-        '_content': query.content
-      });
-    });
-
-    return JSON.stringify(result);
+  export(queries: Query[]): string {
+    const result = JSON.stringify(queries, Query.structureGuard);
+    this._queries.forEach(value => value.selected = false);
+    return result;
   }
 
   /**

@@ -14,8 +14,8 @@ import { groupBy } from 'rxjs/operators';
 export class BrowseComponent implements OnInit {
 
   private _queries: Query[];
-  @ViewChild('querySelectionList') private _queryList: MatSelectionList;
-  selectedQueries: string[] = [];
+  // @ViewChild('querySelectionList') private _queryList: MatSelectionList;
+  // selectedQueries: string[] = [];
   formGroupBy: FormGroup;
   formOrderBy: FormGroup;
   formOrderType: FormGroup;
@@ -100,7 +100,7 @@ export class BrowseComponent implements OnInit {
 
   handleExport() {
     const a = document.createElement('a');
-    const file = new Blob([this._qservice.export(this.selectedQueries)], {type: 'text/plain'});
+    const file = new Blob([this._qservice.export(this._queries.filter(value => value.selected))], {type: 'text/plain'});
     a.href = URL.createObjectURL(file);
     a.download = prompt('Zadejte název souboru...', 'queries.json');
     a.click();
@@ -115,25 +115,11 @@ export class BrowseComponent implements OnInit {
   }
 
   handleSelectAll() {
-    this._queryList.selectAll();
-    this.selectedQueries.splice(0, this.selectedQueries.length);
-    this._queries.forEach(query => this.selectedQueries.push(query.id));
+    this._queries.forEach(query => query.selected = true);
   }
 
   handleSelectNone() {
-    this._queryList.deselectAll();
-    this.selectedQueries.splice(0, this.selectedQueries.length);
-  }
-
-  handleQuerySelectionChange(event: MatSelectionListChange) {
-    console.log(event);
-    const queryId = event.option.value;
-    const selected = event.option.selected;
-    if (selected) {
-      this.selectedQueries.push(queryId);
-    } else {
-      this.selectedQueries.splice(this.selectedQueries.indexOf(queryId), 1);
-    }
+    this._queries.forEach(query => query.selected = false);
   }
 
   handleDeleteAll() {
@@ -160,5 +146,9 @@ export class BrowseComponent implements OnInit {
 
   getQueriesByTag(tag: string): Query[] {
     return this._queries.filter(query => query.tags.indexOf(tag) !== -1);
+  }
+
+  get selectedQueries(): number {
+    return this._queries.filter(value => value.selected).length;
   }
 }

@@ -1,7 +1,18 @@
 export class Query {
+
+  private _selected = false;
+
   constructor(private _id: string, private _name: string, private _endpoint: string, private _tags: string[],
               private _content: string, private _description: string,
               private _created: number, private _lastRun: number, private _runCount: number) { }
+
+  static structureGuard(key: string, value: any) {
+    if (key === '_selected') {
+      return undefined;
+    }
+
+    return value;
+  }
 
   get id(): string {
     return this._id;
@@ -77,5 +88,13 @@ export class Query {
 
   set runCount(value) {
     this._runCount = value;
+  }
+
+  get selected(): boolean {
+    return this._selected;
+  }
+
+  set selected(value: boolean) {
+    this._selected = value;
   }
 }

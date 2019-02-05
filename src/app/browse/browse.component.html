@@ -66,37 +66,31 @@
   <div class="row">
     <div class="col s12 offset-m2 m8">
       <div class="collection" *ngIf="queries.length !== 0">
-        <mat-selection-list #querySelectionList (selectionChange)="handleQuerySelectionChange($event)">
+        <mat-selection-list>
           <div class="collection-item" *ngIf="formGroupBy.value['groupBy'] === 'none'">
-            <mat-list-option *ngFor="let query of queries" [value]="query.id">
-              <app-q-entry [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
-            </mat-list-option>
+              <app-q-entry *ngFor="let query of queries" [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
           </div>
           <div class="collection-item" *ngIf="formGroupBy.value['groupBy'] === 'endpoint'">
             <div *ngFor="let endpoint of endpoints">
               <h5>{{endpoint}}</h5>
-              <mat-list-option *ngFor="let query of getQueriesByEndpoint(endpoint)" [value]="query.id">
-                <app-q-entry [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
-              </mat-list-option>
+                <app-q-entry *ngFor="let query of getQueriesByEndpoint(endpoint)" [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
               <div class="divider"></div>
             </div>
           </div>
           <div class="collection-item" *ngIf="formGroupBy.value['groupBy'] === 'tag'">
             <div *ngFor="let tag of tags">
               <h5>{{tag}}</h5>
-              <mat-list-option *ngFor="let query of getQueriesByTag(tag)" [value]="query.id">
-                <app-q-entry [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
-              </mat-list-option>
+                <app-q-entry *ngFor="let query of getQueriesByTag(tag)" [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
               <div class="divider"></div>
             </div>
           </div>
         </mat-selection-list>
 
-        Označeno dotazů: {{querySelectionList.selectedOptions.selected.length}}
+        Označeno dotazů: {{selectedQueries}}
         <div class="col s12 button-bar-wrapper">
           <div class="button-bar">
             <div class="col s6 m1 center-on-small-only">
-              <button class="btn btn-tiny" (click)="handleExport()" [disabled]="selectedQueries.length === 0">Export</button>
+              <button class="btn btn-tiny" (click)="handleExport()">Export</button>
             </div>
             <div class="col s6 m1 offset-m1 center-on-small-only">
               <button [matMenuTriggerFor]="importMenu" class="btn btn-tiny center-align">Import</button>
@@ -112,10 +106,10 @@
               </mat-menu>
             </div>
             <div class="col s4 m2 offset-m3 offset-l3 center-on-small-only">
-              <button class="btn btn-tiny" (click)="handleSelectAll()" [disabled]="selectedQueries.length === queries.length">Vybrat vše</button>
+              <button class="btn btn-tiny" (click)="handleSelectAll()">Vybrat vše</button>
             </div>
             <div class="col s4 m2 center-on-small-only">
-              <button class="btn btn-tiny" (click)="handleSelectNone()" [disabled]="selectedQueries.length === 0">Zrušit vše</button>
+              <button class="btn btn-tiny" (click)="handleSelectNone()">Zrušit vše</button>
             </div>
             <div class="col s4 m2 center-on-small-only">
               <button class="btn btn-tiny red" (click)="handleDeleteAll()">Smazat vše</button>
