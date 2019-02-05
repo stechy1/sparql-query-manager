@@ -148,14 +148,6 @@ export class BrowseComponent implements OnInit {
     return this._qservice.tags;
   }
 
-  // getQueriesByEndpoint(endpoint: string): Query[] {
-  //   return this._queries.filter(query => query.endpoint === endpoint);
-  // }
-  //
-  // getQueriesByTag(tag: string): Query[] {
-  //   return this._queries.filter(query => query.tags.indexOf(tag) !== -1);
-  // }
-
   get selectedQueries(): number {
     return this._queries.filter(value => value.selected).length;
   }
