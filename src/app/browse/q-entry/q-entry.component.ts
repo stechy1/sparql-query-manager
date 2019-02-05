@@ -11,8 +11,7 @@ export class QEntryComponent implements OnInit {
   private _query: Query;
   private _visible: boolean;
 
-  @Output()
-  deleteRequest = new EventEmitter<string>();
+  @Output() deleteRequest = new EventEmitter<Query>();
 
   constructor() {
   }
@@ -39,7 +38,7 @@ export class QEntryComponent implements OnInit {
   }
 
   handleDelete() {
-    this.deleteRequest.emit(this._query.id);
+    this.deleteRequest.emit(this._query);
   }
 
   get formatedDateOfCreation() {

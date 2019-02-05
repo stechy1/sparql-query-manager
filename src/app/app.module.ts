@@ -17,16 +17,16 @@ import { EditableValueComponent } from './editable-value/editable-value.componen
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  MatButtonModule, MatCheckboxModule,
+  MatButtonModule,
   MatChipsModule,
   MatFormFieldModule,
   MatIconModule,
   MatInputModule, MatListModule, MatMenuModule, MatRadioModule,
-  MatSelectModule,
   MatStepperModule
 } from '@angular/material';
 import { NewQueryComponent } from './new-query/new-query.component';
 import { QTagsComponent } from './query/q-tags/q-tags.component';
+import { QGroupComponent } from './browse/q-group/q-group.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +39,7 @@ import { QTagsComponent } from './query/q-tags/q-tags.component';
     EditableValueComponent,
     NewQueryComponent,
     QTagsComponent,
+    QGroupComponent,
   ],
   imports: [
     BrowserModule,

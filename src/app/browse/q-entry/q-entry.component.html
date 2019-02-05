@@ -1,4 +1,9 @@
 <div (mouseenter)="visible=true" (mouseleave)="visible=false" class="valign-wrapper">
+  <div class="col s1">
+    <label>
+      <input type="checkbox" [(ngModel)]="query.selected" class="filled-in"><span></span>
+    </label>
+  </div>
   <div class="col s8" style="margin-left: 0;">
     <a [routerLink]="['/edit', query.id]"><span>{{query.name}}</span></a> - <span>{{query.endpoint}}</span>
     <mat-chip-list>
@@ -7,10 +12,5 @@
   </div>
   <div class="col s2">
     <button class="btn btn-small btn-flat materialize-red right" (click)="handleDelete()">Smazat</button>
-  </div>
-  <div class="col s1 offset-s1 right">
-    <label>
-      <input type="checkbox" [(ngModel)]="query.selected" class="filled-in"><span></span>
-    </label>
   </div>
 </div>

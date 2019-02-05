@@ -10,18 +10,18 @@
     <div class="col s12 center-align">
       <span>Seskupit dotazy podle:</span>
       <form action="#" [formGroup]="formGroupBy" style="display: inline;">
-      <label>
-        <input type="radio" formControlName="groupBy" value="none"/>
-        <span class="group-by-select">Ničeho</span>
-      </label>
-      <label>
-        <input type="radio" formControlName="groupBy" value="endpoint"/>
-        <span class="group-by-select">Endpointu</span>
-      </label>
-      <label>
-        <input type="radio" formControlName="groupBy" value="tag"/>
-        <span class="group-by-select">Tagu</span>
-      </label>
+        <label>
+          <input type="radio" formControlName="groupBy" value="none"/>
+          <span class="group-by-select">Ničeho</span>
+        </label>
+        <label>
+          <input type="radio" formControlName="groupBy" value="endpoint"/>
+          <span class="group-by-select">Endpointu</span>
+        </label>
+        <label>
+          <input type="radio" formControlName="groupBy" value="tag"/>
+          <span class="group-by-select">Tagu</span>
+        </label>
       </form>
     </div>
   </div>
@@ -68,22 +68,10 @@
       <div class="collection" *ngIf="queries.length !== 0">
         <mat-selection-list>
           <div class="collection-item" *ngIf="formGroupBy.value['groupBy'] === 'none'">
-              <app-q-entry *ngFor="let query of queries" [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
+            <app-q-entry *ngFor="let query of queries" [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
           </div>
-          <div class="collection-item" *ngIf="formGroupBy.value['groupBy'] === 'endpoint'">
-            <div *ngFor="let endpoint of endpoints">
-              <h5>{{endpoint}}</h5>
-                <app-q-entry *ngFor="let query of getQueriesByEndpoint(endpoint)" [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
-              <div class="divider"></div>
-            </div>
-          </div>
-          <div class="collection-item" *ngIf="formGroupBy.value['groupBy'] === 'tag'">
-            <div *ngFor="let tag of tags">
-              <h5>{{tag}}</h5>
-                <app-q-entry *ngFor="let query of getQueriesByTag(tag)" [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
-              <div class="divider"></div>
-            </div>
-          </div>
+          <app-q-group [values]="endpoints" [queries]="queries" [filterFunction]="filterByEndpoint" (deleteRequest)="handleDeleteRequest($event)" *ngIf="formGroupBy.value['groupBy'] === 'endpoint'"></app-q-group>
+          <app-q-group [values]="tags" [queries]="queries" [filterFunction]="filterByTag" (deleteRequest)="handleDeleteRequest($event)" *ngIf="formGroupBy.value['groupBy'] === 'tag'"></app-q-group>
         </mat-selection-list>
 
         Označeno dotazů: {{selectedQueries}}

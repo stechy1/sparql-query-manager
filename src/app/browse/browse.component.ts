@@ -94,8 +94,8 @@ export class BrowseComponent implements OnInit {
     });
   }
 
-  handleDeleteRequest(id: string) {
-    this._qservice.delete(id);
+  handleDeleteRequest(query: Query) {
+    this._qservice.delete(query.id);
   }
 
   handleExport() {
@@ -128,6 +128,14 @@ export class BrowseComponent implements OnInit {
     }
   }
 
+  filterByEndpoint(query: Query, endpoint: string): boolean {
+    return query.endpoint === endpoint;
+  }
+
+  filterByTag(query: Query, tag: string): boolean {
+    return query.tags.indexOf(tag) !== -1;
+  }
+
   get queries() {
     return this._queries;
   }
@@ -140,13 +148,13 @@ export class BrowseComponent implements OnInit {
     return this._qservice.tags;
   }
 
-  getQueriesByEndpoint(endpoint: string): Query[] {
-    return this._queries.filter(query => query.endpoint === endpoint);
-  }
-
-  getQueriesByTag(tag: string): Query[] {
-    return this._queries.filter(query => query.tags.indexOf(tag) !== -1);
-  }
+  // getQueriesByEndpoint(endpoint: string): Query[] {
+  //   return this._queries.filter(query => query.endpoint === endpoint);
+  // }
+  //
+  // getQueriesByTag(tag: string): Query[] {
+  //   return this._queries.filter(query => query.tags.indexOf(tag) !== -1);
+  // }
 
   get selectedQueries(): number {
     return this._queries.filter(value => value.selected).length;
