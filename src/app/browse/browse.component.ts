@@ -33,6 +33,7 @@ export class BrowseComponent implements OnInit {
   }
 
   private _handleOrderBy(orderBy: string, orderType: string) {
+    this._queries.sort((a, b) => a.name.localeCompare(b.name));
     switch (orderBy) {
       case 'last_run':
         this._queries.sort((a, b) => a.lastRun - b.lastRun);
@@ -42,9 +43,6 @@ export class BrowseComponent implements OnInit {
         break;
       case 'count_of_run':
         this._queries.sort((a, b) => a.runCount - b.runCount);
-        break;
-      case 'alphabeticaly':
-        this._queries.sort((a, b) => a.name.localeCompare(b.name));
         break;
     }
     if (orderType === 'descending') {
