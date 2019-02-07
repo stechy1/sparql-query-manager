@@ -27,6 +27,7 @@ import {
 import { NewQueryComponent } from './new-query/new-query.component';
 import { QTagsComponent } from './query/q-tags/q-tags.component';
 import { QGroupComponent } from './browse/q-group/q-group.component';
+import { FusejsModule } from 'angular-fusejs';
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { QGroupComponent } from './browse/q-group/q-group.component';
     MatIconModule,
     MatListModule,
     MatRadioModule,
-    MatMenuModule
+    MatMenuModule,
+    FusejsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,6 +1,6 @@
 <div class="collection-item">
   <div *ngFor="let value of values">
-    <div class="row">
+    <div class="row" *ngIf="getQueries(value).length > 0">
       <div class="col s12">
         <label>
           <input type="checkbox" class="filled-in" [(ngModel)]="groupInformations[value].checked" (change)="handleCheckboxChange($event)" value="{{value}}"><span>{{value}}</span>

@@ -1,10 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { QueryService } from '../query/query.service';
 import { Query } from '../query/query';
-import { MatSelectionList, MatSelectionListChange } from '@angular/material';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { groupBy } from 'rxjs/operators';
 
 @Component({
   selector: 'app-browse',
@@ -14,11 +12,10 @@ import { groupBy } from 'rxjs/operators';
 export class BrowseComponent implements OnInit {
 
   private _queries: Query[];
-  // @ViewChild('querySelectionList') private _queryList: MatSelectionList;
-  // selectedQueries: string[] = [];
   formGroupBy: FormGroup;
   formOrderBy: FormGroup;
   formOrderType: FormGroup;
+  searchedValue: string;
 
   constructor(private _qservice: QueryService, private _route: ActivatedRoute, private _router: Router) { }
 
