@@ -78,7 +78,7 @@
         <div class="col s12 button-bar-wrapper">
           <div class="button-bar">
             <div class="col s6 m1 center-on-small-only">
-              <button class="btn btn-tiny" (click)="handleExport()">Export</button>
+              <button class="btn btn-tiny" (click)="handleExport()" [disabled]="selectedQueries === 0">Export</button>
             </div>
             <div class="col s6 m1 offset-m1 center-on-small-only">
               <button [matMenuTriggerFor]="importMenu" class="btn btn-tiny center-align">Import</button>
@@ -94,10 +94,10 @@
               </mat-menu>
             </div>
             <div class="col s4 m2 offset-m3 offset-l3 center-on-small-only">
-              <button class="btn btn-tiny" (click)="handleSelectAll()">Vybrat vše</button>
+              <button class="btn btn-tiny" (click)="handleSelectAll()" [disabled]="selectedQueries === queries.length">Vybrat vše</button>
             </div>
             <div class="col s4 m2 center-on-small-only">
-              <button class="btn btn-tiny" (click)="handleSelectNone()">Zrušit vše</button>
+              <button class="btn btn-tiny" (click)="handleSelectNone()" [disabled]="selectedQueries === 0">Zrušit vše</button>
             </div>
             <div class="col s4 m2 center-on-small-only">
               <button class="btn btn-tiny red" (click)="handleDeleteAll()">Smazat vše</button>
