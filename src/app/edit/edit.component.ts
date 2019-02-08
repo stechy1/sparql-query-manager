@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { QueryService } from '../query/query.service';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Query } from '../query/query';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { QParamsComponent } from '../query/q-params/q-params.component';
 
 @Component({
   selector: 'app-edit',
@@ -22,6 +23,7 @@ export class EditComponent implements OnInit {
 
   private _query: Query;
   saveProgress: string;
+  @ViewChild(QParamsComponent) paramsComponent: QParamsComponent;
 
   constructor(private _route: ActivatedRoute, private _qservice: QueryService, private _location: Location) { }
 
@@ -53,5 +55,9 @@ export class EditComponent implements OnInit {
   handleManualQuerySave() {
     this.saveProgress = 'notSaved';
     this._qservice.performSave();
+  }
+
+  handleUpdateParams(event: string) {
+    this.paramsComponent.findVariables(event, this._query.params);
   }
 }

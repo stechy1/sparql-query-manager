@@ -14,6 +14,7 @@ export class QContentComponent implements OnInit {
   private _content: string;
   loading: boolean;
   @Output() dataChanged = new EventEmitter<Query>();
+  @Output() updateContentOnly = new EventEmitter<string>();
 
   constructor() { }
 
@@ -42,6 +43,14 @@ export class QContentComponent implements OnInit {
 
   set content(value: string) {
     this._content = value;
+  }
+
+  handleUpdateContent() {
+    if (this._query.content === this.content) {
+      return;
+    }
+
+    this.updateContentOnly.emit(this.content);
   }
 
   handleSaveContent() {

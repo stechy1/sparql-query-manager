@@ -44,7 +44,6 @@ export class QueryService {
    */
   private _loadQueriesInternal(queries: QueryStorageEntry[]): void {
     for (const query of queries) {
-      console.log(query);
       this._queries.push(QueryService.parseQuery(query));
     }
   }

@@ -56,9 +56,7 @@ export class NewQueryComponent implements OnInit {
 
   handleStepChange(event: StepperSelectionEvent) {
     if (event.selectedIndex === 4) {
-      this._paramsComponent.content = this.content;
-      this._paramsComponent.params = {};
-      this._paramsComponent.findVariables();
+      this._paramsComponent.findVariables(this.content, {});
     }
   }
 }

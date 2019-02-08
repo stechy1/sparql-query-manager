@@ -2,7 +2,7 @@
 <div class="row">
   <div class="col s12 m7 offset-l1">
     <app-q-endpoint [query]="query" (dataChanged)="handleQueryChange()"></app-q-endpoint>
-    <app-q-content [query]="query" (dataChanged)="handleQueryChange()"></app-q-content>
+    <app-q-content [query]="query" (dataChanged)="handleQueryChange()" (updateContentOnly)="handleUpdateParams($event)"></app-q-content>
   </div>
   <div class="col s12 m5 l3">
     <app-q-name [query]="query" (dataChanged)="handleQueryChange()"></app-q-name>
