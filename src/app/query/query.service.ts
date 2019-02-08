@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Query } from './query';
 import { LocalStorageService } from 'angular-2-local-storage';
-import { query } from '@angular/animations';
 
 interface QueryStorageEntry {
   _id: string;
@@ -10,6 +9,7 @@ interface QueryStorageEntry {
   _tags: string[];
   _endpoint: string;
   _content: string;
+  _params: string[];
   _created: number;
   _lastRun: number;
   _runCount: number;
@@ -29,8 +29,8 @@ export class QueryService {
   }
 
   private static parseQuery(input: QueryStorageEntry): Query {
-    return new Query(input._id, input._name, input._endpoint, input._tags, input._content, input._description,
-      input._created, input._lastRun, input._runCount);
+    return new Query(input._id, input._name, input._endpoint, input._tags, input._content, input._params,
+      input._description, input._created, input._lastRun, input._runCount);
   }
 
   private static makeID(): string {
@@ -92,7 +92,7 @@ export class QueryService {
    * @param variables Proměnné, které se vyskytují v dotazu
    */
   create(name: string, endpoint: string, description: string, tags: string[], content: string, variables: {}) {
-    const query = new Query(QueryService.makeID(), name, endpoint, tags, content, description, new Date().getTime(), null, 0);
+    const query = new Query(QueryService.makeID(), name, endpoint, tags, content, variables, description, new Date().getTime(), null, 0);
     this._queries.push(query);
     this._saveQueries();
   }

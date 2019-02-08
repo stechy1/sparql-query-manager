@@ -8,7 +8,7 @@
     <app-q-name [query]="query" (dataChanged)="handleQueryChange()"></app-q-name>
     <app-q-description [query]="query" (dataChanged)="handleQueryChange()"></app-q-description>
     <app-q-tags [tags]="query.tags" (dataChanged)="handleQueryChange()"></app-q-tags>
-    <app-q-params></app-q-params>
+    <app-q-params [content]="query.content" [params]="query.params"></app-q-params>
   </div>
 </div>
 

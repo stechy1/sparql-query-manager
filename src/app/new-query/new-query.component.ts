@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Query } from '../query/query';
 import { QueryService } from '../query/query.service';
 import { Router } from '@angular/router';
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { QParamsComponent } from '../query/q-params/q-params.component';
 
 @Component({
   selector: 'app-new-query',
@@ -14,11 +16,14 @@ export class NewQueryComponent implements OnInit {
   nameFormGroup: FormGroup;
   informationFormGroup: FormGroup;
   tags: string[];
+  variables: {};
   queryFormGroup: FormGroup;
-  variablesFormGroup: FormGroup;
+
+  @ViewChild(QParamsComponent) private _paramsComponent: QParamsComponent;
 
   constructor(private _formBuilder: FormBuilder, private _queryService: QueryService, private _router: Router) {
     this.tags = [];
+    this.variables = {};
   }
 
   ngOnInit() {
@@ -32,9 +37,6 @@ export class NewQueryComponent implements OnInit {
     this.queryFormGroup = this._formBuilder.group({
       queryContent: ['', Validators.required]
     });
-    this.variablesFormGroup = this._formBuilder.group({
-      queryVariables: []
-    });
   }
 
   handleNewQuery() {
@@ -42,11 +44,21 @@ export class NewQueryComponent implements OnInit {
     const endpoint = this.informationFormGroup.value['queryEndpoint'];
     const description = this.informationFormGroup.value['queryDescription'];
     const content = this.queryFormGroup.value['queryContent'];
-    // const variables = this.variablesFormGroup.value['variables'];
-    const variables = {};
 
-    this._queryService.create(name, endpoint, description, this.tags, content, variables);
+    this._queryService.create(name, endpoint, description, this.tags, content, this.variables);
 
     this._router.navigate(['/browse']);
+  }
+
+  get content(): string {
+    return this.queryFormGroup.value['queryContent'];
+  }
+
+  handleStepChange(event: StepperSelectionEvent) {
+    if (event.selectedIndex === 4) {
+      this._paramsComponent.content = this.content;
+      this._paramsComponent.params = {};
+      this._paramsComponent.findVariables();
+    }
   }
 }

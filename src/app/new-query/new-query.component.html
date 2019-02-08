@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col s12 m8 offset-m2">
-    <mat-horizontal-stepper [linear]="false" #stepper>
+    <mat-horizontal-stepper [linear]="false" #stepper (selectionChange)="handleStepChange($event)">
       <mat-step [stepControl]="nameFormGroup">
         <form [formGroup]="nameFormGroup">
           <ng-template matStepLabel>Název</ng-template>
@@ -73,9 +73,11 @@
         </form>
       </mat-step>
 
-      <mat-step [formGroup]="variablesFormGroup">
-        <form [formGroup]="variablesFormGroup">
+      <mat-step>
+        <form>
           <ng-template matStepLabel>Proměnné</ng-template>
+
+          <app-q-params></app-q-params>
         </form>
 
         <div>

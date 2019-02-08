@@ -1,6 +1,19 @@
 <div class="card blue-grey darken-1">
   <div class="card-content white-text">
     <span class="card-title">Parametry dotazu</span>
-    <span>Seznam parametrů dotazu</span>
+    <div class="row">
+      <div class="col s4">Název</div>
+      <div class="col s4">Výchozí hodnota</div>
+      <div class="col s4">Aktuální hodnota</div>
+    </div>
+    <div class="row" *ngFor="let key of keys">
+      <div class="col s4">{{key}}</div>
+      <div class="col s4">
+        <app-editable-value [value]="params[key]['defaultValue']" (valueChanged)="handleDefaultValueChange($event, key)"></app-editable-value>
+      </div>
+      <div class="col s4">
+        <app-editable-value [value]="params[key]['usedValue']" (valueChanged)="handleUsedValueChange($event, key)"></app-editable-value>
+      </div>
+    </div>
   </div>
 </div>

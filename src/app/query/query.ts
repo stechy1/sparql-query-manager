@@ -3,7 +3,7 @@ export class Query {
   private _selected = false;
 
   constructor(private _id: string, private _name: string, private _endpoint: string, private _tags: string[],
-              private _content: string, private _description: string,
+              private _content: string,  private _params: {}, private _description: string,
               private _created: number, private _lastRun: number, private _runCount: number) { }
 
   static structureGuard(key: string, value: any) {
@@ -88,6 +88,10 @@ export class Query {
 
   set runCount(value) {
     this._runCount = value;
+  }
+
+  get params(): {} {
+    return this._params;
   }
 
   get selected(): boolean {
