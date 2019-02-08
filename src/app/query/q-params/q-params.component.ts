@@ -12,8 +12,6 @@ export class QParamsComponent implements OnInit {
   @Input() params = {};
   @Input() content = '';
 
-  private _paramsToRemove: string[];
-
   constructor() { }
 
   private static getIndicesOf(searchStr, str): number[] {
@@ -38,13 +36,6 @@ export class QParamsComponent implements OnInit {
       if (content.length === 0) { // Není tu žádný obsah, nemá smysl hledat nějaké parametry
         console.log('Obsah dotazu je prázdný, nemá smysl hledat parametry...');
         return;
-      }
-
-      this._paramsToRemove = [];
-      for (const param in this.params) {
-        if (content.indexOf(`${QParamsComponent.PARAMETER_SEPARATOR}${param}${QParamsComponent.PARAMETER_SEPARATOR}`) === -1) {
-          this._paramsToRemove.push(param);
-        }
       }
 
       const separatorIndexes = QParamsComponent.getIndicesOf(QParamsComponent.PARAMETER_SEPARATOR, content);
@@ -74,8 +65,9 @@ export class QParamsComponent implements OnInit {
 
   get variablesWithoutUnused(): {} {
     const result = {};
+
     for (const param in this.params) {
-      if (this._paramsToRemove.indexOf(param) === -1) {
+      if (this.content.indexOf(`${QParamsComponent.PARAMETER_SEPARATOR}${param}${QParamsComponent.PARAMETER_SEPARATOR}`) !== -1) {
         result[param] = this.params[param];
       }
     }
@@ -84,7 +76,7 @@ export class QParamsComponent implements OnInit {
   }
 
   isParameterToRemove(parameter: string): boolean {
-    return this._paramsToRemove.indexOf(parameter) !== -1;
+    return this.variablesWithoutUnused[parameter] === undefined;
   }
 
   handleDefaultValueChange(event: string | number, key: string) {
