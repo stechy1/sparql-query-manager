@@ -24,6 +24,7 @@ export class EditComponent implements OnInit {
   private _query: Query;
   saveProgress: string;
   @ViewChild(QParamsComponent) paramsComponent: QParamsComponent;
+  private _params: {};
 
   constructor(private _route: ActivatedRoute, private _qservice: QueryService, private _location: Location) { }
 
@@ -31,6 +32,7 @@ export class EditComponent implements OnInit {
     const id = this._route.snapshot.paramMap.get('id');
     this._query = this._qservice.byId(id);
     this.saveProgress = 'notSaved';
+    this._params = this._query.params;
   }
 
   get query(): Query {
@@ -42,6 +44,8 @@ export class EditComponent implements OnInit {
       return;
     }
 
+    this._params = this.paramsComponent.variablesWithoutUnused;
+    this._query.params = this._params;
     this._qservice.performSave();
     this.saveProgress = 'notSaved';
   }
@@ -54,10 +58,12 @@ export class EditComponent implements OnInit {
 
   handleManualQuerySave() {
     this.saveProgress = 'notSaved';
+    this._params = this.paramsComponent.variablesWithoutUnused;
+    this._query.params = this._params;
     this._qservice.performSave();
   }
 
   handleUpdateParams(event: string) {
-    this.paramsComponent.findVariables(event, this._query.params);
+    this._params = this.paramsComponent.findVariables(event, this._params);
   }
 }

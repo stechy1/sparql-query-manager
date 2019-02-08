@@ -12,6 +12,8 @@ export class QParamsComponent implements OnInit {
   @Input() params = {};
   @Input() content = '';
 
+  private _paramsToRemove: string[];
+
   constructor() { }
 
   private static getIndicesOf(searchStr, str): number[] {
@@ -32,11 +34,17 @@ export class QParamsComponent implements OnInit {
     this.findVariables(this.content, this.params);
   }
 
-  findVariables(content: string, params: {}) {
-    // if (Object.keys(params).length === 0) { // Parametry nebyly nalezeny, nebo žádné neexistují
+  findVariables(content: string, params: {}): {} {
       if (content.length === 0) { // Není tu žádný obsah, nemá smysl hledat nějaké parametry
         console.log('Obsah dotazu je prázdný, nemá smysl hledat parametry...');
         return;
+      }
+
+      this._paramsToRemove = [];
+      for (const param in this.params) {
+        if (content.indexOf(`${QParamsComponent.PARAMETER_SEPARATOR}${param}${QParamsComponent.PARAMETER_SEPARATOR}`) === -1) {
+          this._paramsToRemove.push(param);
+        }
       }
 
       const separatorIndexes = QParamsComponent.getIndicesOf(QParamsComponent.PARAMETER_SEPARATOR, content);
@@ -47,20 +55,36 @@ export class QParamsComponent implements OnInit {
 
       for (let i = 0; i < separatorIndexes.length; i += 2) {
         const variable = content.substring(separatorIndexes[i] + 1, separatorIndexes[i + 1]);
-        console.log(variable);
         if (!this.params[variable]) {
           this.params[variable] = {'defaultValue': '', 'usedValue': ''};
         } else {
-          this.params[variable] = params[variable];
+          if (params[variable]) {
+            this.params[variable] = params[variable];
+          }
         }
       }
 
       this.content = content;
-    // }
+      return this.params;
   }
 
   get keys(): string[] {
     return Object.keys(this.params);
+  }
+
+  get variablesWithoutUnused(): {} {
+    const result = {};
+    for (const param in this.params) {
+      if (this._paramsToRemove.indexOf(param) === -1) {
+        result[param] = this.params[param];
+      }
+    }
+
+    return result;
+  }
+
+  isParameterToRemove(parameter: string): boolean {
+    return this._paramsToRemove.indexOf(parameter) !== -1;
   }
 
   handleDefaultValueChange(event: string | number, key: string) {

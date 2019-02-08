@@ -45,7 +45,7 @@ export class NewQueryComponent implements OnInit {
     const description = this.informationFormGroup.value['queryDescription'];
     const content = this.queryFormGroup.value['queryContent'];
 
-    this._queryService.create(name, endpoint, description, this.tags, content, this.variables);
+    this._queryService.create(name, endpoint, description, this.tags, content, this._paramsComponent.variablesWithoutUnused);
 
     this._router.navigate(['/browse']);
   }
@@ -56,7 +56,7 @@ export class NewQueryComponent implements OnInit {
 
   handleStepChange(event: StepperSelectionEvent) {
     if (event.selectedIndex === 4) {
-      this._paramsComponent.findVariables(this.content, {});
+      this.variables = this._paramsComponent.findVariables(this.content, this.variables);
     }
   }
 }

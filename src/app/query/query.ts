@@ -94,6 +94,10 @@ export class Query {
     return this._params;
   }
 
+  set params(value: {}) {
+    this._params = value;
+  }
+
   get selected(): boolean {
     return this._selected;
   }

@@ -7,7 +7,7 @@
       <div class="col s4">Aktuální hodnota</div>
     </div>
     <div class="row" *ngFor="let key of keys">
-      <div class="col s4">{{key}}</div>
+      <div class="col s4"><span [style.text-decoration]="isParameterToRemove(key) ? 'line-through' : 'inherit'">{{key}}</span></div>
       <div class="col s4">
         <app-editable-value [value]="params[key]['defaultValue']" (valueChanged)="handleDefaultValueChange($event, key)"></app-editable-value>
       </div>
