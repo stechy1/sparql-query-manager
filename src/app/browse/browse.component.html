@@ -1,5 +1,5 @@
 <section>
-  <div class="row" *ngIf="queries.length !== 0">
+  <div class="row" [style.visibility]="queries.length === 0 ? 'hidden' : 'visible'">
     <div class="col s12 offset-m2 m8">
       <label>
         <input type="text" placeholder="Najít dotaz..." #inputSearch>
