@@ -2,7 +2,7 @@
   <div class="row" *ngIf="queries.length !== 0">
     <div class="col s12 offset-m2 m8">
       <label>
-        <input type="text" placeholder="Najít dotaz..." [(ngModel)]="searchedValue">
+        <input type="text" placeholder="Najít dotaz..." #inputSearch>
       </label>
     </div>
   </div>
@@ -68,10 +68,10 @@
       <div class="collection" *ngIf="queries.length !== 0">
         <mat-selection-list>
           <div class="collection-item" *ngIf="formGroupBy.value['groupBy'] === 'none'">
-            <app-q-entry *ngFor="let query of (queries | fusejs:searchedValue:{keys: ['name', 'tags']})" [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
+            <app-q-entry *ngFor="let query of fuseQueries" [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
           </div>
-          <app-q-group [values]="endpoints" [queries]="(queries | fusejs:searchedValue:{keys: ['name', 'tags']})" [filterFunction]="filterByEndpoint" (deleteRequest)="handleDeleteRequest($event)" *ngIf="formGroupBy.value['groupBy'] === 'endpoint'"></app-q-group>
-          <app-q-group [values]="tags" [queries]="(queries | fusejs:searchedValue:{keys: ['name', 'tags']})" [filterFunction]="filterByTag" (deleteRequest)="handleDeleteRequest($event)" *ngIf="formGroupBy.value['groupBy'] === 'tag'"></app-q-group>
+          <app-q-group [values]="endpoints" [queries]="fuseQueries" [filterFunction]="filterByEndpoint" (deleteRequest)="handleDeleteRequest($event)" *ngIf="formGroupBy.value['groupBy'] === 'endpoint'"></app-q-group>
+          <app-q-group [values]="tags" [queries]="fuseQueries" [filterFunction]="filterByTag" (deleteRequest)="handleDeleteRequest($event)" *ngIf="formGroupBy.value['groupBy'] === 'tag'"></app-q-group>
         </mat-selection-list>
 
         Označeno dotazů: {{selectedQueries}}

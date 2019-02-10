@@ -1,54 +1,62 @@
-import { Component, OnInit} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { QueryService } from '../query/query.service';
 import { Query } from '../query/query';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FusejsService } from 'angular-fusejs';
 
 @Component({
   selector: 'app-browse',
   templateUrl: './browse.component.html',
   styleUrls: ['./browse.component.css']
 })
-export class BrowseComponent implements OnInit {
+export class BrowseComponent implements OnInit, AfterViewInit {
 
-  private _queries: Query[];
+  queries: Query[];
+  fuseQueries: Query[] = [];
   formGroupBy: FormGroup;
   formOrderBy: FormGroup;
   formOrderType: FormGroup;
   searchedValue: string;
+  @ViewChild('inputSearch') inputSearch: ElementRef;
 
-  constructor(private _qservice: QueryService, private _route: ActivatedRoute, private _router: Router) { }
+  constructor(private _qservice: QueryService, private _fusejs: FusejsService,
+              private _route: ActivatedRoute, private _router: Router) { }
 
-  private _import(input: HTMLInputElement, override: boolean) {
+  private _import(input: HTMLInputElement, override: boolean): Promise<Query[]> {
     const reader = new FileReader();
     const self = this;
-    reader.onload = () => {
-      const text = <string> reader.result;
-      self._qservice.import(text, override);
-    };
-    reader.readAsText(input.files[0]);
+    return new Promise<Query[]>((resolve) => {
+      reader.onload = () => {
+        const text = <string> reader.result;
+        self._qservice.import(text, override);
+        resolve(self._qservice.allQueries());
+      };
+      reader.readAsText(input.files[0]);
+    });
   }
 
   private _handleOrderBy(orderBy: string, orderType: string) {
-    this._queries.sort((a, b) => a.name.localeCompare(b.name));
+    this.fuseQueries.sort((a, b) => a.name.localeCompare(b.name));
     switch (orderBy) {
       case 'last_run':
-        this._queries.sort((a, b) => a.lastRun - b.lastRun);
+        this.fuseQueries.sort((a, b) => a.lastRun - b.lastRun);
         break;
       case 'date_of_creation':
-        this._queries.sort((a, b) => a.created - b.created);
+        this.fuseQueries.sort((a, b) => a.created - b.created);
         break;
       case 'count_of_run':
-        this._queries.sort((a, b) => a.runCount - b.runCount);
+        this.fuseQueries.sort((a, b) => a.runCount - b.runCount);
         break;
     }
     if (orderType === 'descending') {
-      this._queries.reverse();
+      this.fuseQueries.reverse();
     }
   }
 
   ngOnInit() {
-    this._queries = this._qservice.allQueries();
+    this.queries = this._qservice.allQueries();
+    this.fuseQueries = [...this.queries];
     this.formGroupBy = new FormGroup({
       groupBy: new FormControl('none')
     });
@@ -89,32 +97,59 @@ export class BrowseComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit(): void {
+    (<HTMLInputElement>this.inputSearch.nativeElement).onkeyup = ev => {
+      this.searchedValue = (<HTMLInputElement>ev.target).value;
+      const fuseQueries = this._fusejs.searchList(this.queries, this.searchedValue, {keys: ['name', 'tags']});
+      this.fuseQueries.splice(0);
+      for (const query of fuseQueries) {
+        this.fuseQueries.push(query);
+      }
+    };
+  }
+
   handleDeleteRequest(query: Query) {
-    this._qservice.delete(query.id);
+    this._qservice
+    .delete(query.id)
+    .then(() => {
+      const index = this.fuseQueries.indexOf(query);
+      this.fuseQueries.splice(index, 1);
+    });
   }
 
   handleExport() {
     const a = document.createElement('a');
-    const file = new Blob([this._qservice.export(this._queries.filter(value => value.selected))], {type: 'text/plain'});
+    const file = new Blob([this._qservice.export(this.queries.filter(value => value.selected))], {type: 'text/plain'});
     a.href = URL.createObjectURL(file);
     a.download = prompt('Zadejte název souboru...', 'queries.json');
     a.click();
   }
 
   handleImportOverride(event: Event) {
-    this._import(<HTMLInputElement> event.target, true);
+    this._import(<HTMLInputElement> event.target, true)
+    .then(queries => {
+      this.fuseQueries.splice(0);
+      for (const query of queries) {
+        this.fuseQueries.push(query);
+      }
+    });
   }
 
   handleImportAppend(event: Event) {
-    this._import(<HTMLInputElement> event.target, false);
+    this._import(<HTMLInputElement> event.target, false)
+    .then(queries => {
+      for (const query of queries) {
+        this.fuseQueries.push(query);
+      }
+    });
   }
 
   handleSelectAll() {
-    this._queries.forEach(query => query.selected = true);
+    this.queries.forEach(query => query.selected = true);
   }
 
   handleSelectNone() {
-    this._queries.forEach(query => query.selected = false);
+    this.queries.forEach(query => query.selected = false);
   }
 
   handleDeleteAll() {
@@ -131,10 +166,6 @@ export class BrowseComponent implements OnInit {
     return query.tags.indexOf(tag) !== -1;
   }
 
-  get queries() {
-    return this._queries;
-  }
-
   get endpoints(): string[] {
     return this._qservice.endpoints;
   }
@@ -144,6 +175,6 @@ export class BrowseComponent implements OnInit {
   }
 
   get selectedQueries(): number {
-    return this._queries.filter(value => value.selected).length;
+    return this.queries.filter(value => value.selected).length;
   }
 }

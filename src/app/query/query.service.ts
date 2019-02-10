@@ -101,10 +101,17 @@ export class QueryService {
    *
    * @param id ID záznamu, který se má odstranit
    */
-  delete(id: string) {
-    const index = this._queries.findIndex(value => value.id === id);
-    this._queries.splice(index, 1);
-    this._saveQueries();
+  delete(id: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const index = this._queries.findIndex(value => value.id === id);
+      if (index === -1) {
+        reject();
+      }
+
+      this._queries.splice(index, 1);
+      this._saveQueries();
+      resolve();
+    });
   }
 
   /**
