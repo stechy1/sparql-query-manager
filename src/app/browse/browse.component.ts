@@ -3,7 +3,7 @@ import { QueryService } from '../query/query.service';
 import { Query } from '../query/query';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FusejsService } from 'angular-fusejs';
+import * as Fuse from 'fuse.js';
 
 @Component({
   selector: 'app-browse',
@@ -19,8 +19,9 @@ export class BrowseComponent implements OnInit, AfterViewInit {
   formOrderType: FormGroup;
   searchedValue: string;
   @ViewChild('inputSearch') inputSearch: ElementRef;
+  private _fusejs = new Fuse([], {keys: ['name', 'tags']});
 
-  constructor(private _qservice: QueryService, private _fusejs: FusejsService,
+  constructor(private _qservice: QueryService,
               private _route: ActivatedRoute, private _router: Router) { }
 
   private _import(input: HTMLInputElement, override: boolean): Promise<Query[]> {
@@ -100,7 +101,15 @@ export class BrowseComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     (<HTMLInputElement>this.inputSearch.nativeElement).onkeyup = ev => {
       this.searchedValue = (<HTMLInputElement>ev.target).value;
-      const fuseQueries = this._fusejs.searchList(this.queries, this.searchedValue, {keys: ['name', 'tags']});
+      if (this.searchedValue === '') {
+        this.fuseQueries.splice(0);
+        for (const query of this.queries) {
+          this.fuseQueries.push(query);
+        }
+        return;
+      }
+      this._fusejs.setCollection(this.queries);
+      const fuseQueries = this._fusejs.search(this.searchedValue);
       this.fuseQueries.splice(0);
       for (const query of fuseQueries) {
         this.fuseQueries.push(query);
