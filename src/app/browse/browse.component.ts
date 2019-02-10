@@ -4,6 +4,7 @@ import { Query } from '../query/query';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as Fuse from 'fuse.js';
+import { FuseOptions } from 'fuse.js';
 
 @Component({
   selector: 'app-browse',
@@ -12,6 +13,7 @@ import * as Fuse from 'fuse.js';
 })
 export class BrowseComponent implements OnInit, AfterViewInit {
 
+  private _fusejs: Fuse<Query, FuseOptions<Query>>;
   queries: Query[];
   fuseQueries: Query[] = [];
   formGroupBy: FormGroup;
@@ -19,7 +21,6 @@ export class BrowseComponent implements OnInit, AfterViewInit {
   formOrderType: FormGroup;
   searchedValue: string;
   @ViewChild('inputSearch') inputSearch: ElementRef;
-  private _fusejs = new Fuse([], {keys: ['name', 'tags']});
 
   constructor(private _qservice: QueryService,
               private _route: ActivatedRoute, private _router: Router) { }
@@ -57,6 +58,7 @@ export class BrowseComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.queries = this._qservice.allQueries();
+    this._fusejs = new Fuse(this.queries, {keys: ['name', 'tags']});
     this.fuseQueries = [...this.queries];
     this.formGroupBy = new FormGroup({
       groupBy: new FormControl('none')
