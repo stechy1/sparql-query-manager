@@ -20,19 +20,29 @@ interface QueryStorageEntry {
 })
 export class QueryService {
 
+  // Konstanta obsahující název klíče, pod který se ukládají data o dotazech do local storage
   static readonly STORAGE_KEY = 'queries';
 
+  // Kolekce dotazů
   private _queries = new Array<Query>();
 
   constructor(private storage: LocalStorageService) {
     this._loadQueries();
   }
 
+  /**
+   * Metoda převede vstup na Query
+   *
+   * @param input Naparsovaný dotaz
+   */
   private static parseQuery(input: QueryStorageEntry): Query {
     return new Query(input._id, input._name, input._endpoint, input._tags, input._content, input._params,
       input._description, input._created, input._lastRun, input._runCount);
   }
 
+  /**
+   * Generátor náhodného ID dotazu
+   */
   private static makeID(): string {
     return '_' + Math.random().toString(36).substr(2, 9);
   }
@@ -157,6 +167,9 @@ export class QueryService {
     this._saveQueries();
   }
 
+  /**
+   * Vygeneruje pole všech endpointů, které jsou v dotazech
+   */
   get endpoints(): string[] {
     const endpointArray: string[] = [];
     this._queries.forEach(query => {
@@ -168,6 +181,9 @@ export class QueryService {
     .sort((a, b) => a.localeCompare(b));
   }
 
+  /**
+   * Vygeneruje pole všech tagů, které jsou v dotazech
+   */
   get tags(): string[] {
     const tagArray: string[] = [];
     this._queries.forEach(query => {
