@@ -1,23 +1,23 @@
 <div class="row" *ngIf="qfilterService.showActions">
   <div class="col s12 l8 offset-l2">
-    <div class="form-heading">Seskupit dotazy podle:</div>
+    <div class="form-heading primary-text-color">Seskupit dotazy podle:</div>
     <form action="#" [formGroup]="formGroupBy" class="control-form">
       <div class="form-entry">
         <label class="form-entry">
           <input type="radio" formControlName="groupBy" value="none"/>
-          <span class="group-by-select">Ničeho</span>
+          <span class="group-by-select primary-text-color">Ničeho</span>
         </label>
       </div>
       <div class="form-entry">
         <label class="form-entry">
           <input type="radio" formControlName="groupBy" value="endpoint"/>
-          <span class="group-by-select">Endpointu</span>
+          <span class="group-by-select primary-text-color">Endpointu</span>
         </label>
       </div>
       <div class="form-entry">
         <label class="form-entry">
           <input type="radio" formControlName="groupBy" value="tag"/>
-          <span class="group-by-select">Tagu</span>
+          <span class="group-by-select primary-text-color">Tagu</span>
         </label>
       </div>
     </form>
@@ -25,30 +25,30 @@
 </div>
 <div class="row" *ngIf="qfilterService.showActions">
   <div class="col s12 l8 offset-l2">
-    <div class="form-heading">Seřadit dotazy podle:</div>
+    <div class="form-heading primary-text-color">Seřadit dotazy podle:</div>
     <form action="#" [formGroup]="formOrderBy" class="control-form">
       <div class="form-entry">
         <label>
           <input type="radio" formControlName="orderBy" value="last_run"/>
-          <span class="group-by-select">Posledního spuštění</span>
+          <span class="group-by-select primary-text-color">Posledního spuštění</span>
         </label>
       </div>
       <div class="form-entry">
         <label>
           <input type="radio" formControlName="orderBy" value="date_of_creation"/>
-          <span class="group-by-select">Datumu vytvoření</span>
+          <span class="group-by-select primary-text-color">Datumu vytvoření</span>
         </label>
       </div>
       <div class="form-entry">
         <label>
           <input type="radio" formControlName="orderBy" value="count_of_run"/>
-          <span class="group-by-select">Počtu spuštění</span>
+          <span class="group-by-select primary-text-color">Počtu spuštění</span>
         </label>
       </div>
       <div class="form-entry">
         <label>
           <input type="radio" formControlName="orderBy" value="alphabeticaly"/>
-          <span class="group-by-select">Abecedně</span>
+          <span class="group-by-select primary-text-color">Abecedně</span>
         </label>
       </div>
     </form>
@@ -56,18 +56,18 @@
 </div>
 <div class="row" *ngIf="qfilterService.showActions">
   <div class="col s12 l8 offset-l2">
-    <div class="form-heading">Orientace řazení:</div>
+    <div class="form-heading primary-text-color">Orientace řazení:</div>
     <form action="#" [formGroup]="formOrderType" class="control-form">
       <div class="form-entry">
         <label>
           <input type="radio" formControlName="orderType" value="ascending"/>
-          <span class="group-by-select">Vzestupně</span>
+          <span class="group-by-select primary-text-color">Vzestupně</span>
         </label>
       </div>
       <div class="form-entry">
         <label>
           <input type="radio" formControlName="orderType" value="descending"/>
-          <span class="group-by-select">Sestupně</span>
+          <span class="group-by-select primary-text-color">Sestupně</span>
         </label>
       </div>
     </form>

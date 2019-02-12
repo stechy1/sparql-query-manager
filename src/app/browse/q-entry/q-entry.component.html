@@ -1,4 +1,4 @@
-<div (mouseenter)="visible=true" (mouseleave)="visible=false" class="valign-wrapper">
+<div (mouseenter)="visible=true" (mouseleave)="visible=false" class="valign-wrapper q-entry">
   <div class="col s1">
     <label>
       <input type="checkbox" [(ngModel)]="query.selected" class="filled-in"><span></span>
@@ -7,10 +7,10 @@
   <div class="col s8" style="margin-left: 0;">
     <a [routerLink]="['/edit', query.id]"><span>{{query.name}}</span></a> - <span>{{query.endpoint}}</span>
     <mat-chip-list>
-      <mat-chip *ngFor="let tag of query.tags">{{tag}}</mat-chip>
+      <mat-chip *ngFor="let tag of query.tags" class="light-primary-color">{{tag}}</mat-chip>
     </mat-chip-list>
   </div>
   <div class="col s2">
-    <button class="btn btn-small btn-flat materialize-red right" (click)="handleDelete()">Smazat</button>
+    <button class="btn btn-tiny red right" (click)="handleDelete()">Smazat</button>
   </div>
 </div>

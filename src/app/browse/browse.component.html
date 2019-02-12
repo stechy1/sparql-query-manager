@@ -11,7 +11,7 @@
     <div class="col s12 offset-m2 m8">
       <div class="collection" *ngIf="queries.length !== 0">
         <mat-selection-list>
-          <div class="collection-item" *ngIf="qFilterGroupSortingService.selectedGroup === 'none'">
+          <div class="q-group" *ngIf="qFilterGroupSortingService.selectedGroup === 'none'">
             <app-q-entry *ngFor="let query of qFilterGroupSortingService.fuseQueries" [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
           </div>
           <app-q-group [values]="endpoints" [queries]="qFilterGroupSortingService.fuseQueries" [filterFunction]="filterByEndpoint" (deleteRequest)="handleDeleteRequest($event)" *ngIf="qFilterGroupSortingService.selectedGroup === 'endpoint'"></app-q-group>
@@ -63,4 +63,4 @@
 
 </section>
 
-<a routerLink="/new" id="new-query" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">add</i></a>
+<a routerLink="/new" id="new-query" class="btn-floating btn-large waves-effect waves-light accent-color"><i class="material-icons">add</i></a>
