@@ -1,6 +1,7 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Query } from './query';
 import { LocalStorageService } from 'angular-2-local-storage';
+import { Observable } from 'rxjs';
 
 interface QueryStorageEntry {
   _id: string;
@@ -25,6 +26,7 @@ export class QueryService {
 
   // Kolekce dotazů
   private _queries = new Array<Query>();
+  private _queryCollectionChange = new EventEmitter<QueryCollectionChange>();
 
   constructor(private storage: LocalStorageService) {
     this._loadQueries();
@@ -53,8 +55,10 @@ export class QueryService {
    * @param queries Pole dotazů
    */
   private _loadQueriesInternal(queries: QueryStorageEntry[]): void {
-    for (const query of queries) {
-      this._queries.push(QueryService.parseQuery(query));
+    for (const rawQuery of queries) {
+      const query = QueryService.parseQuery(rawQuery);
+      this._queries.push(query);
+      this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.ADD, query: query});
     }
   }
 
@@ -104,6 +108,7 @@ export class QueryService {
     const query = new Query(QueryService.makeID(), name, endpoint, tags, content, variables, description, new Date().getTime(), null, 0);
     this._queries.push(query);
     this._saveQueries();
+    this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.ADD, query: query});
   }
 
   /**
@@ -111,17 +116,16 @@ export class QueryService {
    *
    * @param id ID záznamu, který se má odstranit
    */
-  delete(id: string): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
+  delete(id: string) {
       const index = this._queries.findIndex(value => value.id === id);
       if (index === -1) {
-        reject();
+        return;
       }
 
+      const query = this._queries[index];
       this._queries.splice(index, 1);
       this._saveQueries();
-      resolve();
-    });
+      this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.REMOVE, query: query});
   }
 
   /**
@@ -151,10 +155,9 @@ export class QueryService {
   import(text: string, override: boolean) {
     if (override) {
       this._queries.splice(0, this._queries.length);
-      this._loadQueriesInternal(JSON.parse(text));
-    } else {
-      this._loadQueriesInternal(JSON.parse(text));
     }
+
+    this._loadQueriesInternal(JSON.parse(text));
 
     this._saveQueries();
   }
@@ -165,6 +168,7 @@ export class QueryService {
   clear() {
     this._queries.splice(0, this._queries.length);
     this._saveQueries();
+    this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.CLEAR, query: undefined});
   }
 
   /**
@@ -196,4 +200,17 @@ export class QueryService {
     .filter(((value, index, array) => array.indexOf(value) === index))
     .sort((a, b) => a.localeCompare(b));
   }
+
+  get collectionChange(): Observable<QueryCollectionChange> {
+    return this._queryCollectionChange.asObservable();
+  }
+}
+
+export enum TypeOfQueryChange {
+  ADD, REMOVE, CLEAR
+}
+
+export interface QueryCollectionChange {
+  typeOfChange: TypeOfQueryChange;
+  query: Query;
 }

@@ -27,6 +27,10 @@ import {
 import { NewQueryComponent } from './new-query/new-query.component';
 import { QTagsComponent } from './query/q-tags/q-tags.component';
 import { QGroupComponent } from './browse/q-group/q-group.component';
+import { NavigationComponent } from './navigation/navigation.component';
+import { NavbarDirective } from './navigation/navbar.directive';
+import { SidebarDirective } from './navigation/sidebar.directive';
+import { BrowseToolbarComponent } from './browse/browse-toolbar/browse-toolbar.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +44,10 @@ import { QGroupComponent } from './browse/q-group/q-group.component';
     NewQueryComponent,
     QTagsComponent,
     QGroupComponent,
+    NavigationComponent,
+    NavbarDirective,
+    SidebarDirective,
+    BrowseToolbarComponent,
   ],
   imports: [
     BrowserModule,
@@ -61,6 +69,7 @@ import { QGroupComponent } from './browse/q-group/q-group.component';
     MatRadioModule,
     MatMenuModule
   ],
+  entryComponents: [BrowseToolbarComponent],
   providers: [],
   bootstrap: [AppComponent]
 })

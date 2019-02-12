@@ -1,0 +1,75 @@
+<div class="row" *ngIf="qfilterService.showActions">
+  <div class="col s12 l8 offset-l2">
+    <div class="form-heading">Seskupit dotazy podle:</div>
+    <form action="#" [formGroup]="formGroupBy" class="control-form">
+      <div class="form-entry">
+        <label class="form-entry">
+          <input type="radio" formControlName="groupBy" value="none"/>
+          <span class="group-by-select">Ničeho</span>
+        </label>
+      </div>
+      <div class="form-entry">
+        <label class="form-entry">
+          <input type="radio" formControlName="groupBy" value="endpoint"/>
+          <span class="group-by-select">Endpointu</span>
+        </label>
+      </div>
+      <div class="form-entry">
+        <label class="form-entry">
+          <input type="radio" formControlName="groupBy" value="tag"/>
+          <span class="group-by-select">Tagu</span>
+        </label>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="row" *ngIf="qfilterService.showActions">
+  <div class="col s12 l8 offset-l2">
+    <div class="form-heading">Seřadit dotazy podle:</div>
+    <form action="#" [formGroup]="formOrderBy" class="control-form">
+      <div class="form-entry">
+        <label>
+          <input type="radio" formControlName="orderBy" value="last_run"/>
+          <span class="group-by-select">Posledního spuštění</span>
+        </label>
+      </div>
+      <div class="form-entry">
+        <label>
+          <input type="radio" formControlName="orderBy" value="date_of_creation"/>
+          <span class="group-by-select">Datumu vytvoření</span>
+        </label>
+      </div>
+      <div class="form-entry">
+        <label>
+          <input type="radio" formControlName="orderBy" value="count_of_run"/>
+          <span class="group-by-select">Počtu spuštění</span>
+        </label>
+      </div>
+      <div class="form-entry">
+        <label>
+          <input type="radio" formControlName="orderBy" value="alphabeticaly"/>
+          <span class="group-by-select">Abecedně</span>
+        </label>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="row" *ngIf="qfilterService.showActions">
+  <div class="col s12 l8 offset-l2">
+    <div class="form-heading">Orientace řazení:</div>
+    <form action="#" [formGroup]="formOrderType" class="control-form">
+      <div class="form-entry">
+        <label>
+          <input type="radio" formControlName="orderType" value="ascending"/>
+          <span class="group-by-select">Vzestupně</span>
+        </label>
+      </div>
+      <div class="form-entry">
+        <label>
+          <input type="radio" formControlName="orderType" value="descending"/>
+          <span class="group-by-select">Sestupně</span>
+        </label>
+      </div>
+    </form>
+  </div>
+</div>

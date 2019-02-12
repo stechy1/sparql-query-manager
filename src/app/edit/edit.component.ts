@@ -5,6 +5,7 @@ import { Location } from '@angular/common';
 import { Query } from '../query/query';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { QParamsComponent } from '../query/q-params/q-params.component';
+import { NavigationService } from '../navigation/navigation.service';
 
 @Component({
   selector: 'app-edit',
@@ -26,13 +27,15 @@ export class EditComponent implements OnInit {
   @ViewChild(QParamsComponent) paramsComponent: QParamsComponent;
   private _params: {};
 
-  constructor(private _route: ActivatedRoute, private _qservice: QueryService, private _location: Location) { }
+  constructor(private _route: ActivatedRoute, private _qservice: QueryService, private _navService: NavigationService) { }
 
   ngOnInit() {
     const id = this._route.snapshot.paramMap.get('id');
     this._query = this._qservice.byId(id);
     this.saveProgress = 'notSaved';
     this._params = this._query.params;
+    this._navService.setNavbar(null);
+    this._navService.setSidebar(null);
   }
 
   get query(): Query {

@@ -1,0 +1,39 @@
+.navbar-fixed {
+  position: fixed;
+}
+
+.search-bar {
+  display: none;
+  float: right;
+}
+
+.sidenav {
+  left: 314px;
+  top: 56px;
+  padding: 4px;
+  height: calc(100% - 56px);
+}
+
+@media screen and (min-width: 600px){
+  .brand-logo {
+    margin-left: 8px;
+  }
+
+  .sidenav {
+    left: 314px;
+    top: 64px;
+    padding: 8px;
+    height: calc(100% - 64px);
+  }
+
+}
+
+@media screen and (min-width: 992px){
+  .search-bar {
+    display: block;
+  }
+
+  .sidenav {
+    display: none;
+  }
+}

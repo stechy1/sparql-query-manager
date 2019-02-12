@@ -1,14 +1,22 @@
 <div class="container-fluid">
-  <nav>
+<!--  <nav>
     <div class="nav-wrapper">
       <a [href]="['/browse']" class="brand-logo">Unknown project</a>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">
-        <!--<li><a href="#">Sass</a></li>-->
-        <!--<li><a href="#">Components</a></li>-->
-        <!--<li><a href="#">JavaScript</a></li>-->
-        <!--TODO nějaká navigace?-->
+
+      </ul>
+
+      <ul class="sidenav" id="mobile-demo">
+        <li><a href="#">Sass</a></li>
+        <li><a href="#">Components</a></li>
+        <li><a href="#">Javascript</a></li>
+        <li><a href="#">Mobile</a></li>
       </ul>
     </div>
-  </nav>
+  </nav>-->
+  <app-navigation></app-navigation>
+  <div class="content-wrapper">
   <router-outlet></router-outlet>
+  </div>
 </div>

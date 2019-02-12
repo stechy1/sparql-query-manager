@@ -4,6 +4,10 @@
   bottom: 15px;
 }
 
+.browse-toolbar {
+  display: none;
+}
+
 .collection-item {
   margin-bottom: 4px;
 }
@@ -37,5 +41,8 @@
   }
   .button-bar {
     width: 100%;
+  }
+  .browse-toolbar {
+    display: block;
   }
 }
