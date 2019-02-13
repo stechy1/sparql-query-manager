@@ -34,7 +34,6 @@ export class QParamsComponent implements OnInit {
 
   findVariables(content: string, params: {}): {} {
       if (content.length === 0) { // Není tu žádný obsah, nemá smysl hledat nějaké parametry
-        console.log('Obsah dotazu je prázdný, nemá smysl hledat parametry...');
         return;
       }
 
