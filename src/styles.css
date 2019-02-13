@@ -39,3 +39,6 @@
 .badge.q-tag i:hover {
   color: red;
 }
+input::placeholder {
+  color: #606060;
+}
