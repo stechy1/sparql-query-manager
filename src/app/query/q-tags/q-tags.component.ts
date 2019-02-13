@@ -1,7 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Query } from '../query';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatChipInputEvent } from '@angular/material';
 
 @Component({
   selector: 'app-q-tags',
@@ -32,19 +30,19 @@ export class QTagsComponent implements OnInit {
     return this._tags;
   }
 
-  add(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
-
-    if ((value || '').trim()) {
-      this.tags.push(value.trim());
-      this.dataChanged.emit(this.tags);
-    }
-
-    if (input) {
-      input.value = '';
-    }
-  }
+  // add(event: MatChipInputEvent): void {
+  //   const input = event.input;
+  //   const value = event.value;
+  //
+  //   if ((value || '').trim()) {
+  //     this.tags.push(value.trim());
+  //     this.dataChanged.emit(this.tags);
+  //   }
+  //
+  //   if (input) {
+  //     input.value = '';
+  //   }
+  // }
 
   remove(tag: string): void {
     const index = this._tags.indexOf(tag);

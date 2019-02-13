@@ -23,6 +23,8 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { NavbarDirective } from './navigation/navbar.directive';
 import { SidebarDirective } from './navigation/sidebar.directive';
 import { BrowseToolbarComponent } from './browse/browse-toolbar/browse-toolbar.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,8 @@ import { BrowseToolbarComponent } from './browse/browse-toolbar/browse-toolbar.c
       prefix: 'unknown',
       storageType: 'localStorage'
     }),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   entryComponents: [BrowseToolbarComponent],
   providers: [],
