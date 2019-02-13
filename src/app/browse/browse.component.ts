@@ -43,6 +43,18 @@ export class BrowseComponent implements OnInit, AfterViewInit {
       reader.readAsText(input.files[0]);
   }
 
+  /**
+   * Nastaví horní margin seznamu dotazů
+   */
+  private _recalculateQueryListMargin() {
+    const toolbarDiv = (<HTMLDivElement> this.toolbar.nativeElement);
+    const queryDiv = (<HTMLDivElement> this.queryList.nativeElement);
+    const divHeight = toolbarDiv.clientHeight;
+    toolbarDiv.classList.add('sticky');
+    toolbarDiv.classList.remove('hide');
+    queryDiv.style.marginTop = `${divHeight}px`;
+  }
+
   ngOnInit() {
     // Uložení dotazů do lokální proměnné
     this.queries = this._qservice.allQueries();
@@ -167,14 +179,5 @@ export class BrowseComponent implements OnInit, AfterViewInit {
 
   get selectedQueries(): number {
     return this.queries.filter(value => value.selected).length;
-  }
-
-  private _recalculateQueryListMargin() {
-    const toolbarDiv = (<HTMLDivElement> this.toolbar.nativeElement);
-    const queryDiv = (<HTMLDivElement> this.queryList.nativeElement);
-    const divHeight = toolbarDiv.clientHeight;
-    toolbarDiv.classList.add('sticky');
-    toolbarDiv.classList.remove('hide');
-    queryDiv.style.marginTop = `${divHeight}px`;
   }
 }
