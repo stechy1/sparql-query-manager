@@ -1,22 +1,23 @@
 <section>
-  <div class="row" [style.visibility]="queries.length === 0 ? 'hidden' : 'visible'">
-    <div class="col s12 offset-m2 m8">
-      <label>
-        <input type="text" placeholder="Najít dotaz..." #inputSearch>
-      </label>
+  <div class="toolbar-container" [style.display]="queries.length === 0 ? 'none' : 'block'" #toolbarContainer>
+    <div class="row">
+      <div class="col s12 offset-m2 m8">
+        <label>
+          <input type="text" placeholder="Najít dotaz..." #inputSearch>
+        </label>
+      </div>
     </div>
+    <app-browse-toolbar class="browse-toolbar"></app-browse-toolbar>
   </div>
-  <app-browse-toolbar class="browse-toolbar"></app-browse-toolbar>
-  <div class="row">
+  <div class="row" #queryContainer>
     <div class="col s12 offset-m2 m8">
       <div class="collection" *ngIf="queries.length !== 0">
-        <mat-selection-list>
-          <div class="q-group" *ngIf="qFilterGroupSortingService.selectedGroup === 'none'">
-            <app-q-entry *ngFor="let query of qFilterGroupSortingService.fuseQueries" [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
-          </div>
-          <app-q-group [values]="endpoints" [queries]="qFilterGroupSortingService.fuseQueries" [filterFunction]="filterByEndpoint" (deleteRequest)="handleDeleteRequest($event)" *ngIf="qFilterGroupSortingService.selectedGroup === 'endpoint'"></app-q-group>
-          <app-q-group [values]="tags" [queries]="qFilterGroupSortingService.fuseQueries" [filterFunction]="filterByTag" (deleteRequest)="handleDeleteRequest($event)" *ngIf="qFilterGroupSortingService.selectedGroup === 'tag'"></app-q-group>
-        </mat-selection-list>
+        <div class="q-group" *ngIf="qFilterGroupSortingService.selectedGroup === 'none'">
+          <app-q-entry *ngFor="let query of qFilterGroupSortingService.fuseQueries" [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
+        </div>
+        <app-q-group [values]="endpoints" [queries]="qFilterGroupSortingService.fuseQueries" [filterFunction]="filterByEndpoint" (deleteRequest)="handleDeleteRequest($event)"
+                     *ngIf="qFilterGroupSortingService.selectedGroup === 'endpoint'"></app-q-group>
+        <app-q-group [values]="tags" [queries]="qFilterGroupSortingService.fuseQueries" [filterFunction]="filterByTag" (deleteRequest)="handleDeleteRequest($event)" *ngIf="qFilterGroupSortingService.selectedGroup === 'tag'"></app-q-group>
 
         Označeno dotazů: {{selectedQueries}}
         <div class="col s12 button-bar-wrapper">
@@ -25,17 +26,21 @@
               <button class="btn btn-tiny" (click)="handleExport()" [disabled]="selectedQueries === 0">Export</button>
             </div>
             <div class="col s6 m1 offset-m1 center-on-small-only">
-              <button [matMenuTriggerFor]="importMenu" class="btn btn-tiny center-align">Import</button>
-              <mat-menu #importMenu="matMenu">
-                <label for="btnImportOverride" mat-menu-item>
-                  Přepsat
-                  <input id="btnImportOverride" type="file" style="display: none" (change)="handleImportOverride($event)"/>
-                </label>
-                <label mat-menu-item>
-                  Připnout
-                  <input id="btnImportAppend" type="file" style="display: none;" (change)="handleImportAppend($event)"/>
-                </label>
-              </mat-menu>
+              <span class='dropdown-trigger btn btn-tiny' (click)="showImportDropdown = !showImportDropdown">Import</span>
+              <ul class="dropdown-content" *ngIf="showImportDropdown">
+                <li>
+                  <label for="btnImportOverride" class="btn btn-tiny">
+                    Přepsat
+                    <input id="btnImportOverride" type="file" style="display: none" (change)="handleImportOverride($event)"/>
+                  </label>
+                </li>
+                <li>
+                  <label for="btnImportAppend" class="btn btn-tiny">
+                    Připnout
+                    <input id="btnImportAppend" type="file" style="display: none;" (change)="handleImportAppend($event)"/>
+                  </label>
+                </li>
+              </ul>
             </div>
             <div class="col s4 m2 offset-m3 offset-l3 center-on-small-only">
               <button class="btn btn-tiny" (click)="handleSelectAll()" [disabled]="selectedQueries === queries.length">Vybrat vše</button>

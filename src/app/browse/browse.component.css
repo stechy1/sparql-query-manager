@@ -29,6 +29,19 @@
   height: 50px;
 }
 
+.dropdown-content {
+  display: block;
+  position: relative;
+  opacity: 1;
+  top: auto;
+  left: auto;
+  background-color: transparent;
+  box-shadow: unset;
+}
+.dropdown-content li {
+  min-height: unset;
+}
+
 @media screen and (min-width: 600px) {
   .button-bar {
     width: 150%;
@@ -45,8 +58,17 @@
   .browse-toolbar {
     display: block;
     padding-bottom: 4px;
-    -webkit-box-shadow: 0 8px 10px 0 rgba(0,0,0,0.33);
-    -moz-box-shadow: 0 8px 10px 0 rgba(0,0,0,0.33);
+  }
+
+  .toolbar-container {
+    position: fixed;
+    top: 64px;
+    background: #ffffff;
+    z-index: 2;
+    width: 100%;
+    transition: top 0.3s;
+  }
+  .toolbar-container.sticky {
     box-shadow: 0 8px 10px 0 rgba(0,0,0,0.33);
   }
 }

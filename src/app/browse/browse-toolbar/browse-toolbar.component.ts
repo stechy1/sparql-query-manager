@@ -1,14 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { QueryFilterGroupSortService } from '../query-filter-group-sort.service';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 @Component({
   selector: 'app-browse-toolbar',
   templateUrl: './browse-toolbar.component.html',
   styleUrls: ['./browse-toolbar.component.css']
 })
-export class BrowseToolbarComponent implements OnInit {
+export class BrowseToolbarComponent implements OnInit, AfterViewInit {
 
   // Skupina ovládacích prvků pro výběr seskupování
   formGroupBy: FormGroup;
@@ -18,6 +18,18 @@ export class BrowseToolbarComponent implements OnInit {
   formOrderType: FormGroup;
 
   constructor(public qfilterService: QueryFilterGroupSortService, private _route: ActivatedRoute, private _router: Router) { }
+
+  private _handleParams(params: Params) {
+    const groupBy = params['groupBy'] || 'none';
+    const orderBy = params['orderBy'] || 'alphabeticaly';
+    const orderType = params['orderType'] || 'ascending';
+    this.formGroupBy.setValue({'groupBy': groupBy});
+    this.formOrderBy.setValue({'orderBy': orderBy});
+    this.formOrderType.setValue({'orderType': orderType});
+
+    this.qfilterService.selectedGroup = groupBy;
+    this.qfilterService.sort(orderBy, orderType);
+  }
 
   ngOnInit() {
     console.log('Initializing browse toolbar...');
@@ -34,18 +46,7 @@ export class BrowseToolbarComponent implements OnInit {
 
     // Nastavení handleru na změnu parametrů ve stavovém řádku
     // díky tomu se provádí řazení a seskupování v reálném čase
-    this._route.params.subscribe(params => {
-      console.log('Params update...');
-      const groupBy = params['groupBy'] || 'none';
-      const orderBy = params['orderBy'] || 'alphabeticaly';
-      const orderType = params['orderType'] || 'ascending';
-      this.formGroupBy.setValue({'groupBy': groupBy});
-      this.formOrderBy.setValue({'orderBy': orderBy});
-      this.formOrderType.setValue({'orderType': orderType});
-
-      this.qfilterService.selectedGroup = groupBy;
-      this.qfilterService.sort(orderBy, orderType);
-    });
+    this._route.params.subscribe(params => this._handleParams(params));
 
     this.formGroupBy.valueChanges.subscribe(change => {
       const groupBy = change['groupBy'];
@@ -66,5 +67,13 @@ export class BrowseToolbarComponent implements OnInit {
       this._router.navigate([{'groupBy': groupBy, 'orderBy': orderBy, 'orderType': orderType}]);
     });
   }
+
+  ngAfterViewInit(): void {
+    console.log(this._route.snapshot.params);
+
+    this._handleParams(this._route.snapshot.params);
+  }
+
+
 
 }

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { QueryService } from '../query/query.service';
 import { Query } from '../query/query';
 
@@ -13,10 +13,14 @@ import { QueryFilterGroupSortService } from './query-filter-group-sort.service';
 })
 export class BrowseComponent implements OnInit, AfterViewInit {
 
+  private _lastYOffset: number;
   // Kolekce všech dotazů
   queries: Query[];
   // Reference na input element
   @ViewChild('inputSearch') inputSearch: ElementRef;
+  @ViewChild('toolbarContainer') toolbar: ElementRef;
+  @ViewChild('queryContainer') queryList: ElementRef;
+  showImportDropdown: boolean;
 
   constructor(private _qservice: QueryService, private _navService: NavigationService,
               public qFilterGroupSortingService: QueryFilterGroupSortService) { }
@@ -41,6 +45,8 @@ export class BrowseComponent implements OnInit, AfterViewInit {
     // Uložení dotazů do lokální proměnné
     this.queries = this._qservice.allQueries();
     this._navService.setSidebar(BrowseToolbarComponent);
+    this.showImportDropdown = false;
+    this._lastYOffset = window.pageYOffset;
   }
 
   ngAfterViewInit(): void {
@@ -56,6 +62,38 @@ export class BrowseComponent implements OnInit, AfterViewInit {
 
       this.qFilterGroupSortingService.filterBy(searchedValue);
     };
+
+    const toolbarDiv = (<HTMLDivElement> this.toolbar.nativeElement);
+    const queryDiv = (<HTMLDivElement> this.queryList.nativeElement);
+    const divHeight = toolbarDiv.clientHeight;
+    toolbarDiv.classList.add('sticky');
+    toolbarDiv.classList.remove('hide');
+    queryDiv.style.marginTop = `${divHeight}px`;
+  }
+
+  @HostListener('window:scroll', ['$event'])
+  doSomething(event) {
+    const newOffset = window.pageYOffset;
+    const delta = newOffset - this._lastYOffset;
+    const toolbarDiv = (<HTMLDivElement> this.toolbar.nativeElement);
+    const queryDiv = (<HTMLDivElement> this.queryList.nativeElement);
+    const divHeight = toolbarDiv.clientHeight;
+    this._lastYOffset = newOffset;
+
+    if (delta < 0) {
+      toolbarDiv.classList.add('sticky');
+      toolbarDiv.classList.remove('hide');
+      queryDiv.style.marginTop = `${divHeight}px`;
+    } else {
+      toolbarDiv.classList.remove('sticky');
+      toolbarDiv.classList.add('hide');
+      queryDiv.style.marginTop = `0px`;
+    }
+
+
+    console.log(event);
+    // console.debug("Scroll Event", document.body.scrollTop);
+    console.log('Scroll Event', window.pageYOffset );
   }
 
   /**

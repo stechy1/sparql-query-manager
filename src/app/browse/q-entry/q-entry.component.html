@@ -5,10 +5,12 @@
     </label>
   </div>
   <div class="col s8" style="margin-left: 0;">
-    <a [routerLink]="['/edit', query.id]"><span>{{query.name}}</span></a> - <span>{{query.endpoint}}</span>
-    <mat-chip-list>
-      <mat-chip *ngFor="let tag of query.tags" class="light-primary-color">{{tag}}</mat-chip>
-    </mat-chip-list>
+    <div>
+      <a [routerLink]="['/edit', query.id]"><span>{{query.name}}</span></a> - <span>{{query.endpoint}}</span>
+    </div>
+    <div>
+      <span class="badge q-tag" *ngFor="let tag of query.tags">{{tag}}</span>
+    </div>
   </div>
   <div class="col s2">
     <button class="btn btn-tiny red right" (click)="handleDelete()">Smazat</button>
