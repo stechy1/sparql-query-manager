@@ -63,37 +63,31 @@ export class BrowseComponent implements OnInit, AfterViewInit {
       this.qFilterGroupSortingService.filterBy(searchedValue);
     };
 
-    const toolbarDiv = (<HTMLDivElement> this.toolbar.nativeElement);
-    const queryDiv = (<HTMLDivElement> this.queryList.nativeElement);
-    const divHeight = toolbarDiv.clientHeight;
-    toolbarDiv.classList.add('sticky');
-    toolbarDiv.classList.remove('hide');
-    queryDiv.style.marginTop = `${divHeight}px`;
+    this._recalculateQueryListMargin();
   }
 
-  @HostListener('window:scroll', ['$event'])
-  doSomething(event) {
+  @HostListener('window:scroll')
+  scrollHandler() {
     const newOffset = window.pageYOffset;
     const delta = newOffset - this._lastYOffset;
     const toolbarDiv = (<HTMLDivElement> this.toolbar.nativeElement);
     const queryDiv = (<HTMLDivElement> this.queryList.nativeElement);
-    const divHeight = toolbarDiv.clientHeight;
+    const toolbarDivHeight = toolbarDiv.clientHeight;
+    const queryDivHeight = queryDiv.clientHeight;
+    const windowHeight = window.innerHeight;
     this._lastYOffset = newOffset;
 
     if (delta < 0) {
       toolbarDiv.classList.add('sticky');
       toolbarDiv.classList.remove('hide');
-      queryDiv.style.marginTop = `${divHeight}px`;
+      queryDiv.style.marginTop = `${toolbarDivHeight}px`;
     } else {
-      toolbarDiv.classList.remove('sticky');
-      toolbarDiv.classList.add('hide');
-      queryDiv.style.marginTop = `0px`;
+      if (toolbarDivHeight + queryDivHeight > windowHeight) {
+        toolbarDiv.classList.remove('sticky');
+        toolbarDiv.classList.add('hide');
+        queryDiv.style.marginTop = `0px`;
+      }
     }
-
-
-    console.log(event);
-    // console.debug("Scroll Event", document.body.scrollTop);
-    console.log('Scroll Event', window.pageYOffset );
   }
 
   /**
@@ -135,6 +129,7 @@ export class BrowseComponent implements OnInit, AfterViewInit {
 
   handleImportOverride(event: Event) {
     this._import(<HTMLInputElement> event.target, true);
+    setTimeout(() => this._recalculateQueryListMargin(), 100);
   }
 
   handleImportAppend(event: Event) {
@@ -152,6 +147,7 @@ export class BrowseComponent implements OnInit, AfterViewInit {
   handleDeleteAll() {
     if (confirm('Opravdu si přejete smazat celou databázi?')) {
       this._qservice.clear();
+      setTimeout(() => this._recalculateQueryListMargin(), 100);
     }
   }
 
@@ -165,5 +161,15 @@ export class BrowseComponent implements OnInit, AfterViewInit {
 
   get selectedQueries(): number {
     return this.queries.filter(value => value.selected).length;
+  }
+
+  private _recalculateQueryListMargin() {
+    const toolbarDiv = (<HTMLDivElement> this.toolbar.nativeElement);
+    const queryDiv = (<HTMLDivElement> this.queryList.nativeElement);
+    const divHeight = toolbarDiv.clientHeight;
+    console.log(divHeight);
+    toolbarDiv.classList.add('sticky');
+    toolbarDiv.classList.remove('hide');
+    queryDiv.style.marginTop = `${divHeight}px`;
   }
 }
