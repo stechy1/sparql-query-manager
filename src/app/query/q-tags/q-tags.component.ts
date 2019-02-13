@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-q-tags',
@@ -10,10 +9,6 @@ export class QTagsComponent implements OnInit {
 
   private _tags: string[];
 
-  selectable = true;
-  removable = true;
-  addOnBlur = true;
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   @Output() dataChanged = new EventEmitter<string[]>();
 
   constructor() { }
@@ -30,20 +25,6 @@ export class QTagsComponent implements OnInit {
     return this._tags;
   }
 
-  // add(event: MatChipInputEvent): void {
-  //   const input = event.input;
-  //   const value = event.value;
-  //
-  //   if ((value || '').trim()) {
-  //     this.tags.push(value.trim());
-  //     this.dataChanged.emit(this.tags);
-  //   }
-  //
-  //   if (input) {
-  //     input.value = '';
-  //   }
-  // }
-
   remove(tag: string): void {
     const index = this._tags.indexOf(tag);
 
@@ -53,4 +34,12 @@ export class QTagsComponent implements OnInit {
     }
   }
 
+  handleTagKeyUp(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      const srcElement = (<HTMLInputElement> event.srcElement);
+      this._tags.push(srcElement.value);
+      srcElement.value = '';
+      this.dataChanged.emit(this.tags);
+    }
+  }
 }
