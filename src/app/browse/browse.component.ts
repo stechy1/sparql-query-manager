@@ -5,6 +5,7 @@ import { Query } from '../query/query';
 import { NavigationService } from '../navigation/navigation.service';
 import { BrowseToolbarComponent } from './browse-toolbar/browse-toolbar.component';
 import { QueryFilterGroupSortService } from './query-filter-group-sort.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-browse',
@@ -23,6 +24,7 @@ export class BrowseComponent implements OnInit, AfterViewInit {
   showImportDropdown: boolean;
 
   constructor(private _qservice: QueryService, private _navService: NavigationService,
+              private _router: Router,
               public qFilterGroupSortingService: QueryFilterGroupSortService) { }
 
   /**
@@ -149,6 +151,11 @@ export class BrowseComponent implements OnInit, AfterViewInit {
       this._qservice.clear();
       setTimeout(() => this._recalculateQueryListMargin(), 100);
     }
+  }
+
+  handleNewQuery() {
+    const newId = this._qservice.create();
+    this._router.navigate(['edit', newId]);
   }
 
   get endpoints(): string[] {

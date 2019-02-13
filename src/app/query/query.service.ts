@@ -95,20 +95,14 @@ export class QueryService {
   }
 
   /**
-   * Vytvoří záznam o novém dotazu
-   *
-   * @param name Název dotazu
-   * @param endpoint Endpoint, na který se bude dotaz posílat
-   * @param description Popis dotazu
-   * @param tags Seznam tagů, které odpovídají danému dotazu
-   * @param content Obsah samotného dotazu
-   * @param variables Proměnné, které se vyskytují v dotazu
+   * Vytvoří nový prázdný dotaz
    */
-  create(name: string, endpoint: string, description: string, tags: string[], content: string, variables: {}) {
-    const query = new Query(QueryService.makeID(), name, endpoint, tags, content, variables, description, new Date().getTime(), null, 0);
+  create() {
+    const query = new Query(QueryService.makeID(), '', '', [], '', {}, '', new Date().getTime(), null, 0);
     this._queries.push(query);
     this._saveQueries();
     this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.ADD, query: query});
+    return query.id;
   }
 
   /**
