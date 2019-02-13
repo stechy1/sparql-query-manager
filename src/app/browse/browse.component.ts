@@ -78,13 +78,13 @@ export class BrowseComponent implements OnInit, AfterViewInit {
     const queryDivHeight = queryDiv.clientHeight;
     const windowHeight = window.innerHeight;
     this._lastYOffset = newOffset;
-
+    console.log('Scroll handler: ' + (delta < 0));
     if (delta < 0) {
       toolbarDiv.classList.add('sticky');
       toolbarDiv.classList.remove('hide');
       queryDiv.style.marginTop = `${toolbarDivHeight}px`;
     } else {
-      if (toolbarDivHeight + queryDivHeight > windowHeight) {
+      if (queryDivHeight > windowHeight) {
         toolbarDiv.classList.remove('sticky');
         toolbarDiv.classList.add('hide');
         queryDiv.style.marginTop = `0px`;
