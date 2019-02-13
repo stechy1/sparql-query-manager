@@ -3,35 +3,8 @@
     <a [href]="['browse']" class="brand-logo primary-text-color">Unknown project</a>
     <a data-target="mobile-sidenav" class="sidenav-trigger" (click)="showSidebar = !showSidebar"><i class="material-icons">menu</i></a>
     <ng-template appNavbar></ng-template>
-<!--    <ul id="nav-mobile" class="right hide-on-med-and-down">
-    </ul>
-    <form class="search-bar">
-      <div class="input-field">
-        <input id="search" type="search" required>
-        <label class="label-icon" for="search"><i class="material-icons">search</i></label>
-        <i class="material-icons">close</i>
-      </div>
-    </form>-->
-
     <div class="sidenav" id="mobile-sidenav" [style.visibility]="showSidebar ? 'visible' : 'hidden'">
       <ng-template appSidebar></ng-template>
-      <!--<div class="row">
-          <span style="color: #000;">Seskupit dotazy podle:</span>
-          <form action="#" style="display: block;">
-            <label>
-              <input type="radio" formControlName="groupBy" value="none"/>
-              <span class="group-by-select">Ničeho</span>
-            </label>
-            <label>
-              <input type="radio" formControlName="groupBy" value="endpoint"/>
-              <span class="group-by-select">Endpointu</span>
-            </label>
-            <label>
-              <input type="radio" formControlName="groupBy" value="tag"/>
-              <span class="group-by-select">Tagu</span>
-            </label>
-          </form>
-      </div>-->
     </div>
   </div>
 </nav>
