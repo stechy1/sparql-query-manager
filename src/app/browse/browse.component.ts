@@ -125,6 +125,7 @@ export class BrowseComponent implements OnInit, AfterViewInit {
 
   handleDeleteRequest(query: Query) {
     this._qservice.delete(query.id);
+    setTimeout(() => this._recalculateQueryListMargin(), 100);
   }
 
   handleExport() {

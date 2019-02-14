@@ -56,7 +56,7 @@
       </div>
       <div *ngIf="queries.length === 0" class="col s12 center-align">
         <h1>Nebyly nalezeny žádné dotazy.</h1>
-        <a routerLink="/new">Vytvořte nový dotaz</a>
+        <a (click)="handleNewQuery()" style="cursor: pointer;">Vytvořte nový dotaz</a>
         nebo
         <label for="btnImport" class="btn btn-small">
           Importovat databázi
