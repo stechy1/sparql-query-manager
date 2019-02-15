@@ -25,6 +25,7 @@ import { SidebarDirective } from './navigation/sidebar.directive';
 import { BrowseToolbarComponent } from './browse/browse-toolbar/browse-toolbar.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { environment } from '../environments/environment';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     LocalStorageModule.withConfig({
       prefix: 'unknown',
       storageType: 'localStorage'

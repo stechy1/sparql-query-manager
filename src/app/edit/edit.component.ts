@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { QueryService } from '../query/query.service';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
 import { Query } from '../query/query';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { QParamsComponent } from '../query/q-params/q-params.component';
 import { NavigationService } from '../navigation/navigation.service';
+import { EndpointCommunicatorService } from '../endpoint-communicator.service';
 
 @Component({
   selector: 'app-edit',
@@ -24,15 +24,19 @@ export class EditComponent implements OnInit {
 
   private _query: Query;
   saveProgress: string;
+  working: boolean;
   @ViewChild(QParamsComponent) paramsComponent: QParamsComponent;
   private _params: {};
+  queryResult: string;
 
-  constructor(private _route: ActivatedRoute, private _qservice: QueryService, private _navService: NavigationService) { }
+  constructor(private _route: ActivatedRoute, private _qservice: QueryService,
+              private _navService: NavigationService, private _endpointCommunicator: EndpointCommunicatorService) { }
 
   ngOnInit() {
     const id = this._route.snapshot.paramMap.get('id');
     this._query = this._qservice.byId(id);
     this.saveProgress = 'notSaved';
+    this.working = false;
     this._params = this._query.params;
     this._navService.setNavbar(null);
     this._navService.setSidebar(null);
@@ -68,5 +72,13 @@ export class EditComponent implements OnInit {
 
   handleUpdateParams(event: string) {
     this._params = this.paramsComponent.findVariables(event, this._params);
+  }
+
+  handleDoQuery() {
+    this.working = true;
+    this._endpointCommunicator.makeRequest(this._query.endpoint, this._query.content).then(value => {
+      this.working = false;
+      this.queryResult = value;
+    });
   }
 }

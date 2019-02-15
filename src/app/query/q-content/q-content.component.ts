@@ -13,19 +13,14 @@ export class QContentComponent implements OnInit {
   private _query: Query;
   private _content: string;
   loading: boolean;
+  @Input() working: boolean;
   @Output() dataChanged = new EventEmitter<Query>();
   @Output() updateContentOnly = new EventEmitter<string>();
+  @Output() doQuery = new EventEmitter<void>();
 
   constructor() { }
 
-  ngOnInit() {
-    this.loading = true;
-  }
-
-  @Input()
-  set query(value: Query) {
-    this._query = value;
-    this._content = this._query.content;
+  private _recalculateTextAreaHeight() {
     this.loading = true;
     setTimeout(() => {
       const natElement = <HTMLTextAreaElement> this._textArea.nativeElement;
@@ -35,6 +30,17 @@ export class QContentComponent implements OnInit {
       natElement.disabled = false;
       this.loading = false;
     }, 500);
+  }
+
+  ngOnInit() {
+    this.loading = true;
+  }
+
+  @Input()
+  set query(value: Query) {
+    this._query = value;
+    this._content = this._query.content;
+    this._recalculateTextAreaHeight();
   }
 
   get content() {
@@ -50,6 +56,7 @@ export class QContentComponent implements OnInit {
       return;
     }
 
+    this._recalculateTextAreaHeight();
     this.updateContentOnly.emit(this.content);
   }
 
@@ -60,5 +67,9 @@ export class QContentComponent implements OnInit {
 
     this._query.content = this.content;
     this.dataChanged.emit(this._query);
+  }
+
+  handleDoQuery() {
+    this.doQuery.emit();
   }
 }
