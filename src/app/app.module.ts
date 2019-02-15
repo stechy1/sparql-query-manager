@@ -28,6 +28,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { QResultComponent } from './query/q-result/q-result.component';
 import { BeautifyPipe } from './query/beautify.pipe';
 import { LastResultComponent } from './last-result/last-result.component';
+import { BrowseResultsComponent } from './browse-results/browse-results.component';
+import { QrEntryComponent } from './browse-results/qr-entry/qr-entry.component';
+import { QrStatePipe } from './browse-results/qr-entry/qr-state.pipe';
+import { TimePipe } from './time.pipe';
 
 @NgModule({
   declarations: [
@@ -44,6 +48,10 @@ import { LastResultComponent } from './last-result/last-result.component';
     NavbarDirective,
     SidebarDirective,
     BeautifyPipe,
+    BrowseResultsComponent,
+    QrEntryComponent,
+    QrStatePipe,
+    TimePipe,
   ],
   imports: [
     BrowserModule,

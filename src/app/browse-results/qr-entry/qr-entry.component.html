@@ -1,0 +1,28 @@
+<div class="card qr-entry">
+  <div class="card-title">{{queryResult.name}}</div>
+  <div class="card-content">
+    <div>
+      <span class="qr-entry-parameter">Stav: </span>
+      <span class="qr-entry-value">{{queryResult.resultState | qrState}}</span>
+    </div>
+    <div>
+      <span class="qr-entry-parameter">Spuštěno: </span>
+      <span class="qr-entry-value">{{queryResult.dateOfRun | date}}</span>
+    </div>
+    <div>
+      <span class="qr-entry-parameter">Doba běhu: </span>
+      <span class="qr-entry-value">{{queryResult.runLength | time}}</span>
+    </div>
+    <div>
+      <span class="qr-entry-parameter">Počet řádek: </span>
+      <span class="qr-entry-value">{{queryResult.countOfSelect}}</span>
+    </div>
+    <div>
+      <span class="qr-entry-parameter">Počet trojic: </span>
+      <span class="qr-entry-value">{{queryResult.countOfConstruct}}</span>
+    </div>
+  </div>
+  <div class="card-action">
+    <button class="btn btn-tiny default-primary-color">Zobrazit</button>
+  </div>
+</div>

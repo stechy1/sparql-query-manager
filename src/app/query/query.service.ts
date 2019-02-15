@@ -28,7 +28,7 @@ export class QueryService {
   private _queries = new Array<Query>();
   private _queryCollectionChange = new EventEmitter<QueryCollectionChange>();
 
-  constructor(private storage: LocalStorageService) {
+  constructor(private _storage: LocalStorageService) {
     this._loadQueries();
   }
 
@@ -66,7 +66,7 @@ export class QueryService {
    * Načte data z localStorage
    */
   private _loadQueries(): void {
-    const dataRaw = this.storage.get<QueryStorageEntry[]>(QueryService.STORAGE_KEY) || new Array<QueryStorageEntry>();
+    const dataRaw = this._storage.get<QueryStorageEntry[]>(QueryService.STORAGE_KEY) || new Array<QueryStorageEntry>();
     this._loadQueriesInternal(dataRaw);
   }
 
@@ -74,7 +74,7 @@ export class QueryService {
    * Uloží data do localStorage
    */
   private _saveQueries(): void {
-    this.storage.set(QueryService.STORAGE_KEY, JSON.parse(JSON.stringify(this._queries, Query.structureGuard)));
+    this._storage.set(QueryService.STORAGE_KEY, JSON.parse(JSON.stringify(this._queries, Query.structureGuard)));
   }
 
   /**

@@ -4,10 +4,11 @@ import { BrowseQueryComponent } from './browse-query/browse-query.component';
 import { EditComponent } from './edit/edit.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { LastResultComponent } from './last-result/last-result.component';
+import { BrowseResultsComponent } from './browse-results/browse-results.component';
 
 const routes: Routes = [
   {path: 'browse-query', component: BrowseQueryComponent},
-  // {path: 'browse-results', component: NewQueryComponent},
+  {path: 'browse-results', component: BrowseResultsComponent},
   {path: 'edit/:id', component: EditComponent},
   {path: 'last-result', component: LastResultComponent},
   {path: '', pathMatch: 'full', redirectTo: 'browse-query'},

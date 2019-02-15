@@ -82,7 +82,7 @@ export class EditComponent implements OnInit {
       this._qservice.performSave();
     }
 
-    this._endpointCommunicator.makeRequest(this._query.endpoint, this._query.content).then(value => {
+    this._endpointCommunicator.makeRequest(this._query).then(value => {
       this.working = false;
       this.queryResult = value;
     });

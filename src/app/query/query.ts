@@ -1,3 +1,8 @@
+export class ParameterValue {
+  defaultValue: string;
+  usedValue: string;
+}
+
 export class Query {
 
   private _selected = false;
@@ -12,6 +17,16 @@ export class Query {
     }
 
     return value;
+  }
+
+  usedParams(): {} {
+    const result = {};
+    for (const key of Object.keys(this._params)) {
+      const param = <ParameterValue> this._params[key];
+      result[key] = (param.usedValue) ? param.usedValue : param.defaultValue;
+    }
+
+    return result;
   }
 
   get id(): string {
@@ -42,14 +57,6 @@ export class Query {
     return this._tags;
   }
 
-  addTag(tag: string): void {
-    this._tags.push(tag);
-  }
-
-  removeTag(tag: string): void {
-    this._tags.splice(this._tags.findIndex(value => value === tag), 1);
-  }
-
   get content(): string {
     return this._content;
   }
@@ -68,10 +75,6 @@ export class Query {
 
   get created(): number {
     return this._created;
-  }
-
-  set created(value: number) {
-    this._created = value;
   }
 
   get lastRun(): number {
