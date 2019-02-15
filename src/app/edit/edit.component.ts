@@ -74,8 +74,14 @@ export class EditComponent implements OnInit {
     this._params = this.paramsComponent.findVariables(event, this._params);
   }
 
-  handleDoQuery() {
+  handleDoQuery(ignoreStatistics: boolean) {
     this.working = true;
+    if (!ignoreStatistics) {
+      this._query.runCount++;
+      this._query.lastRun = Date.now();
+      this._qservice.performSave();
+    }
+
     this._endpointCommunicator.makeRequest(this._query.endpoint, this._query.content).then(value => {
       this.working = false;
       this.queryResult = value;
