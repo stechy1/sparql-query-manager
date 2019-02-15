@@ -66,16 +66,15 @@ export class QueryService {
    * Načte data z localStorage
    */
   private _loadQueries(): void {
-    const dataRaw = this.storage.get<string>(QueryService.STORAGE_KEY) || '[]';
-    const data = <QueryStorageEntry[]>JSON.parse(dataRaw);
-    this._loadQueriesInternal(data);
+    const dataRaw = this.storage.get<QueryStorageEntry[]>(QueryService.STORAGE_KEY) || new Array<QueryStorageEntry>();
+    this._loadQueriesInternal(dataRaw);
   }
 
   /**
    * Uloží data do localStorage
    */
   private _saveQueries(): void {
-    this.storage.set(QueryService.STORAGE_KEY, JSON.stringify(this._queries, Query.structureGuard));
+    this.storage.set(QueryService.STORAGE_KEY, JSON.parse(JSON.stringify(this._queries, Query.structureGuard)));
   }
 
   /**
