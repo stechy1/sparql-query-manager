@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
-import * as beautify from 'js-beautify';
+import { copyToClipboard } from '../../content-to-clipboard';
 
 @Component({
   selector: 'app-q-result',
@@ -21,18 +21,7 @@ export class QResultComponent implements OnInit, AfterViewInit {
   }
 
   handleCopyResult() {
-    // Vytvoření provizorního elementu 'textarea'
-    const el = document.createElement('textarea');
-    // Nastavení hodnoty
-    el.value = beautify(JSON.stringify(this.result));
-    // Připnutí elementu do dokumentu
-    document.body.appendChild(el);
-    // Vybrání celého obsahu v elementu
-    el.select();
-    // Zkopírování obsahu do schránky
-    document.execCommand('copy');
-    // Odstranění elementu z dokumentu
-    document.body.removeChild(el);
+    copyToClipboard(this.result);
   }
 
   handleShowSeparate() {

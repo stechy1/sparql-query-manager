@@ -28,6 +28,7 @@ import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { QResultComponent } from './query/q-result/q-result.component';
 import { BeautifyPipe } from './query/beautify.pipe';
+import { LastResultComponent } from './last-result/last-result.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { BeautifyPipe } from './query/beautify.pipe';
     BrowseToolbarComponent,
     QResultComponent,
     BeautifyPipe,
+    LastResultComponent,
   ],
   imports: [
     BrowserModule,
