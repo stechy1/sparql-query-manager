@@ -29,6 +29,12 @@
     <form action="#" [formGroup]="formOrderBy" class="control-form">
       <div class="form-entry">
         <label>
+          <input type="radio" formControlName="orderBy" value="alphabeticaly"/>
+          <span class="group-by-select primary-text-color">Abecedně</span>
+        </label>
+      </div>
+      <div class="form-entry">
+        <label>
           <input type="radio" formControlName="orderBy" value="last_run"/>
           <span class="group-by-select primary-text-color">Posledního spuštění</span>
         </label>
@@ -43,12 +49,6 @@
         <label>
           <input type="radio" formControlName="orderBy" value="count_of_run"/>
           <span class="group-by-select primary-text-color">Počtu spuštění</span>
-        </label>
-      </div>
-      <div class="form-entry">
-        <label>
-          <input type="radio" formControlName="orderBy" value="alphabeticaly"/>
-          <span class="group-by-select primary-text-color">Abecedně</span>
         </label>
       </div>
     </form>
