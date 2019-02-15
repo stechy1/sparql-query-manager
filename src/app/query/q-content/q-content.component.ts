@@ -51,6 +51,10 @@ export class QContentComponent implements OnInit {
     this._content = value;
   }
 
+  get contentChanged(): boolean {
+    return this._query.content !== this._content;
+  }
+
   handleUpdateContent() {
     if (this._query.content === this.content) {
       return;
