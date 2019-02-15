@@ -17,14 +17,11 @@ export class QResultComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.windowHeight = window.innerHeight - 200;
+    setTimeout(() => this.windowHeight = window.innerHeight - 200, 500);
+    console.log("Obsah: " + this.result + " konec");
   }
 
   handleCopyResult() {
     copyToClipboard(this.result);
-  }
-
-  handleShowSeparate() {
-    // TODO uložit výsledek do paměti a přesměrovat na prohlížeč posledního dotazu
   }
 }
