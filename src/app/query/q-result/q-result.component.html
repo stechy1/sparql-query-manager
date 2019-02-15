@@ -1,0 +1,12 @@
+<div class="card">
+  <div class="card-content">
+    <span class="card-title">Výsledek dotazu</span>
+    <pre class="q-result" [style.max-height.px]="windowHeight">
+      {{result | beautify}}
+    </pre>
+  </div>
+  <div class="card-action">
+    <button class="btn btn-tiny default-primary-color" (click)="handleCopyResult()">Zkopírovat</button>
+    <button class="btn btn-tiny" (click)="handleShowSeparate()">Zobrazit samostatně</button>
+  </div>
+</div>

@@ -26,6 +26,8 @@ import { BrowseToolbarComponent } from './browse/browse-toolbar/browse-toolbar.c
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
+import { QResultComponent } from './query/q-result/q-result.component';
+import { BeautifyPipe } from './query/beautify.pipe';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,8 @@ import { HttpClientModule } from '@angular/common/http';
     NavbarDirective,
     SidebarDirective,
     BrowseToolbarComponent,
+    QResultComponent,
+    BeautifyPipe,
   ],
   imports: [
     BrowserModule,
