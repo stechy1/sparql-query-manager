@@ -6,6 +6,10 @@
   </div>
   <div class="card-action">
     <button class="btn btn-tiny green" (click)="handleDoQuery()" [disabled]="working || content.length === 0">Vykonat<i class="material-icons right rotating" [style.display]="working ? 'block' : 'none'">autorenew</i></button>
+    <label style="margin-left: 8px">
+      <input type="checkbox" class="filled-in" value="alphabeticaly"/>
+      <span class="group-by-select primary-text-color">Nezapočítávat do statistik</span>
+    </label>
     <button class="btn btn-tiny blue right" (click)="handleSaveContent()">Uložit</button>
     <button class="btn btn-tiny right" (click)="handleUpdateContent()" [disabled]="!contentChanged">Aktualizovat</button>
   </div>

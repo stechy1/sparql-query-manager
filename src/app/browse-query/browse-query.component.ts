@@ -8,11 +8,11 @@ import { QueryFilterGroupSortService } from './query-filter-group-sort.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-browse',
-  templateUrl: './browse.component.html',
-  styleUrls: ['./browse.component.css']
+  selector: 'app-browse-query',
+  templateUrl: './browse-query.component.html',
+  styleUrls: ['./browse-query.component.css']
 })
-export class BrowseComponent implements OnInit, AfterViewInit {
+export class BrowseQueryComponent implements OnInit, AfterViewInit {
 
   private _lastYOffset: number;
   // Kolekce všech dotazů
