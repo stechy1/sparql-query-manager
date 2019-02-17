@@ -9,7 +9,8 @@
         <pre>{{queryResult | beautify}}</pre>
       </div>
     </div>
-
-    <h1 *ngIf="queryResult === ''">Nebyl vykonán žádný dotaz</h1>
+    <div class="col s12 center-align" *ngIf="queryResult === ''">
+      <h1 >Nebyl vykonán žádný dotaz</h1>
+    </div>
   </div>
 </div>
