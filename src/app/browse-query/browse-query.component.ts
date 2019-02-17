@@ -58,7 +58,6 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     // Uložení dotazů do lokální proměnné
     this.queries = this._qservice.allQueries();
-    this._navService.setSidebar(BrowseToolbarComponent);
     this.showImportDropdown = false;
     this._lastYOffset = window.pageYOffset;
   }
