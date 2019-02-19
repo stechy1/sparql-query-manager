@@ -1,18 +1,18 @@
 <nav class="navbar-fixed default-primary-color">
   <div class="nav-wrapper">
-    <a [href]="['browse-query']" class="brand-logo primary-text-color">Unknown project</a>
+    <a routerLink="browse-query" class="brand-logo primary-text-color">Unknown project</a>
     <a data-target="mobile-sidenav" class="sidenav-trigger" (click)="showSidebar = !showSidebar"><i class="material-icons">menu</i></a>
     <ul class="right hide-on-med-and-down">
       <li routerLinkActive="active"><a routerLink="browse-query">Prohlížeč dotazů</a></li>
       <li routerLinkActive="active"><a routerLink="browse-results">Prohlížeč výsledků</a></li>
-      <li routerLinkActive="active"><a routerLink="last-result">Poslední výsledek</a></li>
+      <li routerLinkActive="active"><a routerLink="result-viewer/last">Poslední výsledek</a></li>
     </ul>
     <ng-template appNavbar></ng-template>
     <div class="sidenav" id="mobile-sidenav" [style.visibility]="showSidebar ? 'visible' : 'hidden'">
       <ul>
         <li routerLinkActive="active"><a routerLink="browse-query">Prohlížeč dotazů</a></li>
         <li routerLinkActive="active"><a routerLink="browse-results">Prohlížeč výsledků</a></li>
-        <li routerLinkActive="active"><a routerLink="last-result">Poslední výsledek</a></li>
+        <li routerLinkActive="active"><a routerLink="result-viewer/last">Poslední výsledek</a></li>
       </ul>
       <ng-template appSidebar></ng-template>
     </div>

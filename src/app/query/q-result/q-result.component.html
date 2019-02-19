@@ -7,6 +7,6 @@
   </div>
   <div class="card-action">
     <button class="btn btn-tiny default-primary-color" (click)="handleCopyResult()" [disabled]="result === undefined">Zkopírovat</button>
-    <a [href]="['last-result']" class="btn btn-tiny">Zobrazit samostatně</a>
+    <a [routerLink]="['/result-viewer', 'last']" class="btn btn-tiny">Zobrazit samostatně</a>
   </div>
 </div>

@@ -27,11 +27,11 @@ import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { QResultComponent } from './query/q-result/q-result.component';
 import { BeautifyPipe } from './query/beautify.pipe';
-import { LastResultComponent } from './last-result/last-result.component';
 import { BrowseResultsComponent } from './browse-results/browse-results.component';
 import { QrEntryComponent } from './browse-results/qr-entry/qr-entry.component';
 import { QrStatePipe } from './browse-results/qr-entry/qr-state.pipe';
 import { TimePipe } from './time.pipe';
+import { ResultViewerComponent } from './result-viewer/result-viewer.component';
 
 @NgModule({
   declarations: [
@@ -40,16 +40,16 @@ import { TimePipe } from './time.pipe';
     BrowseQueryComponent,
     NavigationComponent,
     BrowseToolbarComponent,
-    LastResultComponent,
+    BrowseResultsComponent,
+    ResultViewerComponent,
     QEndpointComponent, QNameComponent, QContentComponent, QDescriptionComponent,
     QParamsComponent, QEntryComponent, QTagsComponent, QGroupComponent, QResultComponent,
+    QrEntryComponent,
     EditComponent,
     EditableValueComponent,
     NavbarDirective,
     SidebarDirective,
     BeautifyPipe,
-    BrowseResultsComponent,
-    QrEntryComponent,
     QrStatePipe,
     TimePipe,
   ],

@@ -6,6 +6,7 @@ interface QueryResultStorageEntry {
   _id: string;
   _name: string;
   _content: string;
+  _result: string;
   _params: {};
   _resultState: ResultState;
   _dateOfRun: number;
@@ -35,8 +36,8 @@ export class QueryResultService {
    * @param input Naparsovaný dotaz
    */
   private static parseQueryResult(input: QueryResultStorageEntry): QueryResult {
-    return new QueryResult(input._id, input._name, input._content, input._params, input._resultState,
-      input._dateOfRun, input._runLength,
+    return new QueryResult(input._id, input._name, input._content, input._result, input._params,
+      input._resultState, input._dateOfRun, input._runLength,
       input._countOfSelect, input._countOfConstruct);
   }
 
@@ -75,5 +76,9 @@ export class QueryResultService {
   add(result: QueryResult) {
     this._results.push(result);
     this._saveQueryResults();
+  }
+
+  byId(id: string): QueryResult {
+  return this._results.find(value => value.id === id);
   }
 }
