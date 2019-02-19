@@ -13,7 +13,7 @@ export class EndpointCommunicatorService {
 
   static readonly LAST_QUERY_KEY = 'last-query';
 
-  static readonly options = {
+  static readonly OPTIONS = {
     'headers': new HttpHeaders({
       'Accept': 'application/sparql-results+json,*/*;q=0.9',
       'Content-Type' : 'application/x-www-form-urlencode',
@@ -39,11 +39,11 @@ export class EndpointCommunicatorService {
 
     // TODO po vyřešení cors problému vrátit zpět opravdové odesílání dotazů
     // const formData = new FormData();
-    // formData.append('query', query);
-    // this._http
-    //   .post('http://cors.io/?' + endpoint, formData, EndpointCommunicatorService.options)
-    //   .toPromise()
-    //   .then(value => console.log(value));
+    // formData.append('query', query.content);
+    // return this._http
+    //   .post(query.endpoint, formData, EndpointCommunicatorService.OPTIONS)
+    //   .toPromise();
+      // .then(value => console.log(value));
   }
 
   get lastQueryResult(): any {
