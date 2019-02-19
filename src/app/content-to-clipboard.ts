@@ -1,6 +1,6 @@
 import * as beautify from 'js-beautify';
 
-export function copyToClipboard(value: string) {
+export function copyToClipboard(value: {}) {
   // Vytvoření provizorního elementu 'textarea'
   const el = document.createElement('textarea');
   // Nastavení hodnoty

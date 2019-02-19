@@ -1,6 +1,6 @@
 export class QueryResult {
 
-  constructor(private _id, private _name: string, private _content: string, private _result: string, private _params: {},
+  constructor(private _id, private _name: string, private _content: string, private _result: {}, private _params: {},
               private _resultState: ResultState, private _dateOfRun: number, private _runLength: number,
               private _countOfSelect: number, private _countOfConstruct: number) {}
 
@@ -16,7 +16,7 @@ export class QueryResult {
     return this._content;
   }
 
-  get result(): string {
+  get result(): {} {
     return this._result;
   }
 

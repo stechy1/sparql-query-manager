@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { BrowseQueryComponent } from './browse-query/browse-query.component';
 import { EditComponent } from './edit/edit.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { LastResultComponent } from './last-result/last-result.component';
 import { BrowseResultsComponent } from './browse-results/browse-results.component';
 import { BrowseToolbarComponent } from './browse-query/browse-toolbar/browse-toolbar.component';
 import { ResultViewerComponent } from './result-viewer/result-viewer.component';

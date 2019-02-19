@@ -30,7 +30,7 @@ export class EndpointCommunicatorService {
       setTimeout(() => {
         const end = Date.now();
         this._storage.set(EndpointCommunicatorService.LAST_QUERY_KEY, endpointsMock);
-        const qresult = new QueryResult(query.id, query.name, query.content, query.usedParams(),
+        const qresult = new QueryResult(query.id, query.name, query.content, endpointsMock, query.usedParams(),
           ResultState.OK, end, end - start, 0, 0);
         this._qresultService.add(qresult);
         resolve(endpointsMock);
@@ -46,8 +46,8 @@ export class EndpointCommunicatorService {
       // .then(value => console.log(value));
   }
 
-  get lastQueryResult(): any {
-    return this._storage.get(EndpointCommunicatorService.LAST_QUERY_KEY) || '';
+  get lastQueryResult(): {} {
+    return this._storage.get(EndpointCommunicatorService.LAST_QUERY_KEY) || {};
   }
 
 }

@@ -6,7 +6,7 @@ interface QueryResultStorageEntry {
   _id: string;
   _name: string;
   _content: string;
-  _result: string;
+  _result: {};
   _params: {};
   _resultState: ResultState;
   _dateOfRun: number;

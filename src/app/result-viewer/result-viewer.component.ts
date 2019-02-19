@@ -12,7 +12,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ResultViewerComponent implements OnInit {
 
-  queryResult: string;
+  queryResult: {};
 
   constructor(private _endpointCommunicator: EndpointCommunicatorService, private _qrservice: QueryResultService,
               private _route: ActivatedRoute, private _toaster: ToastrService) { }
