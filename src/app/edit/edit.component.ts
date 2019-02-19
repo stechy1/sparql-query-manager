@@ -83,8 +83,9 @@ export class EditComponent implements OnInit {
     }
 
     this._endpointCommunicator.makeRequest(this._query).then(value => {
-      this.working = false;
       this.queryResult = value;
+    }).finally(() => {
+      this.working = false;
     });
   }
 }
