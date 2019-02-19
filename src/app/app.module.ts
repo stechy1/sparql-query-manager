@@ -32,6 +32,7 @@ import { QrEntryComponent } from './browse-results/qr-entry/qr-entry.component';
 import { QrStatePipe } from './browse-results/qr-entry/qr-state.pipe';
 import { TimePipe } from './time.pipe';
 import { ResultViewerComponent } from './result-viewer/result-viewer.component';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -64,7 +65,8 @@ import { ResultViewerComponent } from './result-viewer/result-viewer.component';
       storageType: 'localStorage'
     }),
     BrowserAnimationsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ToastrModule.forRoot()
   ],
   entryComponents: [BrowseToolbarComponent],
   providers: [],

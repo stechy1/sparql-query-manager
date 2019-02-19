@@ -6,6 +6,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { QParamsComponent } from '../query/q-params/q-params.component';
 import { NavigationService } from '../navigation/navigation.service';
 import { EndpointCommunicatorService } from '../endpoint-communicator.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-edit',
@@ -30,7 +31,8 @@ export class EditComponent implements OnInit {
   queryResult: string;
 
   constructor(private _route: ActivatedRoute, private _qservice: QueryService,
-              private _navService: NavigationService, private _endpointCommunicator: EndpointCommunicatorService) { }
+              private _navService: NavigationService, private _endpointCommunicator: EndpointCommunicatorService,
+              private _toaster: ToastrService) { }
 
   ngOnInit() {
     const id = this._route.snapshot.paramMap.get('id');
@@ -55,6 +57,7 @@ export class EditComponent implements OnInit {
     this._query.params = this._params;
     this._qservice.performSave();
     this.saveProgress = 'notSaved';
+    this._toaster.success('Dotaz byl uložen');
   }
 
   handleQueryChange() {
@@ -68,6 +71,7 @@ export class EditComponent implements OnInit {
     this._params = this.paramsComponent.variablesWithoutUnused;
     this._query.params = this._params;
     this._qservice.performSave();
+    this._toaster.success('Dotaz byl uložen');
   }
 
   handleUpdateParams(event: string) {

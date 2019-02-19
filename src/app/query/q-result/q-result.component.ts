@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { copyToClipboard } from '../../content-to-clipboard';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-q-result',
@@ -11,17 +12,17 @@ export class QResultComponent implements OnInit, AfterViewInit {
   @Input() result: string;
   windowHeight: number;
 
-  constructor() { }
+  constructor(private _toaster: ToastrService) { }
 
   ngOnInit() {
   }
 
   ngAfterViewInit(): void {
     setTimeout(() => this.windowHeight = window.innerHeight - 200, 500);
-    console.log("Obsah: " + this.result + " konec");
   }
 
   handleCopyResult() {
     copyToClipboard(this.result);
+    this._toaster.success('Zpráva byla zkopírována');
   }
 }

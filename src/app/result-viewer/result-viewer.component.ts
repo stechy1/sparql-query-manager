@@ -3,6 +3,7 @@ import { EndpointCommunicatorService } from '../endpoint-communicator.service';
 import { copyToClipboard } from '../content-to-clipboard';
 import { ActivatedRoute } from '@angular/router';
 import { QueryResultService } from '../query-result/query-result.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-result-viewer',
@@ -14,7 +15,7 @@ export class ResultViewerComponent implements OnInit {
   queryResult: string;
 
   constructor(private _endpointCommunicator: EndpointCommunicatorService, private _qrservice: QueryResultService,
-              private _route: ActivatedRoute) { }
+              private _route: ActivatedRoute, private _toaster: ToastrService) { }
 
   private _loadQuery(id: string) {
     if (id === 'last') {
@@ -34,5 +35,6 @@ export class ResultViewerComponent implements OnInit {
 
   handleCopyResult() {
     copyToClipboard(this.queryResult);
+    this._toaster.success('Zpráva byla zkopírována');
   }
 }

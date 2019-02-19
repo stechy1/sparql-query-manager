@@ -1,4 +1,5 @@
 @import "materialize.css";
+@import "~ngx-toastr/toastr.css";
 @import "palette.css";
 
 .card .card-title {
