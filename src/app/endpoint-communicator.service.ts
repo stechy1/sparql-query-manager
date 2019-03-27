@@ -12,6 +12,7 @@ import { QueryResult, ResultState } from './query-result/query-result';
 export class EndpointCommunicatorService {
 
   static readonly LAST_QUERY_KEY = 'last-query';
+  static readonly LAST_QUERY_BODY_KEY: 'last-query-body';
 
   static readonly OPTIONS = {
     'headers': new HttpHeaders({
@@ -30,6 +31,7 @@ export class EndpointCommunicatorService {
       setTimeout(() => {
         const end = Date.now();
         this._storage.set(EndpointCommunicatorService.LAST_QUERY_KEY, endpointsMock);
+        this._storage.set(EndpointCommunicatorService.LAST_QUERY_BODY_KEY, query.content);
         const qresult = new QueryResult(query.id, query.name, query.content, endpointsMock, query.usedParams(),
           ResultState.OK, end, end - start, 0, 0);
         this._qresultService.add(qresult);
@@ -48,6 +50,10 @@ export class EndpointCommunicatorService {
 
   get lastQueryResult(): {} {
     return this._storage.get(EndpointCommunicatorService.LAST_QUERY_KEY) || {};
+  }
+
+  get lastQueryBody(): string {
+    return this._storage.get(EndpointCommunicatorService.LAST_QUERY_BODY_KEY) || '';
   }
 
 }
