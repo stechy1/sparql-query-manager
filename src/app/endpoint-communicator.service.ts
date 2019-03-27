@@ -25,7 +25,7 @@ export class EndpointCommunicatorService {
               private _qresultService: QueryResultService) { }
 
   makeRequest(query: Query): Promise<any> {
-    const start = Date.now();
+    const start = query.lastRun;
     return new Promise<any>(resolve => {
       setTimeout(() => {
         const end = Date.now();
