@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 export class ResultViewerComponent implements OnInit {
 
   queryResult: {};
+  title: string;
 
   constructor(private _endpointCommunicator: EndpointCommunicatorService, private _qrservice: QueryResultService,
               private _route: ActivatedRoute, private _toaster: ToastrService) { }
@@ -20,8 +21,11 @@ export class ResultViewerComponent implements OnInit {
   private _loadQuery(id: string) {
     if (id === 'last') {
       this.queryResult = this._endpointCommunicator.lastQueryResult;
+      this.title = 'Výsledek posledního dotazu';
     } else {
+      const result = this._qrservice.byId(id);
       this.queryResult = this._qrservice.byId(id).result;
+      this.title = `Výsledek dotazu: ${result.name}`;
     }
   }
 
