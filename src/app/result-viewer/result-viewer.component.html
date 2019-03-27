@@ -10,10 +10,10 @@
   <div class="col s12" [style.display]="showResult ? 'block' : 'none'">
   <div id="result" class="card">
     <div class="card-action">
+      <div class="card-title">{{title}}</div>
       <button class="btn btn-tiny" (click)="handleCopyResult()">Zkopírovat do schránky</button>
     </div>
     <div class="card-content">
-      <span class="card-title">{{title}}</span>
       <pre>{{queryResult | beautify}}</pre>
     </div>
   </div>
