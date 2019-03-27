@@ -2,8 +2,8 @@
   <div class="col s12" *ngIf="queryResult !== ''">
 
     <ul class="tabs">
-      <li class="tab col s6"><a [routerLink]="'.'" [queryParams]="{tab: 'result'}" queryParamsHandling="merge" (click)="showResult = true" style="cursor: pointer;">Výsledek dotazu</a></li>
-      <li class="tab col s6"><a [routerLink]="'.'" [queryParams]="{tab: 'source'}" queryParamsHandling="merge" (click)="showResult = false" style="cursor: pointer;">Dotaz</a></li>
+      <li class="tab col s6"><a [routerLink]="'.'" [queryParams]="{tab: 'result'}" queryParamsHandling="merge" (click)="showResult = true" [routerLinkActive]="'active'" style="cursor: pointer;">Výsledek dotazu</a></li>
+      <li class="tab col s6"><a [routerLink]="'.'" [queryParams]="{tab: 'source'}" queryParamsHandling="merge" (click)="showResult = false" [routerLinkActive]="'active'" style="cursor: pointer;">Dotaz</a></li>
     </ul>
   </div>
 
