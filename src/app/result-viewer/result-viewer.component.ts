@@ -14,6 +14,7 @@ export class ResultViewerComponent implements OnInit {
 
   queryResult: {};
   title: string;
+  showResult: boolean;
 
   constructor(private _endpointCommunicator: EndpointCommunicatorService, private _qrservice: QueryResultService,
               private _route: ActivatedRoute, private _toaster: ToastrService) { }
@@ -35,6 +36,7 @@ export class ResultViewerComponent implements OnInit {
     this._route.params.subscribe(value => {
       this._loadQuery(value['id']);
     });
+    this.showResult = this._route.snapshot.queryParams['tab'] === 'result';
   }
 
   handleCopyResult() {
