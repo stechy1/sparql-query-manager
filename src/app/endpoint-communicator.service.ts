@@ -27,25 +27,25 @@ export class EndpointCommunicatorService {
 
   makeRequest(query: Query): Promise<any> {
     const start = query.lastRun;
-    return new Promise<any>(resolve => {
-      setTimeout(() => {
-        const end = Date.now();
-        this._storage.set(EndpointCommunicatorService.LAST_QUERY_KEY, endpointsMock);
-        this._storage.set(EndpointCommunicatorService.LAST_QUERY_BODY_KEY, query.content);
-        const qresult = new QueryResult(query.id, query.name, query.content, endpointsMock, query.usedParams(),
-          ResultState.OK, end, end - start, 0, 0);
-        this._qresultService.add(qresult);
-        resolve(endpointsMock);
-      }, 1000 + Math.random() * 10000);
-    });
+    // return new Promise<any>(resolve => {
+    //   setTimeout(() => {
+    //     const end = Date.now();
+    //     this._storage.set(EndpointCommunicatorService.LAST_QUERY_KEY, endpointsMock);
+    //     this._storage.set(EndpointCommunicatorService.LAST_QUERY_BODY_KEY, query.content);
+    //     const qresult = new QueryResult(query.id, query.name, query.content, endpointsMock, query.usedParams(),
+    //       ResultState.OK, end, end - start, 0, 0);
+    //     this._qresultService.add(qresult);
+    //     resolve(endpointsMock);
+    //   }, 1000 + Math.random() * 10000);
+    // });
 
     // TODO po vyřešení cors problému vrátit zpět opravdové odesílání dotazů
-    // const formData = new FormData();
-    // formData.append('query', query.content);
-    // return this._http
-    //   .post(query.endpoint, formData, EndpointCommunicatorService.OPTIONS)
-    //   .toPromise();
-      // .then(value => console.log(value));
+    const formData = new FormData();
+    formData.append('query', query.content);
+    return this._http
+      .post(query.endpoint, formData, EndpointCommunicatorService.OPTIONS)
+      .toPromise()
+      .then(value => console.log(value));
   }
 
   get lastQueryResult(): {} {
