@@ -25,4 +25,8 @@ export class QResultComponent implements OnInit, AfterViewInit {
     copyToClipboard(this.result);
     this._toaster.success('Zpráva byla zkopírována');
   }
+
+  handleCloseResponce() {
+    this.result = undefined;
+  }
 }
