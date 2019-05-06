@@ -71,6 +71,7 @@ export class EndpointCommunicatorService {
         // Zpracuji výsledek se stavem OK
         this._handleRequestResult(responce, ResultState.OK, query, start);
       }
+      return responce;
     })
     // Pokud se vykonání požadavku nezdařilo, v proměnné "reason" budu mít uložený důvod neúspěchu
     .catch((reason: HttpErrorResponse) => {
