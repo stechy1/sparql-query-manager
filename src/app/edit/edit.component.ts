@@ -7,6 +7,7 @@ import { QParamsComponent } from '../query/q-params/q-params.component';
 import { NavigationService } from '../navigation/navigation.service';
 import { EndpointCommunicatorService } from '../endpoint-communicator.service';
 import { ToastrService } from 'ngx-toastr';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-edit',
@@ -48,6 +49,9 @@ export class EditComponent implements OnInit {
     return this._query;
   }
 
+  /**
+   * Reakce na tlačítko pro uložení dotazu
+   */
   handleSaveQuery() {
     if (this.saveProgress === 'notSaved') {
       return;
@@ -60,12 +64,18 @@ export class EditComponent implements OnInit {
     this._toaster.success('Dotaz byl uložen');
   }
 
+  /**
+   * Reakce na tlačítko pro uložení změn hodnot v dotazu
+   */
   handleQueryChange() {
     this.saveProgress = 'notSaved';
     const self = this;
     setTimeout(() => {self.saveProgress = 'saved'; }, 100);
   }
 
+  /**
+   * Reakce na tlačítko pro manuální uložení změn hodnot v dotazu
+   */
   handleManualQuerySave() {
     this.saveProgress = 'notSaved';
     this._params = this.paramsComponent.variablesWithoutUnused;
@@ -74,10 +84,20 @@ export class EditComponent implements OnInit {
     this._toaster.success('Dotaz byl uložen');
   }
 
+  /**
+   * Reakce na tlačítko pro aktualizaci parametrů dotazu
+   *
+   * @param event Samotný text dotazu
+   */
   handleUpdateParams(event: string) {
     this._params = this.paramsComponent.findVariables(event, this._params);
   }
 
+  /**
+   * Reakce na tlačítko pro vykonání samotného dotazu
+   *
+   * @param ignoreStatistics True, pokud se výsledek dotazu nemá započítávat do statistik, jinak False
+   */
   handleDoQuery(ignoreStatistics: boolean) {
     this.working = true;
     if (!ignoreStatistics) {
@@ -86,7 +106,7 @@ export class EditComponent implements OnInit {
       this._qservice.performSave();
     }
 
-    this._endpointCommunicator.makeRequest(this._query).then(value => {
+    this._endpointCommunicator.makeRequest(this._query, ignoreStatistics).then(value => {
       this.queryResult = value;
     }).finally(() => {
       this.working = false;

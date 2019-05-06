@@ -43,6 +43,10 @@ export class QueryResult {
   get countOfConstruct(): number {
     return this._countOfConstruct;
   }
+
+  get isOk(): boolean {
+    return this._resultState === ResultState.OK;
+  }
 }
 
 export enum ResultState {

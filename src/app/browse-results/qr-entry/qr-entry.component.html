@@ -3,7 +3,10 @@
   <div class="card-content">
     <div>
       <span class="qr-entry-parameter">Stav: </span>
-      <span class="qr-entry-value">{{queryResult.resultState | qrState}}</span>
+      <span class="qr-entry-value">
+        {{queryResult.resultState | qrState}}
+        <i class="material-icons" style="font-size: 18px">{{queryResult.isOk ? 'check_circle' : 'error'}}</i>
+      </span>
     </div>
     <div>
       <span class="qr-entry-parameter">Spuštěno: </span>
@@ -13,11 +16,11 @@
       <span class="qr-entry-parameter">Doba běhu: </span>
       <span class="qr-entry-value">{{queryResult.runLength | time}}</span>
     </div>
-    <div>
+    <div *ngIf="queryResult.isOk">
       <span class="qr-entry-parameter">Počet řádek: </span>
       <span class="qr-entry-value">{{queryResult.countOfSelect}}</span>
     </div>
-    <div>
+    <div *ngIf="queryResult.isOk">
       <span class="qr-entry-parameter">Počet trojic: </span>
       <span class="qr-entry-value">{{queryResult.countOfConstruct}}</span>
     </div>
