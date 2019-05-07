@@ -43,3 +43,10 @@
 input::placeholder {
   color: #606060;
 }
+
+select {
+  display: block;
+  height: 24px;
+  line-height: 24px;
+  font-size: 11px;
+}

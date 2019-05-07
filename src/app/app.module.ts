@@ -33,6 +33,7 @@ import { QrStatePipe } from './browse-results/qr-entry/qr-state.pipe';
 import { TimePipe } from './time.pipe';
 import { ResultViewerComponent } from './result-viewer/result-viewer.component';
 import { ToastrModule } from 'ngx-toastr';
+import { QActionsComponent } from './query/q-actions/q-actions.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { ToastrModule } from 'ngx-toastr';
     BeautifyPipe,
     QrStatePipe,
     TimePipe,
+    QActionsComponent,
   ],
   imports: [
     BrowserModule,

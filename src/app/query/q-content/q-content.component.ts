@@ -13,11 +13,11 @@ export class QContentComponent implements OnInit {
   private _query: Query;
   private _content: string;
   loading: boolean;
-  @Input() working: boolean;
+  // @Input() working: boolean;
   @Output() dataChanged = new EventEmitter<Query>();
   @Output() updateContentOnly = new EventEmitter<string>();
-  @Output() doQuery = new EventEmitter<boolean>();
-  ignoreStatistics: boolean;
+  // @Output() doQuery = new EventEmitter<boolean>();
+  // ignoreStatistics: boolean;
 
   constructor() { }
 
@@ -35,7 +35,7 @@ export class QContentComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
-    this.ignoreStatistics = false;
+    // this.ignoreStatistics = false;
   }
 
   @Input()
@@ -73,9 +73,5 @@ export class QContentComponent implements OnInit {
 
     this._query.content = this.content;
     this.dataChanged.emit(this._query);
-  }
-
-  handleDoQuery() {
-    this.doQuery.emit(this.ignoreStatistics);
   }
 }

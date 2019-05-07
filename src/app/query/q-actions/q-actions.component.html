@@ -1,0 +1,24 @@
+<div class="card">
+  <div class="card-content">
+    <span class="card-title">Akce</span>
+  </div>
+  <div class="card-action">
+    <div class="row">
+      <div class="col l4">
+        <button class="btn btn-tiny green" (click)="handleDoQuery()" [disabled]="working || query.content.length === 0">Vykonat<i class="material-icons right rotating" [style.display]="working ? 'block' : 'none'">autorenew</i></button>
+      </div>
+      <div class="col l4" style="display: flex;">
+        <label for="selectResponceFormat">Formát odpovědi</label>
+        <select id="selectResponceFormat" [(ngModel)]="selectedResponceFormat">
+          <option *ngFor="let responceFormat of responceFormats" value="{{responceFormat}}">{{responceFormat}}</option>
+        </select>
+        </div>
+      <div class="col l4">
+        <label style="margin-left: 8px" class="right">
+          <input type="checkbox" class="filled-in" value="alphabeticaly" [(checked)]="ignoreStatistics"/>
+          <span class="group-by-select primary-text-color">Nezapočítávat do statistik</span>
+        </label>
+      </div>
+    </div>
+  </div>
+</div>
