@@ -5,9 +5,8 @@ import { Query } from '../query/query';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { QParamsComponent } from '../query/q-params/q-params.component';
 import { NavigationService } from '../navigation/navigation.service';
-import { EndpointCommunicatorService } from '../endpoint-communicator.service';
+import { EndpointCommunicatorService, ResponceFormat } from '../endpoint-communicator.service';
 import { ToastrService } from 'ngx-toastr';
-import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-edit',

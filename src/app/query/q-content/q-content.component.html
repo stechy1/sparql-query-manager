@@ -9,7 +9,7 @@
       <div class="col s12 l6">
         <button class="btn btn-tiny green" (click)="handleDoQuery()" [disabled]="working || content.length === 0">Vykonat<i class="material-icons right rotating" [style.display]="working ? 'block' : 'none'">autorenew</i></button>
         <label style="margin-left: 8px">
-          <input type="checkbox" class="filled-in" value="alphabeticaly" [checked]="ignoreStatistics"/>
+          <input type="checkbox" class="filled-in" value="alphabeticaly" [(checked)]="ignoreStatistics"/>
           <span class="group-by-select primary-text-color">Nezapočítávat do statistik</span>
         </label>
       </div>
