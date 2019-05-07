@@ -165,6 +165,24 @@ export class QueryService {
   }
 
   /**
+   * Vytvoří hlubokou kopii zadaného dotazu a uloží ho do paměti
+   *
+   * @param query Dotaz {@link Query}, který se má zduplikovat
+   * @return ID nového dotazu
+   */
+  duplicate(query: Query): string {
+    const newQuery = new Query(QueryService.makeID(), query.name + ' - (Duplicated)', query.endpoint,
+      JSON.parse(JSON.stringify(query.tags)) || [], query.content, {}, query.description, Date.now(), 0, 0);
+    newQuery.params = (JSON.parse(JSON.stringify(query.params)) || {});
+
+    this._queries.push(newQuery);
+    this._saveQueries();
+    this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.ADD, query: newQuery});
+
+    return newQuery.id;
+  }
+
+  /**
    * Vygeneruje pole všech endpointů, které jsou v dotazech
    */
   get endpoints(): string[] {

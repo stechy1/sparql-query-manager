@@ -6,6 +6,7 @@
     <div class="row">
       <div class="col l4">
         <button class="btn btn-tiny green" (click)="handleDoQuery()" [disabled]="working || query.content.length === 0">Vykonat<i class="material-icons right rotating" [style.display]="working ? 'block' : 'none'">autorenew</i></button>
+        <button class="btn btn-tiny blue" (click)="handleDuplicate()">Duplikovat</button>
       </div>
       <div class="col l4" style="display: flex;">
         <label for="selectResponceFormat">Formát odpovědi</label>
