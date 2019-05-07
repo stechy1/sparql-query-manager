@@ -13,7 +13,7 @@ export class EndpointCommunicatorService {
   static readonly LAST_QUERY_KEY = 'last-query';
   static readonly LAST_QUERY_BODY_KEY = 'last-query-body';
   static readonly RESPONCE_FORMAT_KEY = 'responce-format';
-
+  // Hlavičky, které se odešlou na server společně s dotazem
   static readonly HEADERS = {
     // 'Accept': 'application/sparql-results+json,*/*;q=0.9',
     // 'Content': 'application/json',
@@ -22,21 +22,15 @@ export class EndpointCommunicatorService {
     'Charset': 'UTF-8',
     'Timeout': '5000'
   };
-
-  // static readonly OPTIONS = {
-  //   'headers': new HttpHeaders({
-  //     // 'Accept': 'application/sparql-results+json,*/*;q=0.9',
-  //     // 'Content': 'application/json',
-  //     // 'Accept': 'text/csv',
-  //     'Content-Type': 'application/x-www-form-urlencoded',
-  //     'Charset': 'UTF-8',
-  //     'Timeout': '5000'
-  //   })
-  // };
+  // Formát dotazu
   static readonly BODY_FORMAT = 'query=';
+
+  // Příznak, zda-li se zpracovává požadavek na server
+  private _working: boolean;
 
   constructor(private _http: HttpClient, private _storage: LocalStorageService,
               private _qresultService: QueryResultService) {
+    this._working = false;
   }
 
   /**
@@ -63,6 +57,8 @@ export class EndpointCommunicatorService {
    * @param ignoreStatistics True, pokud se výsledek dotazu nemá započítávat do statistik, jinak False
    */
   makeRequest(query: Query, ignoreStatistics: boolean): Promise<any> {
+    // Nastavím příznak, že komunikuji se serverem
+    this._working = true;
     // Uložím si čas spuštění dotazu
     const start = query.lastRun;
     // Připravím si formát těla požadavku, který budu posílat na server
@@ -70,7 +66,7 @@ export class EndpointCommunicatorService {
     // Vytvořím kopii objektu s hlavičkami
     const headers = JSON.parse(JSON.stringify(EndpointCommunicatorService.HEADERS));
     // Připojím hlavičku s definicí formátu odpovědi
-    headers['Accept'] = this.responceFormat;
+    headers['Accept'] = ResponceFormat[this.responceFormat];
 
     // Budu vracet výsledek z dotazu jako Promise
     return this._http
@@ -100,6 +96,10 @@ export class EndpointCommunicatorService {
       }
       // Vrátím důvod neúspěchu, aby se zobrazil v GUI
       return reason.statusText;
+    })
+    // Nakonec zruším přízak, že komunikuji se serverem...
+    .finally(() => {
+      this._working = false;
     });
   }
 
@@ -117,12 +117,27 @@ export class EndpointCommunicatorService {
     return this._storage.get(EndpointCommunicatorService.LAST_QUERY_BODY_KEY) || '';
   }
 
-  get responceFormat(): ResponceFormat {
-    return this._storage.get(EndpointCommunicatorService.RESPONCE_FORMAT_KEY) || ResponceFormat.CSV;
+  /**
+   * Vrátí zkratku formátu odpovědi ze serveru
+   */
+  get responceFormat(): string {
+    return (this._storage.get(EndpointCommunicatorService.RESPONCE_FORMAT_KEY) || 'JSON');
   }
 
-  set responceFormat(format: ResponceFormat) {
+  /**
+   * Nastaví formát odpovědi podle zkratky
+   *
+   * @param format Zkratka formátu odpovědi. Může být jeden ze čtyř podporovaných formátů: {@link ResponceFormat}
+   */
+  set responceFormat(format: string) {
     this._storage.set(EndpointCommunicatorService.RESPONCE_FORMAT_KEY, format);
+  }
+
+  /**
+   * Indikátor, který říká, zda-li se aktuálně zpracovává nějaký požadavek, či nikoliv
+   */
+  get working(): boolean {
+    return this._working;
   }
 }
 

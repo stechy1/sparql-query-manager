@@ -3,7 +3,7 @@
   <div class="col s12 m7 offset-l1">
     <app-q-name [query]="query" (dataChanged)="handleQueryChange()"></app-q-name>
     <app-q-content [query]="query" (dataChanged)="handleQueryChange()" (updateContentOnly)="handleUpdateParams($event)"></app-q-content>
-    <app-q-actions [query]="query" [working]="working" (doQuery)="handleDoQuery($event)"></app-q-actions>
+    <app-q-actions [query]="query" (doQuery)="handleDoQuery($event)"></app-q-actions>
     <app-q-result [result]="queryResult"></app-q-result>
   </div>
   <div class="col s12 m5 l3">

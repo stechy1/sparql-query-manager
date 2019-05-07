@@ -9,13 +9,13 @@
       </div>
       <div class="col l4" style="display: flex;">
         <label for="selectResponceFormat">Formát odpovědi</label>
-        <select id="selectResponceFormat" [(ngModel)]="selectedResponceFormat">
+        <select id="selectResponceFormat" [(ngModel)]="responceFormat">
           <option *ngFor="let responceFormat of responceFormats" value="{{responceFormat}}">{{responceFormat}}</option>
         </select>
         </div>
       <div class="col l4">
         <label style="margin-left: 8px" class="right">
-          <input type="checkbox" class="filled-in" value="alphabeticaly" [(checked)]="ignoreStatistics"/>
+          <input type="checkbox" class="filled-in" value="alphabeticaly" [(ngModel)]="ignoreStatistics"/>
           <span class="group-by-select primary-text-color">Nezapočítávat do statistik</span>
         </label>
       </div>

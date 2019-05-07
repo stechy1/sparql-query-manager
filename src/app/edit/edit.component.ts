@@ -25,7 +25,6 @@ export class EditComponent implements OnInit {
 
   private _query: Query;
   saveProgress: string;
-  working: boolean;
   @ViewChild(QParamsComponent) paramsComponent: QParamsComponent;
   private _params: {};
   queryResult: string;
@@ -38,7 +37,6 @@ export class EditComponent implements OnInit {
     const id = this._route.snapshot.paramMap.get('id');
     this._query = this._qservice.byId(id);
     this.saveProgress = 'notSaved';
-    this.working = false;
     this._params = this._query.params;
     this._navService.setNavbar(null);
     this._navService.setSidebar(null);
@@ -98,7 +96,6 @@ export class EditComponent implements OnInit {
    * @param ignoreStatistics True, pokud se výsledek dotazu nemá započítávat do statistik, jinak False
    */
   handleDoQuery(ignoreStatistics: boolean) {
-    this.working = true;
     if (!ignoreStatistics) {
       this._query.runCount++;
       this._query.lastRun = Date.now();
@@ -107,8 +104,6 @@ export class EditComponent implements OnInit {
 
     this._endpointCommunicator.makeRequest(this._query, ignoreStatistics).then(value => {
       this.queryResult = value;
-    }).finally(() => {
-      this.working = false;
     });
   }
 }
