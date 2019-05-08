@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { LocalStorageService } from 'angular-2-local-storage';
-import { Query } from './query/query';
+import { ParameterValue, Query } from './query/query';
 import { QueryResultService } from './query-result/query-result.service';
 import { QueryResult, ResultState } from './query-result/query-result';
 import { parseQueryResult, QueryResultStorageEntry } from './query-result/query-result-storage.entry';
@@ -35,6 +35,22 @@ export class EndpointCommunicatorService {
   }
 
   /**
+   * Extrahuje proměnné z dotazu a dosadí za ně hodnoty
+   *
+   * @param query Dotaz, ve kterém se mají dosadit hodnoty
+   */
+  private static _extractVariables(query: Query): string {
+    let queryContent = query.content;
+    for (const key of Object.keys(query.params)) {
+      const param = <ParameterValue> query.params[key];
+      const value = (param.usedValue !== undefined && param.usedValue !== '') ? param.usedValue : param.defaultValue;
+      queryContent = queryContent.replace(`\$${key}\$`, value);
+    }
+
+    return queryContent;
+  }
+
+  /**
    * Uloží výsledek ze serveru
    *
    * @param qresult Instance výsledku odpovědi ze serveru
@@ -56,7 +72,7 @@ export class EndpointCommunicatorService {
     // Uložím si čas spuštění dotazu
     const start = query.lastRun;
     // Připravím si formát těla požadavku, který budu posílat na server
-    const body = `${EndpointCommunicatorService.BODY_FORMAT}${query.content}`;
+    const body = `${EndpointCommunicatorService.BODY_FORMAT}${EndpointCommunicatorService._extractVariables(query)}`;
     // Vytvořím kopii objektu s hlavičkami
     const headers = JSON.parse(JSON.stringify(EndpointCommunicatorService.HEADERS));
     // Připojím hlavičku s definicí formátu odpovědi
