@@ -4,6 +4,7 @@ import { copyToClipboard } from '../content-to-clipboard';
 import { ActivatedRoute } from '@angular/router';
 import { QueryResultService } from '../query-result/query-result.service';
 import { ToastrService } from 'ngx-toastr';
+import { QueryResult } from '../query-result/query-result';
 
 @Component({
   selector: 'app-result-viewer',
@@ -12,8 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ResultViewerComponent implements OnInit {
 
-  queryResult: {};
-  queryBody: string;
+  queryResult: QueryResult;
   title: string;
   showResult: boolean;
 
@@ -22,14 +22,11 @@ export class ResultViewerComponent implements OnInit {
 
   private _loadQuery(id: string) {
     if (id === 'last') {
-      this.queryResult = this._endpointCommunicator.lastQueryResult;
-      this.queryBody = this._endpointCommunicator.lastQueryBody;
+      this.queryResult = <QueryResult>this._endpointCommunicator.lastQueryResult;
       this.title = 'Výsledek posledního dotazu';
     } else {
-      const query = this._qrservice.byId(id);
-      this.queryResult = query.result;
-      this.queryBody = query.content;
-      this.title = `Výsledek dotazu: ${query.name}`;
+      this.queryResult = this._qrservice.byId(id);
+      this.title = `Výsledek dotazu: ${this.queryResult.name}`;
     }
   }
 

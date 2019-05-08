@@ -4,6 +4,7 @@ import { LocalStorageService } from 'angular-2-local-storage';
 import { Query } from './query/query';
 import { QueryResultService } from './query-result/query-result.service';
 import { QueryResult, ResultState } from './query-result/query-result';
+import { parseQueryResult, QueryResultStorageEntry } from './query-result/query-result-storage.entry';
 
 @Injectable({
   providedIn: 'root'
@@ -34,19 +35,12 @@ export class EndpointCommunicatorService {
   }
 
   /**
-   * Zpracuje výsledek ze serveru
+   * Uloží výsledek ze serveru
    *
-   * @param responce Odpověď serveru, nebo chybová hláčka
-   * @param resultState Výsledek odpovědi: OK/KO
-   * @param query Instance třídy Query, pro kterou byla odpověď získána
-   * @param start Čas začátku volání serveru
+   * @param qresult Instance výsledku odpovědi ze serveru
    */
-  private _handleRequestResult(responce: string | {}, resultState: ResultState, query: Query, start: number) {
-    const end = Date.now();
-    this._storage.set(EndpointCommunicatorService.LAST_QUERY_KEY, responce);
-    this._storage.set(EndpointCommunicatorService.LAST_QUERY_BODY_KEY, query.content);
-    const qresult = new QueryResult(query.id, query.name, query.content, responce, query.usedParams(),
-      resultState, end, end - start, 0, 0);
+  private _saveResponce(qresult: QueryResult) {
+    this._storage.set(EndpointCommunicatorService.LAST_QUERY_KEY, JSON.stringify(qresult));
     this._qresultService.add(qresult);
   }
 
@@ -71,31 +65,37 @@ export class EndpointCommunicatorService {
     // Budu vracet výsledek z dotazu jako Promise
     return this._http
     // POST požadavek na query.endpoint
-    .post(query.endpoint, body, {'headers': new HttpHeaders(headers)})
+    .post(query.endpoint, body, {'headers': new HttpHeaders(headers), 'responseType': 'text'})
     // Převedu na Promise
     .toPromise()
     // Pokud se požadavek úspěšně vykoná a příjdou validní data
     .then(responce => {
       console.log('Přišla nějaká data.');
       console.log(responce);
+      const end = Date.now();
+      const qresult = new QueryResult(query.id, query.name, query.content, responce, query.usedParams(),
+        ResultState.OK, end, end - start, 0, 0, this.responceFormat);
       // Pokud se má výsledek započítat do statistik
       if (!ignoreStatistics) {
-        // Zpracuji výsledek se stavem OK
-        this._handleRequestResult(responce, ResultState.OK, query, start);
+        // Uložím výsledek
+        this._saveResponce(qresult);
       }
-      return responce;
+      return qresult;
     })
     // Pokud se vykonání požadavku nezdařilo, v proměnné "reason" budu mít uložený důvod neúspěchu
     .catch((reason: HttpErrorResponse) => {
       console.log('Nastala nějaká chyba.');
-      console.error(JSON.stringify(reason));
+      console.error(reason);
+      const end = Date.now();
+      const qresult = new QueryResult(query.id, query.name, query.content, reason.statusText, query.usedParams(),
+        ResultState.KO, end, end - start, 0, 0, this.responceFormat);
       // Pokud se má výsledek započítat do statistik
       if (!ignoreStatistics) {
         // Zpracuji neúspěšný výsledek
-        this._handleRequestResult(reason.statusText, ResultState.KO, query, start);
+        this._saveResponce(qresult);
       }
       // Vrátím důvod neúspěchu, aby se zobrazil v GUI
-      return reason.statusText;
+      return qresult;
     })
     // Nakonec zruším přízak, že komunikuji se serverem...
     .finally(() => {
@@ -104,17 +104,10 @@ export class EndpointCommunicatorService {
   }
 
   /**
-   * Vrátí poslední výsledek dotazu
+   * Vrátí instanci výsledu posledního provedeného dotazu
    */
-  get lastQueryResult(): {} {
-    return this._storage.get(EndpointCommunicatorService.LAST_QUERY_KEY) || {};
-  }
-
-  /**
-   * Vrátí tělo posledního dotazu
-   */
-  get lastQueryBody(): string {
-    return this._storage.get(EndpointCommunicatorService.LAST_QUERY_BODY_KEY) || '';
+  get lastQueryResult(): QueryResult {
+    return parseQueryResult(<QueryResultStorageEntry>JSON.parse(this._storage.get(EndpointCommunicatorService.LAST_QUERY_KEY)));
   }
 
   /**

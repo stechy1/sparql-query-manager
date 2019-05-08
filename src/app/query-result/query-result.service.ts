@@ -1,19 +1,7 @@
-import { EventEmitter, Injectable } from '@angular/core';
-import { QueryResult, ResultState } from './query-result';
+import { Injectable } from '@angular/core';
+import { QueryResult } from './query-result';
 import { LocalStorageService } from 'angular-2-local-storage';
-
-interface QueryResultStorageEntry {
-  _id: string;
-  _name: string;
-  _content: string;
-  _result: {};
-  _params: {};
-  _resultState: ResultState;
-  _dateOfRun: number;
-  _runLength: number;
-  _countOfSelect: number;
-  _countOfConstruct: number;
-}
+import { parseQueryResult, QueryResultStorageEntry } from './query-result-storage.entry';
 
 @Injectable({
   providedIn: 'root'
@@ -30,16 +18,16 @@ export class QueryResultService {
     this._loadQueryResults();
   }
 
-  /**
-   * Metoda převede vstup na Query
-   *
-   * @param input Naparsovaný dotaz
-   */
-  private static parseQueryResult(input: QueryResultStorageEntry): QueryResult {
-    return new QueryResult(input._id, input._name, input._content, input._result, input._params,
-      input._resultState, input._dateOfRun, input._runLength,
-      input._countOfSelect, input._countOfConstruct);
-  }
+  // /**
+  //  * Metoda převede vstup na Query
+  //  *
+  //  * @param input Naparsovaný dotaz
+  //  */
+  // private static parseQueryResult(input: QueryResultStorageEntry): QueryResult {
+  //   return new QueryResult(input._id, input._name, input._content, input._result, input._params,
+  //     input._resultState, input._dateOfRun, input._runLength,
+  //     input._countOfSelect, input._countOfConstruct, input._format);
+  // }
 
   /**
    * Interní metoda pro načtení dotazů do paměti
@@ -48,7 +36,7 @@ export class QueryResultService {
    */
   private _loadQueryResultsInternal(queries: QueryResultStorageEntry[]): void {
     for (const rawQuery of queries) {
-      const query = QueryResultService.parseQueryResult(rawQuery);
+      const query = parseQueryResult(rawQuery);
       this._results.push(query);
       // this._resultsCollectionChange.emit({typeOfChange: TypeOfQueryChange.ADD, query: query});
     }

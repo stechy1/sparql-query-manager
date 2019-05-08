@@ -7,6 +7,7 @@ import { QParamsComponent } from '../query/q-params/q-params.component';
 import { NavigationService } from '../navigation/navigation.service';
 import { EndpointCommunicatorService, ResponceFormat } from '../endpoint-communicator.service';
 import { ToastrService } from 'ngx-toastr';
+import { QueryResult } from '../query-result/query-result';
 
 @Component({
   selector: 'app-edit',
@@ -27,7 +28,7 @@ export class EditComponent implements OnInit {
   saveProgress: string;
   @ViewChild(QParamsComponent) paramsComponent: QParamsComponent;
   private _params: {};
-  queryResult: string;
+  queryResult: QueryResult;
 
   constructor(private _route: ActivatedRoute, private _qservice: QueryService,
               private _navService: NavigationService, private _endpointCommunicator: EndpointCommunicatorService,

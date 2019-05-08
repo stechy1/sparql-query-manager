@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { copyToClipboard } from '../../content-to-clipboard';
 import { ToastrService } from 'ngx-toastr';
+import { QueryResult } from '../../query-result/query-result';
 
 @Component({
   selector: 'app-q-result',
@@ -9,7 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class QResultComponent implements OnInit, AfterViewInit {
 
-  @Input() result: string;
+  @Input() result: QueryResult;
   windowHeight: number;
 
   constructor(private _toaster: ToastrService) { }

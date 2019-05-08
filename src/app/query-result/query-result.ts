@@ -1,8 +1,8 @@
 export class QueryResult {
 
-  constructor(private _id, private _name: string, private _content: string, private _result: {}, private _params: {},
+  constructor(private _id, private _name: string, private _content: string, private _result: string, private _params: {},
               private _resultState: ResultState, private _dateOfRun: number, private _runLength: number,
-              private _countOfSelect: number, private _countOfConstruct: number) {}
+              private _countOfSelect: number, private _countOfConstruct: number, private _format) {}
 
   get id() {
     return this._id;
@@ -16,7 +16,7 @@ export class QueryResult {
     return this._content;
   }
 
-  get result(): {} {
+  get result(): string {
     return this._result;
   }
 
@@ -42,6 +42,10 @@ export class QueryResult {
 
   get countOfConstruct(): number {
     return this._countOfConstruct;
+  }
+
+  get format(): string {
+    return this._format;
   }
 
   get isOk(): boolean {
