@@ -6,6 +6,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { BrowseResultsComponent } from './browse-results/browse-results.component';
 import { BrowseToolbarComponent } from './browse-query/browse-toolbar/browse-toolbar.component';
 import { ResultViewerComponent } from './result-viewer/result-viewer.component';
+import { SettingsComponent } from './settings/settings.component';
 
 const routes: Routes = [
   {path: 'browse-query', component: BrowseQueryComponent, data: {'sidebar': BrowseToolbarComponent}},
@@ -13,6 +14,7 @@ const routes: Routes = [
   {path: 'edit/:id', component: EditComponent},
   {path: 'result-viewer', pathMatch: 'full', redirectTo: 'result-viewer/last'},
   {path: 'result-viewer/:id', component: ResultViewerComponent},
+  {path: 'settings', component: SettingsComponent},
   {path: '', pathMatch: 'full', redirectTo: 'browse-query'},
   {path: '**', component: PageNotFoundComponent}
 ];

@@ -1,0 +1,66 @@
+<div class="row">
+  <div class="col s12 offset-m2 m8">
+    <div class="card">
+      <span class="card-title">Nastavení</span>
+      <div class="card-content">
+
+        <div class="row settings-entry">
+          <p>Suffix pro duplikovaný dotaz</p>
+          <app-editable-value [value]="settings.suffixForDuplicatedQuery" (valueChanged)="settings.suffixForDuplicatedQuery = $event" class="right"></app-editable-value>
+        </div>
+
+        <div class="row settings-entry">
+          <p>Timeout pro odpověd ze serveru (ms)</p>
+          <app-editable-value [value]="settings.serverTimeout" (valueChanged)="settings.serverTimeout = $event" class="right"></app-editable-value>
+        </div>
+
+        <div class="row settings-entry">
+          <p>Nastavení firebase</p>
+          <div class="right">
+            <label style="display: block">
+              <input type="checkbox" [(ngModel)]="settings.useFirebase">
+              <span>Zapnout firebase</span>
+            </label>
+            <app-editable-value [value]="settings.firebaseCredentials" [useTextarea]="true" (valueChanged)="settings.firebaseCredentials = $event" class="right"></app-editable-value>
+          </div>
+        </div>
+
+        <div class="row settings-entry">
+          <p>Prodleva pro uložení změn hodnot v editaci dotazu (ms)</p>
+          <app-editable-value [value]="settings.saveDelay" (valueChanged)="settings.saveDelay = $event" class="right"></app-editable-value>
+        </div>
+
+        <div class="row settings-entry">
+          <p>Formát doby čekání na výsledek</p>
+          <div class="right">
+            <label style="display: block">
+              <input type="checkbox" [(ngModel)]="settings.queryResultTimeFormat.showHours" (ngModelChange)="refreshTime()">
+              <span>Zobrazit hodiny</span>
+            </label>
+            <label style="display: block">
+              <input type="checkbox" [(ngModel)]="settings.queryResultTimeFormat.showMinutes" (ngModelChange)="refreshTime()">
+              <span>Zobrazit minuty</span>
+            </label>
+            <label style="display: block">
+              <input type="checkbox" [(ngModel)]="settings.queryResultTimeFormat.showSeconds" (ngModelChange)="refreshTime()">
+              <span>Zobrazit vteřiny</span>
+            </label>
+            <label style="display: block">
+              <input type="checkbox" [(ngModel)]="settings.queryResultTimeFormat.showMiliseconds" (ngModelChange)="refreshTime()">
+              <span>Zobrazit milisekundy</span>
+            </label>
+            <p>{{testTime | time:settings.queryResultTimeFormat}}</p>
+          </div>
+        </div>
+
+        <div class="row settings-entry">
+          <p>formát proměnných v dotazu</p>
+          <app-editable-value [value]="settings.queryParameterFormat" (valueChanged)="settings.queryParameterFormat = $event" class="right"></app-editable-value>
+        </div>
+      </div>
+      <div class="card-action">
+        <button class="btn btn-tiny" (click)="handleSave()">Uložit</button>
+      </div>
+    </div>
+  </div>
+</div>

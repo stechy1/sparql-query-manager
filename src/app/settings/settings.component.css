@@ -1,0 +1,9 @@
+.settings-entry {
+  padding: 8px;
+  border-bottom: solid black 1px;
+  margin: 4px;
+}
+
+.settings-entry .time-entry {
+  display: block;
+}
