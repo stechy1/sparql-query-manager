@@ -2,6 +2,7 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { Query } from './query';
 import { LocalStorageService } from 'angular-2-local-storage';
 import { Observable } from 'rxjs';
+import { SettingsService } from '../settings/settings.service';
 
 interface QueryStorageEntry {
   _id: string;
@@ -28,7 +29,7 @@ export class QueryService {
   private _queries = new Array<Query>();
   private _queryCollectionChange = new EventEmitter<QueryCollectionChange>();
 
-  constructor(private _storage: LocalStorageService) {
+  constructor(private _storage: LocalStorageService, private _settings: SettingsService) {
     this._loadQueries();
   }
 
@@ -171,7 +172,7 @@ export class QueryService {
    * @return ID nového dotazu
    */
   duplicate(query: Query): string {
-    const newQuery = new Query(QueryService.makeID(), query.name + ' - (Duplicated)', query.endpoint,
+    const newQuery = new Query(QueryService.makeID(), query.name + this._settings.suffixForDuplicatedQuery, query.endpoint,
       JSON.parse(JSON.stringify(query.tags)) || [], query.content, {}, query.description, Date.now(), 0, 0);
     newQuery.params = (JSON.parse(JSON.stringify(query.params)) || {});
 
