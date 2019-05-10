@@ -1,11 +1,10 @@
-<div style="display: block;">
   <a (dblclick)="isEditing = !isEditing" *ngIf="!isEditing" (mouseenter)="hover=true" (mouseleave)="handleMouseLeave()">
     {{value}}
     <i class="material-icons tiny" *ngIf="hover">create</i>
   </a>
   <div class="row" *ngIf="isEditing">
     <div class="col m7">
-      <div class="" *ngIf="!useTextarea">
+      <div *ngIf="!useTextarea">
         <input type="text" class="tiny-input validate" [formControl]="inputElement" [ngClass]="(inputElement.valid)?'valid':'invalid'" required [(ngModel)]="value" (keydown)="onKeyDown($event)">
         <span class="helper-text" data-error="vyplňte" data-success="">Helper text</span>
       </div>
@@ -15,4 +14,3 @@
       <button class="btn btn-tiny green" [disabled]="!inputElement.valid" (click)="handleClick()">Potvrdit</button>
     </div>
   </div>
-</div>

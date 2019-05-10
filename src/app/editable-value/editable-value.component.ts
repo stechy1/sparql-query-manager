@@ -18,10 +18,7 @@ export class EditableValueComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-    this.isEditing = false;
-    this.useTextarea = false;
-  }
+  ngOnInit() {}
 
   get value(): string | number {
     return this._value;
