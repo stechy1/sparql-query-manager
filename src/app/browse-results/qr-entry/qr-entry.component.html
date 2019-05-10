@@ -14,7 +14,7 @@
     </div>
     <div>
       <span class="qr-entry-parameter">Doba běhu: </span>
-      <span class="qr-entry-value">{{queryResult.runLength | time}}</span>
+      <span class="qr-entry-value">{{queryResult.runLength | time:timeFormat}}</span>
     </div>
     <div *ngIf="queryResult.isOk">
       <span class="qr-entry-parameter">Počet řádek: </span>
