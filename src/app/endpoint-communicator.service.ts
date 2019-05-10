@@ -5,6 +5,7 @@ import { ParameterValue, Query } from './query/query';
 import { QueryResultService } from './query-result/query-result.service';
 import { QueryResult, ResultState } from './query-result/query-result';
 import { parseQueryResult, QueryResultStorageEntry } from './query-result/query-result-storage.entry';
+import { SettingsService } from './settings/settings.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,16 +13,11 @@ import { parseQueryResult, QueryResultStorageEntry } from './query-result/query-
 export class EndpointCommunicatorService {
 
   static readonly LAST_QUERY_KEY = 'last-query';
-  static readonly LAST_QUERY_BODY_KEY = 'last-query-body';
   static readonly RESPONCE_FORMAT_KEY = 'responce-format';
   // Hlavičky, které se odešlou na server společně s dotazem
   static readonly HEADERS = {
-    // 'Accept': 'application/sparql-results+json,*/*;q=0.9',
-    // 'Content': 'application/json',
-    // 'Accept': 'text/csv',
     'Content-Type': 'application/x-www-form-urlencoded',
-    'Charset': 'UTF-8',
-    'Timeout': '5000'
+    'Charset': 'UTF-8'
   };
   // Formát dotazu
   static readonly BODY_FORMAT = 'query=';
@@ -30,7 +26,7 @@ export class EndpointCommunicatorService {
   private _working: boolean;
 
   constructor(private _http: HttpClient, private _storage: LocalStorageService,
-              private _qresultService: QueryResultService) {
+              private _qresultService: QueryResultService, private _settings: SettingsService) {
     this._working = false;
   }
 
@@ -77,6 +73,7 @@ export class EndpointCommunicatorService {
     const headers = JSON.parse(JSON.stringify(EndpointCommunicatorService.HEADERS));
     // Připojím hlavičku s definicí formátu odpovědi
     headers['Accept'] = ResponceFormat[this.responceFormat];
+    headers['Timeout'] = this._settings.serverTimeout;
 
     // Budu vracet výsledek z dotazu jako Promise
     return this._http
