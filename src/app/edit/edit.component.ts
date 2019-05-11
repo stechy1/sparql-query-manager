@@ -8,6 +8,7 @@ import { NavigationService } from '../navigation/navigation.service';
 import { EndpointCommunicatorService, ResponceFormat } from '../endpoint-communicator.service';
 import { ToastrService } from 'ngx-toastr';
 import { QueryResult } from '../query-result/query-result';
+import { SettingsService } from '../settings/settings.service';
 
 @Component({
   selector: 'app-edit',
@@ -17,7 +18,7 @@ import { QueryResult } from '../query-result/query-result';
     trigger('saveProgress', [
       state('notSaved', style({width: '0%', visibility: 'hidden'})),
       state('saved', style({width: '100%', visibility: 'visible'})),
-      transition('notSaved => saved', animate('3s')),
+      transition('notSaved => saved', animate('1s')),
       transition('saved => notSaved', animate('0s'))
     ])
   ]
@@ -32,7 +33,7 @@ export class EditComponent implements OnInit {
 
   constructor(private _route: ActivatedRoute, private _qservice: QueryService,
               private _navService: NavigationService, private _endpointCommunicator: EndpointCommunicatorService,
-              private _toaster: ToastrService) { }
+              private _toaster: ToastrService, private _settings: SettingsService) { }
 
   ngOnInit() {
     const id = this._route.snapshot.paramMap.get('id');
@@ -66,9 +67,15 @@ export class EditComponent implements OnInit {
    * Reakce na tlačítko pro uložení změn hodnot v dotazu
    */
   handleQueryChange() {
-    this.saveProgress = 'notSaved';
     const self = this;
-    setTimeout(() => {self.saveProgress = 'saved'; }, 100);
+    this.saveProgress = 'notSaved';
+    if (this._settings.useSaveDelay) {
+      setTimeout(() => {
+        self.saveProgress = 'saved';
+      }, this._settings.saveDelay);
+    } else {
+      this.handleManualQuerySave();
+    }
   }
 
   /**

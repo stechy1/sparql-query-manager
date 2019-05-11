@@ -27,7 +27,13 @@
 
         <div class="row settings-entry">
           <p>Prodleva pro uložení změn hodnot v editaci dotazu (ms)</p>
-          <app-editable-value [value]="settings.saveDelay" (valueChanged)="settings.saveDelay = $event" class="right"></app-editable-value>
+          <div class="right">
+            <label style="display: block">
+              <input type="checkbox" [(ngModel)]="settings.useSaveDelay">
+              <span>Použít prodlevu</span>
+            </label>
+            <app-editable-value [value]="settings.saveDelay" (valueChanged)="settings.saveDelay = $event" class="right"></app-editable-value>
+          </div>
         </div>
 
         <div class="row settings-entry">
@@ -49,7 +55,7 @@
               <input type="checkbox" [(ngModel)]="settings.queryResultTimeFormat.showMiliseconds" (ngModelChange)="refreshTime()">
               <span>Zobrazit milisekundy</span>
             </label>
-            <p>{{testTime | time:settings.queryResultTimeFormat}}</p>
+            <p class="right">Vzor: {{testTime | time:settings.queryResultTimeFormat}}</p>
           </div>
         </div>
 

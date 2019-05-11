@@ -7,6 +7,7 @@ interface Settings {
   serverTimeout: number;
   useFirebase: boolean;
   firebaseCredentials: string;
+  useSaveDelay: boolean;
   saveDelay: number;
   queryResultTimeFormat: TimeFormat;
   queryParameterFormat: string;
@@ -23,6 +24,7 @@ export class SettingsService {
     serverTimeout: 5000,
     useFirebase: false,
     firebaseCredentials: '',
+    useSaveDelay: true,
     saveDelay: 250,
     queryResultTimeFormat: {
       showHours: false,
@@ -73,6 +75,14 @@ export class SettingsService {
 
   set firebaseCredentials(credentials: string) {
     this._settings.firebaseCredentials = credentials;
+  }
+
+  get useSaveDelay(): boolean {
+    return this._settings.useSaveDelay;
+  }
+
+  set useSaveDelay(use: boolean) {
+    this._settings.useSaveDelay = use;
   }
 
   get saveDelay(): number {
