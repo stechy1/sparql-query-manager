@@ -24,4 +24,18 @@ export class SettingsComponent implements OnInit {
   refreshTime() {
     this.testTime = Date.now();
   }
+
+  handlePrefixChange($event: string) {
+    this.settings.queryParameterFormat.prefix = $event;
+    if (this.settings.queryParameterFormat.suffixIsPrefix) {
+      this.settings.queryParameterFormat.suffix = $event;
+    }
+  }
+
+  handleSuffixIsPrefix($event: Event) {
+    const suffixIsprefix = (<HTMLInputElement>$event.srcElement).checked;
+    if (suffixIsprefix) {
+      this.settings.queryParameterFormat.suffix = this.settings.queryParameterFormat.prefix;
+    }
+  }
 }
