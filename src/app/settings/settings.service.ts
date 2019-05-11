@@ -10,7 +10,13 @@ interface Settings {
   useSaveDelay: boolean;
   saveDelay: number;
   queryResultTimeFormat: TimeFormat;
-  queryParameterFormat: string;
+  queryParameterFormat: QueryParameterFormat;
+}
+
+interface QueryParameterFormat {
+  prefix: string;
+  suffixIsPrefix: boolean;
+  suffix: string;
 }
 
 @Injectable({
@@ -32,13 +38,39 @@ export class SettingsService {
       showSeconds: true,
       showMiliseconds: true
     },
-    queryParameterFormat: '$VARIABLE_NAME$'
+    queryParameterFormat: {
+      prefix: '$',
+      suffixIsPrefix: true,
+      suffix: '$'
+    }
   };
 
   private readonly _settings: Settings;
 
   constructor(private _storage: LocalStorageService) {
+    // Vytažení nastavení z localStorage, nebo použití výchozího nastavení
     this._settings = this._storage.get<Settings>(SettingsService.SETTINGS_KEY) || SettingsService.DEFAULT_SETTINGS;
+    // Registrace globálního listeneru pro localStorage
+    window.addEventListener('storage', ($event) => this._globalStorageEventListener($event.key, $event.newValue));
+  }
+
+  /**
+   * Privátní globální listener pro poslouchání změny obsahu nastavení v LocalStorage napříč instancemi aplikace
+   *
+   * @param key Klíč, pod kterým se změnila hodnota
+   * @param newValue Nová hodnota
+   */
+  private _globalStorageEventListener(key: string, newValue: string) {
+    if (key.indexOf(SettingsService.SETTINGS_KEY) === -1) {
+      return;
+    }
+
+    if (JSON.stringify(this._settings) !== newValue) {
+      const newSettings = <Settings>JSON.parse(newValue);
+      for (const settingsKey of Object.keys(this._settings)) {
+        this._settings[settingsKey] = newSettings[settingsKey];
+      }
+    }
   }
 
   public save(): void {
@@ -101,11 +133,11 @@ export class SettingsService {
     this._settings.queryResultTimeFormat = format;
   }
 
-  get queryParameterFormat(): string {
+  get queryParameterFormat(): QueryParameterFormat {
     return this._settings.queryParameterFormat;
   }
 
-  set queryParameterFormat(format: string) {
+  set queryParameterFormat(format: QueryParameterFormat) {
     this._settings.queryParameterFormat = format;
   }
 }

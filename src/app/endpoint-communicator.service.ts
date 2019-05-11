@@ -35,12 +35,12 @@ export class EndpointCommunicatorService {
    *
    * @param query Dotaz, ve kterém se mají dosadit hodnoty
    */
-  private static _extractVariables(query: Query): string {
+  private _extractVariables(query: Query): string {
     let queryContent = query.content;
     for (const key of Object.keys(query.params)) {
-      const param = <ParameterValue> query.params[key];
+      const param = <ParameterValue>query.params[key];
       const value = (param.usedValue !== undefined && param.usedValue !== '') ? param.usedValue : param.defaultValue;
-      queryContent = queryContent.replace(`\$${key}\$`, value);
+      queryContent = queryContent.replace(`${this._settings.queryParameterFormat.prefix}${key}${this._settings.queryParameterFormat.suffix}`, value);
     }
 
     return queryContent;
@@ -68,7 +68,9 @@ export class EndpointCommunicatorService {
     // Uložím si čas spuštění dotazu
     const start = query.lastRun;
     // Připravím si formát těla požadavku, který budu posílat na server
-    const body = `${EndpointCommunicatorService.BODY_FORMAT}${EndpointCommunicatorService._extractVariables(query)}`;
+    const body = `${EndpointCommunicatorService.BODY_FORMAT}${this._extractVariables(query)}`;
+    // Zaloguji tělo dotazu
+    console.log(body);
     // Vytvořím kopii objektu s hlavičkami
     const headers = JSON.parse(JSON.stringify(EndpointCommunicatorService.HEADERS));
     // Připojím hlavičku s definicí formátu odpovědi
@@ -148,8 +150,8 @@ export class EndpointCommunicatorService {
 }
 
 export enum ResponceFormat {
-  JSON= 'application/sparql-results+json,*/*;q=0.9',
-  XML= 'application/sparql-results+xml',
-  CSV= 'text/csv',
-  TSV= 'text/tab-separated-values'
+  JSON = 'application/sparql-results+json,*/*;q=0.9',
+  XML = 'application/sparql-results+xml',
+  CSV = 'text/csv',
+  TSV = 'text/tab-separated-values'
 }
