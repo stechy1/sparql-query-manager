@@ -7,3 +7,8 @@
 .settings-entry .time-entry {
   display: block;
 }
+
+.settings-entry > p {
+  background-color: #99e297;
+  margin-bottom: 4px;
+}

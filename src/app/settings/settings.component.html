@@ -6,12 +6,20 @@
 
         <div class="row settings-entry">
           <p>Suffix pro duplikovaný dotaz</p>
-          <app-editable-value [value]="settings.suffixForDuplicatedQuery" (valueChanged)="settings.suffixForDuplicatedQuery = $event" class="right"></app-editable-value>
+          <div class="right">
+            <div class="row">
+              <app-editable-value [value]="settings.suffixForDuplicatedQuery" (valueChanged)="settings.suffixForDuplicatedQuery = $event" class="right"></app-editable-value>
+            </div>
+          </div>
         </div>
 
         <div class="row settings-entry">
           <p>Timeout pro odpověd ze serveru (ms)</p>
-          <app-editable-value [value]="settings.serverTimeout" (valueChanged)="settings.serverTimeout = $event" class="right"></app-editable-value>
+          <div class="right">
+            <div class="row">
+              <app-editable-value [value]="settings.serverTimeout" (valueChanged)="settings.serverTimeout = $event" class="right"></app-editable-value>
+            </div>
+          </div>
         </div>
 
         <div class="row settings-entry">
