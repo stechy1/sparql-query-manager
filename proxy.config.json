@@ -1,0 +1,20 @@
+{
+  "/sendRemoteRequest/*" : {
+    "target": "https://cors-anywhere.herokuapp.com",
+    "secure": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/sendRemoteRequest/": ""
+    },
+    "changeOrigin": true
+  },
+  "/sendLocalRequest/*": {
+    "target": "http://localhost:3030",
+    "secure": false,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/sendLocalRequest/": "/"
+    },
+    "changeOrigin": true
+  }
+}

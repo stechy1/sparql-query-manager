@@ -6,6 +6,7 @@ import { QueryResultService } from './query-result/query-result.service';
 import { QueryResult, ResultState } from './query-result/query-result';
 import { parseQueryResult, QueryResultStorageEntry } from './query-result/query-result-storage.entry';
 import { SettingsService } from './settings/settings.service';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -21,9 +22,36 @@ export class EndpointCommunicatorService {
   };
   // Formát dotazu
   static readonly BODY_FORMAT = 'query=';
+  static readonly LOCALHOST_REGEX = new RegExp('(http:\/\/)?localhost(:[0-9]+)?\/');
 
   // Příznak, zda-li se zpracovává požadavek na server
   private _working: boolean;
+
+  /**
+   * Sestaví adresu odkazu, na který se bude posílat požadavek.
+   * Pokud se jedná o produkční verzi, nebude se do adresy zasahovat a prostě se vrátí.
+   *
+   * Pokud se jedná o vývoj, je potřeba vyřešit CORS problém.
+   * Pokud odesílám požadavek na localhost, dám prefix 'sendLocalRequest', jinak 'sendRemoteRequest'.
+   * V souboru 'proxy.config.json' je pak podle těchto prefixů požadavek přesměrován.
+   *
+   * @param endpoint Adresa odkazu
+   */
+  private static _buildAddress(endpoint: string): string {
+    const isProduction = environment.production;
+    const isLocalhost = endpoint.search(this.LOCALHOST_REGEX) !== -1;
+
+    if (isProduction) {
+      return endpoint;
+    }
+
+    let prefix = 'sendRemoteRequest';
+    if (isLocalhost) {
+      prefix = 'sendLocalRequest';
+      endpoint = endpoint.replace(this.LOCALHOST_REGEX, '');
+    }
+    return `${prefix}/${endpoint}`;
+  }
 
   constructor(private _http: HttpClient, private _storage: LocalStorageService,
               private _qresultService: QueryResultService, private _settings: SettingsService) {
@@ -40,7 +68,9 @@ export class EndpointCommunicatorService {
     for (const key of Object.keys(query.params)) {
       const param = <ParameterValue>query.params[key];
       const value = (param.usedValue !== undefined && param.usedValue !== '') ? param.usedValue : param.defaultValue;
-      queryContent = queryContent.replace(`${this._settings.queryParameterFormat.prefix}${key}${this._settings.queryParameterFormat.suffix}`, value);
+      queryContent = queryContent.replace(
+        `${this._settings.queryParameterFormat.prefix}${key}${this._settings.queryParameterFormat.suffix}`,
+        value);
     }
 
     return queryContent;
@@ -67,7 +97,10 @@ export class EndpointCommunicatorService {
     this._working = true;
     // Uložím si čas spuštění dotazu
     const start = query.lastRun;
+    // Sestavení adresy, kam se bude odesílat dotaz
+    const address = EndpointCommunicatorService._buildAddress(query.endpoint); // `sendLocalRequest/${query.endpoint}`;
     // Připravím si formát těla požadavku, který budu posílat na server
+    // Sestavení těla dotazu - vyextrahování proměnných
     const body = `${EndpointCommunicatorService.BODY_FORMAT}${this._extractVariables(query)}`;
     // Zaloguji tělo dotazu
     console.log(body);
@@ -80,7 +113,7 @@ export class EndpointCommunicatorService {
     // Budu vracet výsledek z dotazu jako Promise
     return this._http
     // POST požadavek na query.endpoint
-    .post(query.endpoint, body, {'headers': new HttpHeaders(headers), 'responseType': 'text'})
+    .post(address, body, {'headers': new HttpHeaders(headers), 'responseType': 'text'})
     // Převedu na Promise
     .toPromise()
     // Pokud se požadavek úspěšně vykoná a příjdou validní data

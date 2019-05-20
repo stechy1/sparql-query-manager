@@ -1,5 +1,5 @@
 <div class="row">
-  <div class="col s12" *ngIf="queryResult !== undefinded">
+  <div class="col s12" *ngIf="queryResult !== undefined">
 
     <ul class="tabs">
       <li class="tab col s6"><a [routerLink]="'.'" [queryParams]="{tab: 'result'}" queryParamsHandling="merge" (click)="showResult = true" [routerLinkActive]="'active'" style="cursor: pointer;">Výsledek dotazu</a></li>
@@ -28,7 +28,7 @@
   </div>
   </div>
 
-  <div class="col s12 center-align" *ngIf="queryResult === ''">
+  <div class="col s12 center-align" *ngIf="queryResult === undefined">
     <h1>Nebyl vykonán žádný dotaz</h1>
   </div>
 </div>
