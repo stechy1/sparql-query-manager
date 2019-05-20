@@ -77,6 +77,19 @@ export class SettingsService {
     this._storage.set(SettingsService.SETTINGS_KEY, this._settings);
   }
 
+  /**
+   * Vymaže veškerá uložená data aplikace.
+   */
+  public deleteLocalStorage(): Promise<void> {
+    return new Promise<void>(resolve => {
+      const success = this._storage.clearAll();
+      if (!success) {
+        throw new Error('Data se nepodařilo smazat!');
+      }
+      resolve();
+    });
+  }
+
   get suffixForDuplicatedQuery(): string {
     return this._settings.suffix;
   }
