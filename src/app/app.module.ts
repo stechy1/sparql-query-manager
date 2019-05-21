@@ -22,8 +22,6 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { NavbarDirective } from './navigation/navbar.directive';
 import { SidebarDirective } from './navigation/sidebar.directive';
 import { BrowseToolbarComponent } from './browse-query/browse-toolbar/browse-toolbar.component';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { QResultComponent } from './query/q-result/q-result.component';
 import { BeautifyPipe } from './query/beautify.pipe';
@@ -69,7 +67,6 @@ import { SettingsComponent } from './settings/settings.component';
       storageType: 'localStorage'
     }),
     BrowserAnimationsModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     ToastrModule.forRoot()
   ],
   entryComponents: [BrowseToolbarComponent],
