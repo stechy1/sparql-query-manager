@@ -2,8 +2,7 @@ import { Injectable, Type } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { NavbarComponent } from './navbar.component';
 import { SidebarComponent } from './sidebar.component';
-import { ActivatedRoute, NavigationEnd, Router, RoutesRecognized } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { Router, RoutesRecognized } from '@angular/router';
 
 interface RouterData {
   sidebar: Type<any>;

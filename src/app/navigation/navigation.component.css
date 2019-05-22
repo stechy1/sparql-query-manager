@@ -14,6 +14,14 @@
   height: calc(100% - 56px);
 }
 
+.nav-with-image > li > a > i {
+  display: inline;
+}
+
+nav ul a {
+  display: flex;
+}
+
 @media screen and (min-width: 600px){
   .brand-logo {
     margin-left: 8px;

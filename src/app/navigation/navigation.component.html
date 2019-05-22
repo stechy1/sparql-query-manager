@@ -2,19 +2,19 @@
   <div class="nav-wrapper">
     <a routerLink="browse-query" class="brand-logo primary-text-color">Sparql manager</a>
     <a data-target="mobile-sidenav" class="sidenav-trigger" (click)="showSidebar = !showSidebar"><i class="material-icons">menu</i></a>
-    <ul class="right hide-on-med-and-down">
-      <li routerLinkActive="active"><a routerLink="browse-query">Prohlížeč dotazů</a></li>
-      <li routerLinkActive="active"><a routerLink="browse-results">Prohlížeč výsledků</a></li>
-      <li routerLinkActive="active"><a routerLink="result-viewer/last">Poslední výsledek</a></li>
-      <li routerLinkActive="active"><a routerLink="settings">Nastavení</a></li>
+    <ul class="right hide-on-med-and-down nav-with-image">
+      <li routerLinkActive="active"><a routerLink="browse-query"><i class="material-icons">dashboard</i>Prohlížeč dotazů</a></li>
+      <li routerLinkActive="active"><a routerLink="browse-results"><i class="material-icons">assignment</i>Prohlížeč výsledků</a></li>
+      <li routerLinkActive="active"><a routerLink="result-viewer/last"><i class="material-icons">all_inclusive</i>Poslední výsledek</a></li>
+      <li routerLinkActive="active"><a routerLink="settings"><i class="material-icons">settings</i>Nastavení</a></li>
     </ul>
     <ng-template appNavbar></ng-template>
     <div class="sidenav" id="mobile-sidenav" [style.visibility]="showSidebar ? 'visible' : 'hidden'">
-      <ul>
-        <li routerLinkActive="active"><a routerLink="browse-query">Prohlížeč dotazů</a></li>
-        <li routerLinkActive="active"><a routerLink="browse-results">Prohlížeč výsledků</a></li>
-        <li routerLinkActive="active"><a routerLink="result-viewer/last">Poslední výsledek</a></li>
-        <li routerLinkActive="active"><a routerLink="settings">Nastavení</a></li>
+      <ul class="nav-with-image">
+        <li routerLinkActive="active"><a routerLink="browse-query"><i class="material-icons">dashboard</i>Prohlížeč dotazů</a></li>
+        <li routerLinkActive="active"><a routerLink="browse-results"><i class="material-icons">assignment</i>Prohlížeč výsledků</a></li>
+        <li routerLinkActive="active"><a routerLink="result-viewer/last"><i class="material-icons">all_inclusive</i>Poslední výsledek</a></li>
+        <li routerLinkActive="active"><a routerLink="settings"><i class="material-icons">settings</i>Nastavení</a></li>
       </ul>
       <ng-template appSidebar></ng-template>
     </div>
