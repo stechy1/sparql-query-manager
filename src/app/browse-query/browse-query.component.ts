@@ -47,8 +47,13 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
    * Nastaví horní margin seznamu dotazů
    */
   private _recalculateQueryListMargin() {
-    const toolbarDiv = (<HTMLDivElement> this.toolbar.nativeElement);
     const queryDiv = (<HTMLDivElement> this.queryList.nativeElement);
+    if (window.innerWidth <= 992) {
+      queryDiv.style.marginTop = `0px`;
+      return;
+    }
+
+    const toolbarDiv = (<HTMLDivElement> this.toolbar.nativeElement);
     const divHeight = toolbarDiv.clientHeight;
     toolbarDiv.classList.add('sticky');
     toolbarDiv.classList.remove('hide');
@@ -68,13 +73,14 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
 
   @HostListener('window:scroll')
   scrollHandler() {
+    const queryDiv = (<HTMLDivElement> this.queryList.nativeElement);
     if (window.innerWidth <= 992) {
+      queryDiv.style.marginTop = `0px`;
       return;
     }
     const newOffset = window.pageYOffset;
     const delta = newOffset - this._lastYOffset;
     const toolbarDiv = (<HTMLDivElement> this.toolbar.nativeElement);
-    const queryDiv = (<HTMLDivElement> this.queryList.nativeElement);
     const toolbarDivHeight = toolbarDiv.clientHeight;
     const queryDivHeight = queryDiv.clientHeight;
     const windowHeight = window.innerHeight;
