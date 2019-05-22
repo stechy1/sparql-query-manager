@@ -42,6 +42,12 @@
 input::placeholder {
   color: #606060;
 }
+.mobile-search input {
+  color: #000 !important;
+}
+.mobile-search input::placeholder {
+  color: #000 !important;
+}
 
 select {
   display: block;
