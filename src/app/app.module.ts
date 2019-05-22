@@ -36,6 +36,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
+import { SearchComponent } from './browse-query/search/search.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { environment } from '../environments/environment';
     TimePipe,
     QActionsComponent,
     SettingsComponent,
+    SearchComponent,
   ],
   imports: [
     BrowserModule,

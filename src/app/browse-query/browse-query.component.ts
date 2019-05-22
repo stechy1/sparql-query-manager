@@ -18,7 +18,7 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   // Kolekce všech dotazů
   queries: Query[];
   // Reference na input element
-  @ViewChild('inputSearch') inputSearch: ElementRef;
+  // @ViewChild('inputSearch') inputSearch: ElementRef;
   @ViewChild('toolbarContainer') toolbar: ElementRef;
   @ViewChild('queryContainer') queryList: ElementRef;
   showImportDropdown: boolean;
@@ -63,24 +63,14 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // Nabindování změny hodnoty ve vyhledávacím řádku
-    (<HTMLInputElement>this.inputSearch.nativeElement).onkeyup = ev => {
-      // Získání nové hodnoty
-      const searchedValue = (<HTMLInputElement>ev.target).value;
-      // Pokud je hodnota prázdná, nic nebudu vyhledávat a zobrazím všechny dotazy
-      if (searchedValue === '') {
-        this.qFilterGroupSortingService.resetQueries();
-        return;
-      }
-
-      this.qFilterGroupSortingService.filterBy(searchedValue);
-    };
-
     this._recalculateQueryListMargin();
   }
 
   @HostListener('window:scroll')
   scrollHandler() {
+    if (window.innerWidth <= 992) {
+      return;
+    }
     const newOffset = window.pageYOffset;
     const delta = newOffset - this._lastYOffset;
     const toolbarDiv = (<HTMLDivElement> this.toolbar.nativeElement);

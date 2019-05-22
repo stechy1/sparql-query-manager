@@ -7,9 +7,10 @@ import { BrowseResultsComponent } from './browse-results/browse-results.componen
 import { BrowseToolbarComponent } from './browse-query/browse-toolbar/browse-toolbar.component';
 import { ResultViewerComponent } from './result-viewer/result-viewer.component';
 import { SettingsComponent } from './settings/settings.component';
+import { SearchComponent } from './browse-query/search/search.component';
 
 const routes: Routes = [
-  {path: 'browse-query', component: BrowseQueryComponent, data: {'sidebar': BrowseToolbarComponent}},
+  {path: 'browse-query', component: BrowseQueryComponent, data: {'sidebar': BrowseToolbarComponent, 'navbar': SearchComponent}},
   {path: 'browse-results', component: BrowseResultsComponent},
   {path: 'edit/:id', component: EditComponent},
   {path: 'result-viewer', pathMatch: 'full', redirectTo: 'result-viewer/last'},

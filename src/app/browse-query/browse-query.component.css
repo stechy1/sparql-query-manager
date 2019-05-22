@@ -42,6 +42,7 @@
   min-height: unset;
 }
 
+
 @media screen and (min-width: 600px) {
   .button-bar {
     width: 150%;
@@ -70,5 +71,8 @@
   }
   .toolbar-container.sticky {
     box-shadow: 0 8px 10px 0 rgba(0,0,0,0.33);
+  }
+  .mobile-search {
+    display: none;
   }
 }
