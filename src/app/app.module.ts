@@ -11,7 +11,7 @@ import { QParamsComponent } from './query/q-params/q-params.component';
 import { BrowseQueryComponent } from './browse-query/browse-query.component';
 import { EditComponent } from './edit/edit.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { LocalStorageModule } from 'angular-2-local-storage';
+import { ILocalStorageServiceConfig, LocalStorageModule } from 'angular-2-local-storage';
 import { QEntryComponent } from './browse-query/q-entry/q-entry.component';
 import { EditableValueComponent } from './editable-value/editable-value.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -33,6 +33,9 @@ import { ResultViewerComponent } from './result-viewer/result-viewer.component';
 import { ToastrModule } from 'ngx-toastr';
 import { QActionsComponent } from './query/q-actions/q-actions.component';
 import { SettingsComponent } from './settings/settings.component';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -62,10 +65,9 @@ import { SettingsComponent } from './settings/settings.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    LocalStorageModule.withConfig({
-      prefix: 'unknown',
-      storageType: 'localStorage'
-    }),
+    LocalStorageModule.withConfig(<ILocalStorageServiceConfig>environment.localStorage),
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot()
   ],

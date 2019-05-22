@@ -24,22 +24,6 @@
           </div>
         </div>
 
-        <!-- Firebase nastavení -->
-        <div class="row settings-entry">
-          <p>Nastavení firebase</p>
-          <div class="right">
-            <div class="row">
-              <label>
-                <input type="checkbox" [(ngModel)]="settings.useFirebase">
-                <span>Zapnout firebase</span>
-              </label>
-            </div>
-            <div class="row">
-              <app-editable-value [value]="settings.firebaseCredentials" [useTextarea]="true" (valueChanged)="settings.firebaseCredentials = $event" class="right"></app-editable-value>
-            </div>
-          </div>
-        </div>
-
         <!-- Prodleva pro uložení změn hodnot v editoru dotazu -->
         <div class="row settings-entry">
           <p>Prodleva pro uložení změn hodnot v editaci dotazu (ms)</p>
