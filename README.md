@@ -1,4 +1,4 @@
-# Unknown
+# Sparql query and result manager
 
 ![Browser](https://github.com/stechy1/sparql-query-manager/blob/master/img/sparql_browser.png)
 
