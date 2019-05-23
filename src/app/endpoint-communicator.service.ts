@@ -22,7 +22,10 @@ export class EndpointCommunicatorService {
   };
   // Formát dotazu
   static readonly BODY_FORMAT = 'query=';
+  // Regulární výraz pro řetězec: "http://localhost:3030"
   static readonly LOCALHOST_REGEX = new RegExp('(http:\/\/)?localhost(:[0-9]+)?\/');
+  // CORS hack, abych mohl posílat požadavky kdekoliv; pouze na localhost to nebude fungovat
+  static readonly CORS_HACK = 'https://cors-anywhere.herokuapp.com';
 
   // Příznak, zda-li se zpracovává požadavek na server
   private _working: boolean;
@@ -38,18 +41,31 @@ export class EndpointCommunicatorService {
    * @param endpoint Adresa odkazu
    */
   private static _buildAddress(endpoint: string): string {
+    // Zjistím, zda-li se jedná o produkční verzi aplikace
     const isProduction = environment.production;
+
+    // Pokud se jedná o produkci, pošlu požadavek přes externí adresu
+    // abych obešel CORS problém
+    if (isProduction) {
+      return `${this.CORS_HACK}/${endpoint}`;
+    }
+
+    // Další věci se týkají pouze dev serveru
+    // --------------------------------------
+
+    // Dále zjistím, zda-li se server nachází na localhostu v případě dev verze
     const isLocalhost = endpoint.search(this.LOCALHOST_REGEX) !== -1;
 
-    if (isProduction) {
-      return endpoint;
-    }
-
+    // Základní prefix pro odeslání požadavku počítá s odesláním přes externí adresu
     let prefix = 'sendRemoteRequest';
+    // Pokud se jedná o localhost
     if (isLocalhost) {
+      // Nastavím jiný prefix
       prefix = 'sendLocalRequest';
+      // Přepíšu řetězec "http://localhost:3030" za prázdný řetězec
       endpoint = endpoint.replace(this.LOCALHOST_REGEX, '');
     }
+    // Vrátím adresu, která se zpracuje v souboru "proxy.config.json
     return `${prefix}/${endpoint}`;
   }
 
@@ -98,7 +114,9 @@ export class EndpointCommunicatorService {
     // Uložím si čas spuštění dotazu
     const start = query.lastRun;
     // Sestavení adresy, kam se bude odesílat dotaz
-    const address = EndpointCommunicatorService._buildAddress(query.endpoint); // `sendLocalRequest/${query.endpoint}`;
+    const address = EndpointCommunicatorService._buildAddress(query.endpoint);
+    // Zaloguji sestavenou adresu
+    console.log(address);
     // Připravím si formát těla požadavku, který budu posílat na server
     // Sestavení těla dotazu - vyextrahování proměnných
     const body = `${EndpointCommunicatorService.BODY_FORMAT}${this._extractVariables(query)}`;
