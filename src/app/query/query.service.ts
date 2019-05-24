@@ -3,24 +3,13 @@ import { Query } from './query';
 import { LocalStorageService } from 'angular-2-local-storage';
 import { Observable } from 'rxjs';
 import { SettingsService } from '../settings/settings.service';
-
-interface QueryStorageEntry {
-  _id: string;
-  _name: string;
-  _description: string;
-  _tags: string[];
-  _endpoint: string;
-  _content: string;
-  _params: string[];
-  _created: number;
-  _lastRun: number;
-  _runCount: number;
-}
+import { IQueryCRUD } from './iquery-crud';
+import { encodeQueries, parseQuery, QueryStorageEntry } from './query-storage-entry';
 
 @Injectable({
   providedIn: 'root'
 })
-export class QueryService {
+export class QueryService implements IQueryCRUD {
 
   // Konstanta obsahující název klíče, pod který se ukládají data o dotazech do local storage
   static readonly STORAGE_KEY = 'queries';
@@ -31,16 +20,6 @@ export class QueryService {
 
   constructor(private _storage: LocalStorageService, private _settings: SettingsService) {
     this._loadQueries();
-  }
-
-  /**
-   * Metoda převede vstup na Query
-   *
-   * @param input Naparsovaný dotaz
-   */
-  private static parseQuery(input: QueryStorageEntry): Query {
-    return new Query(input._id, input._name, input._endpoint, input._tags, input._content, input._params,
-      input._description, input._created, input._lastRun, input._runCount);
   }
 
   /**
@@ -57,7 +36,7 @@ export class QueryService {
    */
   private _loadQueriesInternal(queries: QueryStorageEntry[]): void {
     for (const rawQuery of queries) {
-      const query = QueryService.parseQuery(rawQuery);
+      const query = parseQuery(rawQuery);
       this._queries.push(query);
       this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.ADD, query: query});
     }
@@ -75,7 +54,7 @@ export class QueryService {
    * Uloží data do localStorage
    */
   private _saveQueries(): void {
-    this._storage.set(QueryService.STORAGE_KEY, JSON.parse(JSON.stringify(this._queries, Query.structureGuard)));
+    this._storage.set(QueryService.STORAGE_KEY, encodeQueries(this._queries));
   }
 
   /**
@@ -186,7 +165,7 @@ export class QueryService {
   /**
    * Vygeneruje pole všech endpointů, které jsou v dotazech
    */
-  get endpoints(): string[] {
+  endpoints(): string[] {
     const endpointArray: string[] = [];
     this._queries.forEach(query => {
       endpointArray.push(query.endpoint);
@@ -200,7 +179,7 @@ export class QueryService {
   /**
    * Vygeneruje pole všech tagů, které jsou v dotazech
    */
-  get tags(): string[] {
+  tags(): string[] {
     const tagArray: string[] = [];
     this._queries.forEach(query => {
       query.tags.forEach(tag => {

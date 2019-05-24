@@ -9,14 +9,17 @@ export class Query {
 
   constructor(private _id: string, private _name: string, private _endpoint: string, private _tags: string[],
               private _content: string,  private _params: {}, private _description: string,
-              private _created: number, private _lastRun: number, private _runCount: number) { }
+              private _created: number, private _lastRun: number, private _runCount: number, private _isRemote: boolean = false) {
+  }
 
   static structureGuard(key: string, value: any) {
-    if (key === '_selected') {
-      return undefined;
+    switch (key) {
+      case '_selected':
+      case '_isRemote':
+        return undefined;
+      default:
+        return value;
     }
-
-    return value;
   }
 
   usedParams(): {} {
@@ -111,5 +114,12 @@ export class Query {
 
   set selected(value: boolean) {
     this._selected = value;
+  }
+
+  // Firebase support
+  // ----------------------------------------
+
+  get isRemote(): boolean {
+    return this._isRemote;
   }
 }

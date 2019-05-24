@@ -166,11 +166,11 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   }
 
   get endpoints(): string[] {
-    return this._qservice.endpoints;
+    return this._qservice.endpoints();
   }
 
   get tags(): string[] {
-    return this._qservice.tags;
+    return this._qservice.tags();
   }
 
   get selectedQueries(): number {
