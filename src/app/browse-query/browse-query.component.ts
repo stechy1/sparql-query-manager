@@ -1,11 +1,11 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { QueryService } from '../query/query.service';
 import { Query } from '../query/query';
 
 import { NavigationService } from '../navigation/navigation.service';
 import { QueryFilterGroupSortService } from './query-filter-group-sort.service';
 import { Router } from '@angular/router';
 import { DeleteHandler, FirebaseHandler, FirebaseHandlerType } from './handlers';
+import { QueryService } from '../query/query.service';
 
 @Component({
   selector: 'app-browse-query',
@@ -79,6 +79,7 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this._recalculateQueryListMargin();
+    // this._qservice.();
   }
 
   @HostListener('window:scroll')
@@ -133,20 +134,23 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
       // TODO implementovat smazání z firebase
       console.log('Query delete from firebase.');
     } else {
-      this._qservice.delete(deleteHandler.query.id);
-      setTimeout(() => this._recalculateQueryListMargin(), 100);
+      this._qservice.delete(deleteHandler.query.id).then(() => {
+        setTimeout(() => this._recalculateQueryListMargin(), 100);
+      });
     }
   }
 
-  handleExport() {
+  async handleExport() {
     // Vytvořím neviditelný odkaz
     const a = document.createElement('a');
+    // Počkám si na vyexportování dotazů do řetězce
+    const content = await this._qservice.export(this._qservice.allQueries().filter(value => value.selected));
     // Vytvořím balík dat (obsah souboru = serializované vybrané dotazy)
-    const file = new Blob([this._qservice.export(this.queries.filter(value => value.selected))], {type: 'text/plain'});
+    const file = new Blob([content], {type: 'text/plain'});
     // Nastavím odkaz na vytvořený balík dat
     a.href = URL.createObjectURL(file);
     // Požádám uživatele o název souboru, pod kterým se soubor uloží
-    a.download = prompt('Zadejte název souboru...', 'queries.json');
+    a.download = prompt('Zadejte název souboru...', 'queries$.json');
     // Stáhnu soubor
     a.click();
   }
@@ -194,14 +198,15 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   }
 
   get endpoints(): string[] {
-    return this._qservice.endpoints();
+    return this._qservice.endpoints;
   }
 
   get tags(): string[] {
-    return this._qservice.tags();
+    return this._qservice.tags;
   }
 
   get selectedQueries(): number {
+    // TODO opravit getter selectedQueries
     return this.queries.filter(value => value.selected).length;
   }
 }

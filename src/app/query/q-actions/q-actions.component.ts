@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Query } from '../query';
 import { EndpointCommunicatorService, ResponceFormat } from '../../endpoint-communicator.service';
-import { QueryService } from '../query.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { QueryService } from '../query.service';
 
 @Component({
   selector: 'app-q-actions',

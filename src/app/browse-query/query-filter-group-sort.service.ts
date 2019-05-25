@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { QueryService, TypeOfQueryChange } from '../query/query.service';
 import { Query } from '../query/query';
 import * as Fuse from 'fuse.js';
 import { FuseOptions } from 'fuse.js';
+import { QueryService } from '../query/query.service';
+import { TypeOfQueryChange } from '../query/query-storage-provider';
 
 @Injectable({
   providedIn: 'root'

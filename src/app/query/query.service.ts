@@ -1,25 +1,29 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { QueryLocalStorageProviderService } from './query-local-storage-provider.service';
+import { QueryFirebaseProviderService } from './query-firebase-provider.service';
+import { Injectable } from '@angular/core';
 import { Query } from './query';
-import { LocalStorageService } from 'angular-2-local-storage';
-import { Observable } from 'rxjs';
+import { QueryCollectionChange, TypeOfQueryChange } from './query-storage-provider';
 import { SettingsService } from '../settings/settings.service';
-import { IQueryCRUD } from './iquery-crud';
-import { encodeQueries, parseQuery, QueryStorageEntry } from './query-storage-entry';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class QueryService implements IQueryCRUD {
+export class QueryService {
 
-  // Konstanta obsahující název klíče, pod který se ukládají data o dotazech do local storage
-  static readonly STORAGE_KEY = 'queries';
+  private readonly _querySubject = new Subject<QueryCollectionChange>();
 
-  // Kolekce dotazů
-  private _queries = new Array<Query>();
-  private _queryCollectionChange = new EventEmitter<QueryCollectionChange>();
+  private _queries: Query[] = [];
 
-  constructor(private _storage: LocalStorageService, private _settings: SettingsService) {
-    this._loadQueries();
+  constructor(private _queryLocalStorageProvider: QueryLocalStorageProviderService,
+              private _queryFirebaseProvider: QueryFirebaseProviderService,
+              private _settings: SettingsService) {
+
+    this._queryLocalStorageProvider.observable().subscribe(value => this._processQuery(value));
+    this._queryFirebaseProvider.observable().subscribe(value => this._processQuery(value));
+
+    this._queryLocalStorageProvider.load();
+    this._queryFirebaseProvider.load();
   }
 
   /**
@@ -29,32 +33,21 @@ export class QueryService implements IQueryCRUD {
     return '_' + Math.random().toString(36).substr(2, 9);
   }
 
-  /**
-   * Interní metoda pro načtení dotazů do paměti
-   *
-   * @param queries Pole dotazů
-   */
-  private _loadQueriesInternal(queries: QueryStorageEntry[]): void {
-    for (const rawQuery of queries) {
-      const query = parseQuery(rawQuery);
-      this._queries.push(query);
-      this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.ADD, query: query});
+  private _processQuery(change: QueryCollectionChange) {
+    switch (change.typeOfChange) {
+      case TypeOfQueryChange.ADD:
+        this._queries.push(change.query);
+        break;
+      case TypeOfQueryChange.REMOVE:
+        const index = this._queries.findIndex(query => query.id === change.query.id);
+        this._queries.splice(index, 1);
+        break;
+      case TypeOfQueryChange.CLEAR:
+        this._queries.splice(0, this._queries.length - 1);
+        break;
     }
-  }
 
-  /**
-   * Načte data z localStorage
-   */
-  private _loadQueries(): void {
-    const dataRaw = this._storage.get<QueryStorageEntry[]>(QueryService.STORAGE_KEY) || new Array<QueryStorageEntry>();
-    this._loadQueriesInternal(dataRaw);
-  }
-
-  /**
-   * Uloží data do localStorage
-   */
-  private _saveQueries(): void {
-    this._storage.set(QueryService.STORAGE_KEY, encodeQueries(this._queries));
+    this._querySubject.next(change);
   }
 
   /**
@@ -69,79 +62,54 @@ export class QueryService implements IQueryCRUD {
    *
    * @param id ID dotazu, který se má vrátit
    */
-  byId(id: string): Query {
-    return this._queries.find(query => id === query.id);
+  byId(id: string): Promise<Query> {
+    return new Promise<Query>((resolve, reject) => {
+      const result = this._queries.find(query => id === query.id);
+      if (result === undefined || result.isRemote) {
+        reject();
+      }
+
+      resolve(result);
+    });
   }
 
   /**
    * Vytvoří nový prázdný dotaz
    */
-  create() {
+  create(): Promise<string> {
     const query = new Query(QueryService.makeID(), '', '', [], '', {}, '', new Date().getTime(), null, 0);
-    this._queries.push(query);
-    this._saveQueries();
-    this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.ADD, query: query});
-    return query.id;
+    return this._queryLocalStorageProvider.insert(query);
   }
 
   /**
    * Odstraní záznam podle ID
    *
    * @param id ID záznamu, který se má odstranit
+   * @param remote True, pokud se bude mazat z firebase, False pro smazání z localStorage
    */
-  delete(id: string) {
-      const index = this._queries.findIndex(value => value.id === id);
-      if (index === -1) {
-        return;
-      }
-
-      const query = this._queries[index];
-      this._queries.splice(index, 1);
-      this._saveQueries();
-      this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.REMOVE, query: query});
+  delete(id: string, remote: boolean = false): Promise<void> {
+    return remote
+      ? this._queryFirebaseProvider.delete(id)
+      : this._queryLocalStorageProvider.delete(id);
   }
 
-  /**
-   * Vynucení uložení dotazů na disk
-   */
   performSave() {
-    this._saveQueries();
-  }
-
-  /**
-   * Serializuje vybrané dotazy do textové podoby
-   *
-   * @param queries Pole všech dotazů, které se budou exportovat
-   */
-  export(queries: Query[]): string {
-    const result = JSON.stringify(queries, Query.structureGuard);
-    this._queries.forEach(value => value.selected = false);
-    return result;
-  }
-
-  /**
-   * Importuje dotazy
-   *
-   * @param text Serializované dotazy
-   * @param override True, pokud importované dotazy mají přepsat lokální databázi, jinak false
-   */
-  import(text: string, override: boolean) {
-    if (override) {
-      this._queries.splice(0, this._queries.length);
-    }
-
-    this._loadQueriesInternal(JSON.parse(text));
-
-    this._saveQueries();
+    this._queryLocalStorageProvider.save();
   }
 
   /**
    * Vymaže celou lokální databázi
+   *
+   * @param remote True, pokud se má smazat i data z Firebase
    */
-  clear() {
-    this._queries.splice(0, this._queries.length);
-    this._saveQueries();
-    this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.CLEAR, query: undefined});
+  clear(remote: boolean = false): Promise<void> {
+    return Promise.all(this._queries.map(value => {
+      return value.isRemote
+        ? remote
+          ? this._queryFirebaseProvider.delete(value.id)
+          : Promise.resolve()
+        : this._queryLocalStorageProvider.delete(value.id);
+    })).then(() => null);
   }
 
   /**
@@ -150,26 +118,54 @@ export class QueryService implements IQueryCRUD {
    * @param query Dotaz {@link Query}, který se má zduplikovat
    * @return ID nového dotazu
    */
-  duplicate(query: Query): string {
+  duplicate(query: Query): Promise<string> {
     const newQuery = new Query(QueryService.makeID(), query.name + this._settings.suffixForDuplicatedQuery, query.endpoint,
       JSON.parse(JSON.stringify(query.tags)) || [], query.content, {}, query.description, Date.now(), 0, 0);
     newQuery.params = (JSON.parse(JSON.stringify(query.params)) || {});
 
-    this._queries.push(newQuery);
-    this._saveQueries();
-    this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.ADD, query: newQuery});
+    return this._queryLocalStorageProvider.insert(newQuery);
+  }
 
-    return newQuery.id;
+  /**
+   * Serializuje vybrané dotazy do textové podoby
+   *
+   * @param queries Pole všech dotazů, které se budou exportovat
+   */
+  export(queries: Query[]): Promise<string> {
+    return Promise.resolve('');
+    // return new Promise<string>(resolve => {
+    //   const result = JSON.stringify(queries, Query.structureGuard);
+    //   this._queries.forEach(value => value.selected = false);
+    //   resolve(result);
+    // });
+  }
+
+  /**
+   * Importuje dotazy
+   *
+   * @param text Serializované dotazy
+   * @param override True, pokud importované dotazy mají přepsat lokální databázi, jinak false
+   */
+  import(text: string, override: boolean): Promise<void> {
+    return Promise.resolve();
+    // return new Promise<void>(resolve => {
+    //   if (override) {
+    //     this._queries.splice(0, this._queries.length);
+    //     this._querySubject.next(this._queries);
+    //   }
+    //
+    //   this._loadQueriesInternal(JSON.parse(text));
+    //
+    //   this._saveQueries();
+    //   resolve();
+    // });
   }
 
   /**
    * Vygeneruje pole všech endpointů, které jsou v dotazech
    */
-  endpoints(): string[] {
-    const endpointArray: string[] = [];
-    this._queries.forEach(query => {
-      endpointArray.push(query.endpoint);
-    });
+  get endpoints(): string[] {
+    const endpointArray = this._queries.map(query => query.endpoint);
 
     return endpointArray
     .filter(((value, index, array) => array.indexOf(value) === index))
@@ -179,7 +175,7 @@ export class QueryService implements IQueryCRUD {
   /**
    * Vygeneruje pole všech tagů, které jsou v dotazech
    */
-  tags(): string[] {
+  get tags(): string[] {
     const tagArray: string[] = [];
     this._queries.forEach(query => {
       query.tags.forEach(tag => {
@@ -193,15 +189,6 @@ export class QueryService implements IQueryCRUD {
   }
 
   get collectionChange(): Observable<QueryCollectionChange> {
-    return this._queryCollectionChange.asObservable();
+    return this._querySubject;
   }
-}
-
-export enum TypeOfQueryChange {
-  ADD, REMOVE, CLEAR
-}
-
-export interface QueryCollectionChange {
-  typeOfChange: TypeOfQueryChange;
-  query: Query;
 }
