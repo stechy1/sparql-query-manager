@@ -3,7 +3,6 @@ import { QueryService } from '../query/query.service';
 import { Query } from '../query/query';
 
 import { NavigationService } from '../navigation/navigation.service';
-import { BrowseToolbarComponent } from './browse-toolbar/browse-toolbar.component';
 import { QueryFilterGroupSortService } from './query-filter-group-sort.service';
 import { Router } from '@angular/router';
 

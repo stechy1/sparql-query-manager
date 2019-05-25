@@ -6,16 +6,22 @@ export class ParameterValue {
 export class Query {
 
   private _selected = false;
+  private _downloaded = false;
+  private _uploaded = false;
 
   constructor(private _id: string, private _name: string, private _endpoint: string, private _tags: string[],
               private _content: string,  private _params: {}, private _description: string,
               private _created: number, private _lastRun: number, private _runCount: number, private _isRemote: boolean = false) {
+    this._downloaded = !this._isRemote;
+    this._uploaded = this._isRemote;
   }
 
   static structureGuard(key: string, value: any) {
     switch (key) {
       case '_selected':
       case '_isRemote':
+      case '_downloaded':
+      case '_uploaded':
         return undefined;
       default:
         return value;
@@ -121,5 +127,21 @@ export class Query {
 
   get isRemote(): boolean {
     return this._isRemote;
+  }
+
+  get downloaded(): boolean {
+    return this._downloaded;
+  }
+
+  set downloaded(value: boolean) {
+    this._downloaded = value;
+  }
+
+  get uploaded(): boolean {
+    return this._uploaded;
+  }
+
+  set uploaded(value: boolean) {
+    this._uploaded = value;
   }
 }

@@ -1,10 +1,14 @@
-<div (mouseenter)="visible=true" (mouseleave)="visible=false" class="valign-wrapper q-entry">
+<div (mouseenter)="visible=true" (mouseleave)="visible=false" class="row valign-wrapper q-entry">
   <div class="col s1">
     <label>
       <input type="checkbox" [(ngModel)]="query.selected" class="filled-in"><span></span>
     </label>
   </div>
-  <div class="col s8" style="margin-left: 0;">
+  <div class="col s1 cloud-indicator">
+    <span><i class="material-icons" *ngIf="!query.isRemote">cloud_off</i></span>
+    <span><i class="material-icons" *ngIf="query.isRemote">cloud</i></span>
+  </div>
+  <div class="col s8">
     <div>
       <a [routerLink]="['/edit', query.id]"><span>{{query.name}}</span></a> - <span>{{query.endpoint}}</span>
     </div>
@@ -12,7 +16,9 @@
       <span class="badge q-tag" *ngFor="let tag of query.tags">{{tag}}</span>
     </div>
   </div>
-  <div class="col s2">
-    <button class="btn btn-tiny red right" (click)="handleDelete()">Smazat</button>
+  <div class="col s3 q-entry-toolbar">
+    <span><i class="material-icons q-icon">delete</i></span>
+    <span><i class="material-icons q-icon" *ngIf="!query.isRemote">cloud_upload</i></span>
+    <span><i class="material-icons q-icon" *ngIf="query.isRemote">cloud_download</i></span>
   </div>
 </div>
