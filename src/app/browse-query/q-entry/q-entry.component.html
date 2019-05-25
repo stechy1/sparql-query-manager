@@ -17,8 +17,8 @@
     </div>
   </div>
   <div class="col s3 q-entry-toolbar">
-    <span><i class="material-icons q-icon">delete</i></span>
-    <span><i class="material-icons q-icon" *ngIf="!query.isRemote">cloud_upload</i></span>
-    <span><i class="material-icons q-icon" *ngIf="query.isRemote">cloud_download</i></span>
+    <span><i class="material-icons q-icon" (click)="handleDelete(query.isRemote)">delete</i></span>
+    <span><i class="material-icons q-icon" *ngIf="!query.isRemote" (click)="handleUpload()">cloud_upload</i></span>
+    <span><i class="material-icons q-icon" *ngIf="query.isRemote" (click)="handleDownload()">cloud_download</i></span>
   </div>
 </div>

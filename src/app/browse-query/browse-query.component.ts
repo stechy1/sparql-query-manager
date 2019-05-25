@@ -5,6 +5,7 @@ import { Query } from '../query/query';
 import { NavigationService } from '../navigation/navigation.service';
 import { QueryFilterGroupSortService } from './query-filter-group-sort.service';
 import { Router } from '@angular/router';
+import { DeleteHandler, FirebaseHandler, FirebaseHandlerType } from './handlers';
 
 @Component({
   selector: 'app-browse-query',
@@ -57,6 +58,16 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
     toolbarDiv.classList.add('sticky');
     toolbarDiv.classList.remove('hide');
     queryDiv.style.marginTop = `${divHeight}px`;
+  }
+
+  private _handleDownload(query: Query) {
+    // TODO implementovat stažení dotazu do lokální paměti
+    console.log('Query download.');
+  }
+
+  private _handleUpload(query: Query) {
+    // TODO implementovat nahrání dotazu do firebase
+    console.log('Query upload.');
   }
 
   ngOnInit() {
@@ -117,9 +128,14 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
     return query.tags.indexOf(tag) !== -1;
   }
 
-  handleDeleteRequest(query: Query) {
-    this._qservice.delete(query.id);
-    setTimeout(() => this._recalculateQueryListMargin(), 100);
+  handleDeleteRequest(deleteHandler: DeleteHandler) {
+    if (deleteHandler.isRemote) {
+      // TODO implementovat smazání z firebase
+      console.log('Query delete from firebase.');
+    } else {
+      this._qservice.delete(deleteHandler.query.id);
+      setTimeout(() => this._recalculateQueryListMargin(), 100);
+    }
   }
 
   handleExport() {
@@ -162,6 +178,19 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   handleNewQuery() {
     const newId = this._qservice.create();
     this._router.navigate(['edit', newId]);
+  }
+
+  handleFirebaseRequest($event: FirebaseHandler) {
+    switch ($event.handlerType) {
+      case FirebaseHandlerType.DOWNLOAD:
+        this._handleDownload($event.query);
+        break;
+      case FirebaseHandlerType.UPLOAD:
+        this._handleUpload($event.query);
+        break;
+      default:
+        console.log('Neznámá akce.');
+    }
   }
 
   get endpoints(): string[] {
