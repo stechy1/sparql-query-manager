@@ -32,7 +32,7 @@ export class QueryFilterGroupSortService {
           this._fuseQueries.push(value.query);
           break;
         case TypeOfQueryChange.REMOVE:
-          const index = this._fuseQueries.indexOf(value.query);
+          const index = this._fuseQueries.findIndex(query => query.id === value.query.id);
           this._fuseQueries.splice(index, 1);
           break;
         case TypeOfQueryChange.CLEAR:

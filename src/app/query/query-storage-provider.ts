@@ -38,7 +38,7 @@ export interface QueryStorageProvider {
 export interface QueryCollectionChange {
   typeOfChange: TypeOfQueryChange;
   query: Query;
-  // source: string;
+  source?: string;
 }
 
 export enum TypeOfQueryChange {

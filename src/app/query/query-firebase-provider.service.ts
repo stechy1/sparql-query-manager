@@ -11,6 +11,8 @@ import { map } from 'rxjs/operators';
 })
 export class QueryFirebaseProviderService implements QueryStorageProvider {
 
+  // Název služby
+  public static readonly QUERY_PROVIDER_NAME = 'firebase_provider';
   // Název kolekce, která obsahuje dotazy ve Firebase
   static readonly QUERY_COLLECTION = 'queries';
 
@@ -83,7 +85,11 @@ export class QueryFirebaseProviderService implements QueryStorageProvider {
         // Smažu dotaz z lokální kopie dotazů
         this._queries.splice(index, 1);
         // Informuji svět, že jsem smazal dotaz
-        this._querySubject.next({query: deletedQuery, typeOfChange: TypeOfQueryChange.REMOVE});
+        this._querySubject.next({
+          query: deletedQuery,
+          typeOfChange: TypeOfQueryChange.REMOVE,
+          source: QueryFirebaseProviderService.QUERY_PROVIDER_NAME
+        });
       }
     });
   }

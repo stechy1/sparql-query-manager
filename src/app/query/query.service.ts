@@ -11,8 +11,9 @@ import { Observable, Subject } from 'rxjs';
 })
 export class QueryService {
 
+  // Subjekt, pomocí kterého se propagují změny v kolekci dále do světa
   private readonly _querySubject = new Subject<QueryCollectionChange>();
-
+  // Kolekce všech existujících dotazů v aplikaci
   private _queries: Query[] = [];
 
   constructor(private _queryLocalStorageProvider: QueryLocalStorageProviderService,
@@ -33,33 +34,85 @@ export class QueryService {
     return '_' + Math.random().toString(36).substr(2, 9);
   }
 
+  /**
+   * Metoda pro zpracování změny v kolekci dotazů
+   *
+   * @param change Změna v kolekci dotazů
+   */
   private _processQuery(change: QueryCollectionChange) {
+    // Definuji pomocnou proměnnou, která říká, zda-li mám nechat "probublat" událost k dalšímu zpracování
     let continueProcessing = true;
+    // Podle typu akce se zachovám
     switch (change.typeOfChange) {
+      // V případě přidání nového dotazu
       case TypeOfQueryChange.ADD: {
-        // Aktualizovat downloaded a uploaded na obou instancich.
+        // Pokusím se najít index dotazu v aktuální kolekci
         const index = this._queries.findIndex(query => query.id === change.query.id);
+        // Pokud takový dotaz neexistuje,
         if (index === -1) {
+          // tak ho přidám do kolekce a o víc se nestarám
           this._queries.push(change.query);
+          // Opustím switch
           break;
         }
+
+        // Zde mám jistotu, že dotaz existuje
         continueProcessing = false;
+        // Získám si instanci z aktuální kolekce
         const localQuery = this._queries[index];
+        // To, že dotaz existuje znamená, že byl již jednou přídán
+        // ať už z localStorage, nebo z firebase
+        // naštěstí pro mě, tohle řešit nemusím a prostě
+        // nastavím dotazu parametry "downloaded" a "uploaded" na true
         change.query.downloaded = change.query.uploaded = true;
         localQuery.downloaded = localQuery.uploaded = true;
       }
+        // Opustím switch
         break;
+      // V případě odebrání dotazu
       case TypeOfQueryChange.REMOVE: {
+        // Získám instanci odebraného dotazu
+        const removedQuery = change.query;
+        // Najdu index, na kterém se dotaz nachází v aktuální kolekci
         const index = this._queries.findIndex(query => query.id === change.query.id);
+
+        // Pokud byl dotaz uložen i nahrán zároveň
+        if (removedQuery.downloaded && removedQuery.uploaded) {
+          // Vytáhnu si referenci dotazu z aktuální kolekce
+          const affectedQuery = this._queries[index];
+          // Podle zdroje odstranění dotazu
+          switch (change.source) {
+            // Odstranil jsem dotaz z localStorage
+            case QueryLocalStorageProviderService.QUERY_PROVIDER_NAME:
+              // Nastavím příznak "downloaded" na false
+              affectedQuery.downloaded = false;
+              break;
+            // Odstranil jsem dotaz z firebase
+            case QueryFirebaseProviderService.QUERY_PROVIDER_NAME:
+              // Nastavím příznak "uploaded" na false
+              affectedQuery.uploaded = false;
+              // Opustím switch
+              break;
+          }
+          // Přeruším propagování dalšího zpracování
+          continueProcessing = false;
+          // Opustím switch
+          break;
+        }
+        // Dotaz byl buď stažený, nebo nahraný, takže ho můžu bezpečně odstranit
+        // protože již neexistuje ani v jednom úložišti
         this._queries.splice(index, 1);
       }
+        // Opustím switch
         break;
       case TypeOfQueryChange.CLEAR:
         this._queries.splice(0, this._queries.length - 1);
         break;
     }
 
+    // Pokud můžu pokračovat ve zpracování změny
     if (continueProcessing) {
+      // Nechám probublat změnu do dalšího kola
       this._querySubject.next(change);
     }
   }

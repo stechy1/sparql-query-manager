@@ -1,5 +1,5 @@
 import { QueryCollectionChange, QueryStorageProvider, TypeOfQueryChange } from './query-storage-provider';
-import { Observable, Subject} from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Query } from './query';
 import { Injectable } from '@angular/core';
 import { encodeQueries, parseQuery, QueryStorageEntry } from './query-storage-entry';
@@ -10,6 +10,8 @@ import { LocalStorageService } from 'angular-2-local-storage';
 })
 export class QueryLocalStorageProviderService implements QueryStorageProvider {
 
+  // Název služby
+  public static readonly QUERY_PROVIDER_NAME = 'local_storage_provider';
   // Konstanta obsahující název klíče, pod který se ukládají data o dotazech do local storage
   static readonly STORAGE_KEY = 'queries';
 
@@ -78,7 +80,13 @@ export class QueryLocalStorageProviderService implements QueryStorageProvider {
         return;
       }
 
+      const deletedQuery = this._queries[index];
       this._queries.slice(index, 1);
+      this._querySubject.next({
+        query: deletedQuery,
+        typeOfChange: TypeOfQueryChange.REMOVE,
+        source: QueryLocalStorageProviderService.QUERY_PROVIDER_NAME
+      });
     });
   }
 
