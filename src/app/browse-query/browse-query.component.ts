@@ -61,13 +61,11 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   }
 
   private _handleDownload(query: Query) {
-    // TODO implementovat stažení dotazu do lokální paměti
-    console.log('Query download.');
+    this._qservice.create(query);
   }
 
   private _handleUpload(query: Query) {
-    // TODO implementovat nahrání dotazu do firebase
-    console.log('Query upload.');
+    this._qservice.create(query);
   }
 
   ngOnInit() {
@@ -79,7 +77,6 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this._recalculateQueryListMargin();
-    // this._qservice.();
   }
 
   @HostListener('window:scroll')
@@ -130,14 +127,10 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   }
 
   handleDeleteRequest(deleteHandler: DeleteHandler) {
-    if (deleteHandler.isRemote) {
-      // TODO implementovat smazání z firebase
-      console.log('Query delete from firebase.');
-    } else {
-      this._qservice.delete(deleteHandler.query.id).then(() => {
-        setTimeout(() => this._recalculateQueryListMargin(), 100);
-      });
-    }
+    this._qservice.delete(deleteHandler.query.id, deleteHandler.isRemote)
+    .then(() => {
+      setTimeout(() => this._recalculateQueryListMargin(), 100);
+    });
   }
 
   async handleExport() {
@@ -206,7 +199,6 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   }
 
   get selectedQueries(): number {
-    // TODO opravit getter selectedQueries
     return this.queries.filter(value => value.selected).length;
   }
 }

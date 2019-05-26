@@ -5,8 +5,9 @@
     </label>
   </div>
   <div class="col s1 cloud-indicator">
-    <span><i class="material-icons" *ngIf="!query.isRemote">cloud_off</i></span>
-    <span><i class="material-icons" *ngIf="query.isRemote">cloud</i></span>
+    <span><i class="material-icons" *ngIf="query.downloaded && query.uploaded">cloud_done</i></span>
+    <span><i class="material-icons" *ngIf="query.downloaded && !query.uploaded">cloud_off</i></span>
+    <span><i class="material-icons" *ngIf="!query.downloaded && query.uploaded">cloud</i></span>
   </div>
   <div class="col s8">
     <div>
@@ -17,8 +18,9 @@
     </div>
   </div>
   <div class="col s3 q-entry-toolbar">
-    <span><i class="material-icons q-icon" (click)="handleDelete(query.isRemote)">delete</i></span>
-    <span><i class="material-icons q-icon" *ngIf="!query.isRemote" (click)="handleUpload()">cloud_upload</i></span>
-    <span><i class="material-icons q-icon" *ngIf="query.isRemote" (click)="handleDownload()">cloud_download</i></span>
+    <span><i class="material-icons q-icon" *ngIf="query.downloaded" (click)="handleDelete(false)">delete_forever</i></span>
+    <span><i class="material-icons q-icon" *ngIf="query.uploaded" (click)="handleDelete(true)">delete</i></span>
+    <span><i class="material-icons q-icon" *ngIf="!query.uploaded" (click)="handleUpload()">cloud_upload</i></span>
+    <span><i class="material-icons q-icon" *ngIf="!query.downloaded" (click)="handleDownload()">cloud_download</i></span>
   </div>
 </div>

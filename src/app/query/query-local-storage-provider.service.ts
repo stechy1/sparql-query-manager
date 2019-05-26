@@ -29,6 +29,7 @@ export class QueryLocalStorageProviderService implements QueryStorageProvider {
   private _loadQueriesInternal(queries: QueryStorageEntry[]): void {
     for (const rawQuery of queries) {
       const query = parseQuery(rawQuery);
+      query.downloaded = true;
       this._queries.push(query);
       this._querySubject.next({query: query, typeOfChange: TypeOfQueryChange.ADD});
     }

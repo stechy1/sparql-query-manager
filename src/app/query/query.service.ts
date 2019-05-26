@@ -34,20 +34,34 @@ export class QueryService {
   }
 
   private _processQuery(change: QueryCollectionChange) {
+    let continueProcessing = true;
     switch (change.typeOfChange) {
-      case TypeOfQueryChange.ADD:
-        this._queries.push(change.query);
+      case TypeOfQueryChange.ADD: {
+        // Aktualizovat downloaded a uploaded na obou instancich.
+        const index = this._queries.findIndex(query => query.id === change.query.id);
+        if (index === -1) {
+          this._queries.push(change.query);
+          break;
+        }
+        continueProcessing = false;
+        const localQuery = this._queries[index];
+        change.query.downloaded = change.query.uploaded = true;
+        localQuery.downloaded = localQuery.uploaded = true;
+      }
         break;
-      case TypeOfQueryChange.REMOVE:
+      case TypeOfQueryChange.REMOVE: {
         const index = this._queries.findIndex(query => query.id === change.query.id);
         this._queries.splice(index, 1);
+      }
         break;
       case TypeOfQueryChange.CLEAR:
         this._queries.splice(0, this._queries.length - 1);
         break;
     }
 
-    this._querySubject.next(change);
+    if (continueProcessing) {
+      this._querySubject.next(change);
+    }
   }
 
   /**
@@ -65,7 +79,7 @@ export class QueryService {
   byId(id: string): Promise<Query> {
     return new Promise<Query>((resolve, reject) => {
       const result = this._queries.find(query => id === query.id);
-      if (result === undefined || result.isRemote) {
+      if (result === undefined || (result.uploaded && !result.downloaded) || !result.downloaded) {
         reject();
       }
 
@@ -76,9 +90,15 @@ export class QueryService {
   /**
    * Vytvoří nový prázdný dotaz
    */
-  create(): Promise<string> {
-    const query = new Query(QueryService.makeID(), '', '', [], '', {}, '', new Date().getTime(), null, 0);
-    return this._queryLocalStorageProvider.insert(query);
+  create(query?: Query): Promise<string> {
+    if (query === undefined) {
+      query = new Query(QueryService.makeID(), '', '', [], '', {}, '', new Date().getTime(), null, 0);
+      return this._queryLocalStorageProvider.insert(query);
+    }
+
+    return query.uploaded
+      ? this._queryLocalStorageProvider.insert(query)
+      : this._queryFirebaseProvider.insert(query);
   }
 
   /**
@@ -93,6 +113,10 @@ export class QueryService {
       : this._queryLocalStorageProvider.delete(id);
   }
 
+  /**
+   * Provede uložení pouze localStorage
+   * Firebase je synchronizována průběžně
+   */
   performSave() {
     this._queryLocalStorageProvider.save();
   }
@@ -104,7 +128,7 @@ export class QueryService {
    */
   clear(remote: boolean = false): Promise<void> {
     return Promise.all(this._queries.map(value => {
-      return value.isRemote
+      return value.uploaded
         ? remote
           ? this._queryFirebaseProvider.delete(value.id)
           : Promise.resolve()

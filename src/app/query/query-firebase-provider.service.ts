@@ -1,10 +1,10 @@
 import { QueryCollectionChange, QueryStorageProvider, TypeOfQueryChange } from './query-storage-provider';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { Query } from './query';
-import { AngularFirestore, AngularFirestoreCollection, DocumentChangeType } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { encodeQuery, parseQuery, QueryStorageEntry } from './query-storage-entry';
-import { map} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -43,41 +43,49 @@ export class QueryFirebaseProviderService implements QueryStorageProvider {
       map(actions => actions.map(value => {
         // Uložím si ID dotazu
         const id = value.payload.doc.id;
-        // Zjistím, o jakou akci se jedná
-        const action: DocumentChangeType = value.type;
-
-        switch (action) {
-          case 'added':
-            // Vyzvednu si data
-            const data = value.payload.doc.data() as QueryStorageEntry;
-            // Uložím ID
-            data._id = id;
-            // Pokusím se najít dotaz se stejným ID v lokální kolekci
-            const index = this._queries.findIndex(val => val.id === id);
-            // Pokud záznam existuje
-            if (index !== -1) {
-              // Nebudu nic provádět
-              break;
-            }
-            console.log('Přidávám query.');
-            console.log(data);
-            // Naparsuji dotaz
-            const query = parseQuery(data, true);
-            // Uložím ho do lokální kolekce
-            self._queries.push(query);
-            // Inform rest of the worl, that new query arrived
-            self._querySubject.next({query: query, typeOfChange: TypeOfQueryChange.ADD});
-            break;
-          case 'removed':
-            // TODO vymyslet, proč se tohle nevolá...
-            console.log('Odstranuji query s id: ' + id);
-            break;
-          default:
-            console.log('Nepodporovaná akce');
+        // Vyzvednu si data
+        const data = value.payload.doc.data() as QueryStorageEntry;
+        // Uložím ID
+        data._id = id;
+        // Pokusím se najít dotaz se stejným ID v lokální kolekci
+        const index = this._queries.findIndex(val => val.id === id);
+        // Pokud záznam existuje
+        if (index !== -1) {
+          // Nebudu nic provádět
+          return id;
         }
-      }))
-    )
-    .subscribe();
+        console.log('Přidávám query.');
+        console.log(data);
+        // Naparsuji dotaz
+        const query = parseQuery(data, true);
+        query.uploaded = true;
+        // Uložím ho do lokální kolekce
+        self._queries.push(query);
+        // Inform rest of the worl, that new query arrived
+        self._querySubject.next({query: query, typeOfChange: TypeOfQueryChange.ADD});
+        // Vrátím ID dotazu
+        return id;
+      })))
+    // liveIDs obsahuje pole ID dotazů, které již existují v lokální kopii
+    .subscribe((liveIDs: string[]) => {
+      // Vytvořím pole ID lokálních dotazů
+      const localIDs = this._queries.map(query => query.id);
+      // Vytvořím set ID aktuálních dotazů
+      const liveSetIDs = new Set(liveIDs);
+      // Získám Set, obsahující ID smazaných dotazů (localIDs - liveSetIDs)
+      const diffIDs = localIDs.filter(x => !liveSetIDs.has(x));
+      // O smazaných dotazech musím informovat zbytek světa
+      for (const id of diffIDs) {
+        // Najdu index dotazu, který chci smazat
+        const index = this._queries.findIndex(query => query.id === id);
+        // Uložím si referenci na mazaný dotaz
+        const deletedQuery = this._queries[index];
+        // Smažu dotaz z lokální kopie dotazů
+        this._queries.splice(index, 1);
+        // Informuji svět, že jsem smazal dotaz
+        this._querySubject.next({query: deletedQuery, typeOfChange: TypeOfQueryChange.REMOVE});
+      }
+    });
   }
 
   /**
