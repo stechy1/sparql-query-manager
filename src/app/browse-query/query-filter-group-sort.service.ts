@@ -93,8 +93,7 @@ export class QueryFilterGroupSortService {
   }
 
   get showActions(): boolean {
-    return true;
-    // return this._qservice.allQueries().length !== 0;
+    return this._qservice.allQueries().length !== 0;
   }
 
   set selectedGroup(group: string) {
