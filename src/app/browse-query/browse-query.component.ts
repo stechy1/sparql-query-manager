@@ -13,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './browse-query.component.html',
   styleUrls: ['./browse-query.component.css']
 })
-export class BrowseQueryComponent implements OnInit, AfterViewInit {
+export class BrowseQueryComponent implements OnInit {
 
   // Kolekce všech dotazů
   queries: Query[];
@@ -23,8 +23,6 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   @ViewChild('queryContainer') queryList: ElementRef;
   // Pomocný příznak, pomocí kterého zobrazuji dropdown s výběrem typu importu
   showImportDropdown: boolean;
-  // Poslední yOffset toolbaru
-  // private _lastYOffset: number;
 
   constructor(private _qservice: QueryService, private _navService: NavigationService,
               private _router: Router, private _toastr: ToastrService,
@@ -43,73 +41,29 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
         const text = <string> reader.result;
         self._qservice.import(text, override).then(importedQueries => {
           self._toastr.success(`Importovaných dotazů: ${importedQueries}.`);
+          self.showImportDropdown = false;
         });
       };
       reader.readAsText(input.files[0]);
   }
 
-  // /**
-  //  * Nastaví horní margin seznamu dotazů
-  //  */
-  // private _recalculateQueryListMargin() {
-  //   const queryDiv = (<HTMLDivElement> this.queryList.nativeElement);
-  //   if (window.innerWidth <= 992) {
-  //     queryDiv.style.marginTop = `0px`;
-  //     return;
-  //   }
-  //
-  //   const toolbarDiv = (<HTMLDivElement> this.toolbar.nativeElement);
-  //   const divHeight = toolbarDiv.clientHeight;
-  //   toolbarDiv.classList.add('sticky');
-  //   toolbarDiv.classList.remove('hide');
-  //   queryDiv.style.marginTop = `${divHeight}px`;
-  // }
-
   private _handleDownload(query: Query) {
-    this._qservice.create(query);
+    this._qservice.create(query).then(() => {
+      this._toastr.success('Dotaz byl úspěšně stažen.');
+    });
   }
 
   private _handleUpload(query: Query) {
-    this._qservice.create(query);
+    this._qservice.create(query).then(() => {
+      this._toastr.success('Dotaz byl úspěšně nahrán.');
+    });
   }
 
   ngOnInit() {
-    // Uložení dotazů do lokální proměnné
+    // Načtení všech dotazů
     this.queries = this._qservice.allQueries();
     this.showImportDropdown = false;
-    // this._lastYOffset = window.pageYOffset;
   }
-
-  ngAfterViewInit(): void {
-    // this._recalculateQueryListMargin();
-  }
-
-  // @HostListener('window:scroll')
-  // scrollHandler() {
-  //   const queryDiv = (<HTMLDivElement> this.queryList.nativeElement);
-  //   if (window.innerWidth <= 992) {
-  //     queryDiv.style.marginTop = `0px`;
-  //     return;
-  //   }
-  //   const newOffset = window.pageYOffset;
-  //   const delta = newOffset - this._lastYOffset;
-  //   const toolbarDiv = (<HTMLDivElement> this.toolbar.nativeElement);
-  //   const toolbarDivHeight = toolbarDiv.clientHeight;
-  //   const queryDivHeight = queryDiv.clientHeight;
-  //   const windowHeight = window.innerHeight;
-  //   this._lastYOffset = newOffset;
-  //   if (delta < 0) {
-  //     toolbarDiv.classList.add('sticky');
-  //     toolbarDiv.classList.remove('hide');
-  //     queryDiv.style.marginTop = `${toolbarDivHeight}px`;
-  //   } else {
-  //     if (queryDivHeight > windowHeight) {
-  //       toolbarDiv.classList.remove('sticky');
-  //       toolbarDiv.classList.add('hide');
-  //       queryDiv.style.marginTop = `0px`;
-  //     }
-  //   }
-  // }
 
   /**
    * Metoda pro vyfiltrování dotazu podle endpointu
@@ -134,7 +88,7 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   handleDeleteRequest(deleteHandler: DeleteHandler) {
     this._qservice.delete(deleteHandler.query.id, deleteHandler.isRemote)
     .then(() => {
-      // setTimeout(() => this._recalculateQueryListMargin(), 100);
+      this._toastr.success('Dotaz byl smazán.');
     });
   }
 
@@ -155,7 +109,6 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
 
   handleImportOverride(event: Event) {
     this._import(<HTMLInputElement> event.target, true);
-    // setTimeout(() => this._recalculateQueryListMargin(), 100);
   }
 
   handleImportAppend(event: Event) {
@@ -172,8 +125,9 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
 
   handleDeleteAll() {
     if (confirm('Opravdu si přejete smazat celou databázi?')) {
-      this._qservice.clear();
-      // setTimeout(() => this._recalculateQueryListMargin(), 100);
+      this._qservice.clear().then(() => {
+        this._toastr.success('Dotazy byy smazány.');
+      });
     }
   }
 
