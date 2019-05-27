@@ -132,8 +132,9 @@ export class BrowseQueryComponent implements OnInit {
   }
 
   handleNewQuery() {
-    const newId = this._qservice.create();
-    this._router.navigate(['edit', newId]);
+    this._qservice.create().then(newId => {
+      this._router.navigate(['edit', newId]);
+    });
   }
 
   handleFirebaseRequest($event: FirebaseHandler) {
