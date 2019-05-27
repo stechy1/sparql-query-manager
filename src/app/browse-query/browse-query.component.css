@@ -76,4 +76,7 @@
   .mobile-search {
     display: none;
   }
+  .query-container-margin {
+    margin-top: 90px;
+  }
 }
