@@ -15,7 +15,7 @@ export class QueryService {
   // Subjekt, pomocí kterého se propagují změny v kolekci dále do světa
   private readonly _querySubject = new Subject<QueryCollectionChange>();
   // Kolekce všech existujících dotazů v aplikaci
-  private _queries: Query[] = [];
+  private readonly _queries: Query[] = [];
 
   constructor(private _queryLocalStorageProvider: QueryLocalStorageProviderService,
               private _queryFirebaseProvider: QueryFirebaseProviderService,
@@ -65,7 +65,7 @@ export class QueryService {
         // ať už z localStorage, nebo z firebase
         // naštěstí pro mě, tohle řešit nemusím a prostě
         // nastavím dotazu parametry "downloaded" a "uploaded" na true
-        change.query.downloaded = change.query.uploaded = true;
+        // change.query.downloaded = change.query.uploaded = true;
         localQuery.downloaded = localQuery.uploaded = true;
       }
         // Opustím switch
