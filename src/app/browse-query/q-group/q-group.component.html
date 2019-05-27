@@ -1,9 +1,11 @@
 <div class="collection-item">
-  <div *ngFor="let value of values" class="q-group">
-    <app-q-entry *ngFor="let query of getQueries(value)"
-                 [query]="query"
-                 (deleteRequest)="handleDeleteRequest($event)"
-                 (firebaseRequest)="handleFirebaseRequest($event)"></app-q-entry>
-    <div class="divider"></div>
+  <div *ngFor="let value of values">
+    <ul>
+      <li *ngFor="let query of getQueries(value)" class="q-entry-border">
+        <app-q-entry [query]="query"
+                     (deleteRequest)="handleDeleteRequest($event)"
+                     (firebaseRequest)="handleFirebaseRequest($event)"></app-q-entry>
+      </li>
+    </ul>
   </div>
 </div>

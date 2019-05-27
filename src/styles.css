@@ -55,3 +55,11 @@ select {
   line-height: 24px;
   font-size: 11px;
 }
+
+.q-entry-border {
+  border-bottom: solid 1px #BDBDBD;
+}
+.q-entry-border:last-child {
+    border-bottom: solid 2px #BDBDBD;
+    margin-bottom: 4px;
+}

@@ -1,5 +1,4 @@
 .q-entry {
-  border-bottom: solid 1px #BDBDBD;
   min-height: 50px;
 }
 
@@ -14,13 +13,6 @@
   color: #000;
 }
 
-.q-information {
-  /*margin-left: 40px;*/
-}
-
 .cloud-indicator {
   float: left;
-  /*position: absolute;*/
-  /*margin-top: 10px;*/
 }
-

@@ -11,10 +11,13 @@
     <div class="col s12 offset-m2 m8">
       <div class="collection" *ngIf="queries.length !== 0">
         <div class="q-group" *ngIf="qFilterGroupSortingService.selectedGroup === 'none'">
-          <app-q-entry *ngFor="let query of qFilterGroupSortingService.fuseQueries"
-                       [query]="query"
-                       (deleteRequest)="handleDeleteRequest($event)"
-                       (firebaseRequest)="handleFirebaseRequest($event)"></app-q-entry>
+          <ul>
+            <li *ngFor="let query of qFilterGroupSortingService.fuseQueries" class="q-entry-border">
+              <app-q-entry [query]="query"
+                           (deleteRequest)="handleDeleteRequest($event)"
+                           (firebaseRequest)="handleFirebaseRequest($event)"></app-q-entry>
+            </li>
+          </ul>
         </div>
         <app-q-group [values]="endpoints"
                      [queries]="qFilterGroupSortingService.fuseQueries"
@@ -75,7 +78,6 @@
       </div>
     </div>
   </div>
-
 </section>
 
 <span id="new-query" class="btn-floating btn-large waves-effect waves-light accent-color" (click)="handleNewQuery()"><i class="material-icons">add</i></span>
