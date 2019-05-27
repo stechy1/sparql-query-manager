@@ -173,7 +173,11 @@ export class EndpointCommunicatorService {
    * Vrátí instanci výsledu posledního provedeného dotazu
    */
   get lastQueryResult(): QueryResult {
-    return parseQueryResult(<QueryResultStorageEntry>JSON.parse(this._storage.get(EndpointCommunicatorService.LAST_QUERY_KEY)));
+    const result = this._storage.get<string>(EndpointCommunicatorService.LAST_QUERY_KEY);
+    if (result === null) {
+      return undefined;
+    }
+    return parseQueryResult(<QueryResultStorageEntry>JSON.parse(result));
   }
 
   /**

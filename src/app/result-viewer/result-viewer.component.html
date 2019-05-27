@@ -14,7 +14,7 @@
       <button class="btn btn-tiny" (click)="handleCopyResult()">Zkopírovat do schránky</button>
     </div>
     <div class="card-content">
-      <pre class="auto-overflow">{{queryResult.result}}</pre>
+      <pre class="auto-overflow">{{queryResult?.result}}</pre>
     </div>
   </div>
   </div>
@@ -23,7 +23,7 @@
   <div id="query" class="card">
     <div class="card-content">
       <span class="card-title">Tělo dotazu</span>
-      <pre>{{queryResult.content}}</pre>
+      <pre>{{queryResult?.content}}</pre>
     </div>
   </div>
   </div>
