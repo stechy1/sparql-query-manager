@@ -125,10 +125,6 @@ export class Query {
   // Firebase support
   // ----------------------------------------
 
-  get isRemote(): boolean {
-    return this._isRemote;
-  }
-
   get downloaded(): boolean {
     return this._downloaded;
   }

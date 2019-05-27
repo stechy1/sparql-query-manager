@@ -15,14 +15,16 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class BrowseQueryComponent implements OnInit, AfterViewInit {
 
-  private _lastYOffset: number;
   // Kolekce všech dotazů
   queries: Query[];
-  // Reference na input element
-  // @ViewChild('inputSearch') inputSearch: ElementRef;
+  // Reference na toolbar container
   @ViewChild('toolbarContainer') toolbar: ElementRef;
+  // Reference na query container
   @ViewChild('queryContainer') queryList: ElementRef;
+  // Pomocný příznak, pomocí kterého zobrazuji dropdown s výběrem typu importu
   showImportDropdown: boolean;
+  // Poslední yOffset toolbaru
+  private _lastYOffset: number;
 
   constructor(private _qservice: QueryService, private _navService: NavigationService,
               private _router: Router, private _toastr: ToastrService,
