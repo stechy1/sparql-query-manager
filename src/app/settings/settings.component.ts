@@ -17,13 +17,13 @@ export class SettingsComponent implements OnInit {
     this.testTime = Date.now();
   }
 
+  refreshTime() {
+    this.testTime = Date.now();
+  }
+
   handleSave() {
     this.settings.save();
     this._toastr.success('Nastavení bylo uloženo.');
-  }
-
-  refreshTime() {
-    this.testTime = Date.now();
   }
 
   handlePrefixChange($event: string) {

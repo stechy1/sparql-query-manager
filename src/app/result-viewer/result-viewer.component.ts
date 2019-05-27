@@ -20,7 +20,12 @@ export class ResultViewerComponent implements OnInit {
   constructor(private _endpointCommunicator: EndpointCommunicatorService, private _qrservice: QueryResultService,
               private _route: ActivatedRoute, private _toaster: ToastrService) { }
 
-  private _loadQuery(id: string) {
+  /**
+   * Načte výsledek dotazu podle ID
+   *
+   * @param id ID dotazu
+   */
+  private _loadQueryResult(id: string) {
     if (id === 'last') {
       this.queryResult = <QueryResult>this._endpointCommunicator.lastQueryResult;
       this.title = 'Výsledek posledního dotazu';
@@ -32,9 +37,9 @@ export class ResultViewerComponent implements OnInit {
 
   ngOnInit() {
     const resultId = this._route.snapshot.params['id'];
-    this._loadQuery(resultId);
+    this._loadQueryResult(resultId);
     this._route.params.subscribe(value => {
-      this._loadQuery(value['id']);
+      this._loadQueryResult(value['id']);
     });
     this.showResult = this._route.snapshot.queryParams['tab'] === 'result';
   }

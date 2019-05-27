@@ -28,16 +28,16 @@ export class QGroupComponent implements OnInit {
     });
   }
 
+  getQueries(value: string): Query[] {
+    return this.queries.filter(query => this.filterFunction(query, value));
+  }
+
   handleDeleteRequest(deleteHandler: DeleteHandler) {
     this.deleteRequest.emit(deleteHandler);
   }
 
   handleFirebaseRequest(firebaseHandler: FirebaseHandler) {
     this.firebaseRequest.emit(firebaseHandler);
-  }
-
-  getQueries(value: string): Query[] {
-    return this.queries.filter(query => this.filterFunction(query, value));
   }
 
   handleCheckboxChange(event: Event) {

@@ -8,12 +8,19 @@ import { Query } from '../query';
 })
 export class QNameComponent implements OnInit {
 
-  private _query: Query;
   @Output() dataChanged = new EventEmitter<Query>();
+  private _query: Query;
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  nameChanged(value: string) {
+    if (this._query.name !== value) {
+      this._query.name = value;
+      this.dataChanged.emit(this._query);
+    }
   }
 
   @Input()
@@ -23,12 +30,5 @@ export class QNameComponent implements OnInit {
 
   get name() {
     return this._query.name;
-  }
-
-  nameChanged(value: string) {
-    if (this._query.name !== value) {
-      this._query.name = value;
-      this.dataChanged.emit(this._query);
-    }
   }
 }

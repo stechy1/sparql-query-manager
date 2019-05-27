@@ -25,11 +25,11 @@ import { QueryService } from '../query/query.service';
 })
 export class EditComponent implements OnInit {
 
-  private _query: Query;
   saveProgress: string;
   @ViewChild(QParamsComponent) paramsComponent: QParamsComponent;
-  private _params: {};
   queryResult: QueryResult;
+  private _params: {};
+  private _query: Query;
 
   constructor(private _qservice: QueryService, private _settings: SettingsService,
               private _navService: NavigationService, private _endpointCommunicator: EndpointCommunicatorService,
@@ -48,10 +48,6 @@ export class EditComponent implements OnInit {
     this._params = this._query.params;
     this._navService.setNavbar(null);
     this._navService.setSidebar(null);
-  }
-
-  get query(): Query {
-    return this._query;
   }
 
   /**
@@ -119,5 +115,9 @@ export class EditComponent implements OnInit {
     this._endpointCommunicator.makeRequest(this._query, ignoreStatistics).then(value => {
       this.queryResult = value;
     });
+  }
+
+  get query(): Query {
+    return this._query;
   }
 }

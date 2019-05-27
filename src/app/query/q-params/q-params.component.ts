@@ -69,22 +69,6 @@ export class QParamsComponent implements OnInit {
     return this.params;
   }
 
-  get keys(): string[] {
-    return Object.keys(this.params);
-  }
-
-  get variablesWithoutUnused(): {} {
-    const result = {};
-
-    for (const param in this.params) {
-      if (this.content.indexOf(`${this._settings.queryParameterFormat.prefix}${param}${this._settings.queryParameterFormat.suffix}`) !== -1) {
-        result[param] = this.params[param];
-      }
-    }
-
-    return result;
-  }
-
   isParameterToRemove(parameter: string): boolean {
     return this.variablesWithoutUnused[parameter] === undefined;
   }
@@ -95,5 +79,22 @@ export class QParamsComponent implements OnInit {
 
   handleUsedValueChange(event: string | number, key: string) {
     this.params[key]['usedValue'] = event;
+  }
+
+  get keys(): string[] {
+    return Object.keys(this.params);
+  }
+
+  get variablesWithoutUnused(): {} {
+    const result = {};
+
+    for (const param in this.params) {
+      // tslint:disable-next-line:max-line-length
+      if (this.content.indexOf(`${this._settings.queryParameterFormat.prefix}${param}${this._settings.queryParameterFormat.suffix}`) !== -1) {
+        result[param] = this.params[param];
+      }
+    }
+
+    return result;
   }
 }

@@ -22,6 +22,18 @@ export class QEntryComponent implements OnInit {
     this._visible = false;
   }
 
+  handleDelete(isRemote: boolean) {
+    this.deleteRequest.emit({query: this._query, isRemote: isRemote});
+  }
+
+  handleUpload() {
+    this.firebaseRequest.emit({query: this._query, handlerType: FirebaseHandlerType.UPLOAD});
+  }
+
+  handleDownload() {
+    this.firebaseRequest.emit({query: this._query, handlerType: FirebaseHandlerType.DOWNLOAD});
+  }
+
   @Input()
   set query(value: Query) {
     this._query = value;
@@ -42,17 +54,5 @@ export class QEntryComponent implements OnInit {
   get formatedDateOfCreation() {
     const date = new Date(this._query.created);
     return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
-  }
-
-  handleDelete(isRemote: boolean) {
-    this.deleteRequest.emit({query: this._query, isRemote: isRemote});
-  }
-
-  handleUpload() {
-    this.firebaseRequest.emit({query: this._query, handlerType: FirebaseHandlerType.UPLOAD});
-  }
-
-  handleDownload() {
-    this.firebaseRequest.emit({query: this._query, handlerType: FirebaseHandlerType.DOWNLOAD});
   }
 }

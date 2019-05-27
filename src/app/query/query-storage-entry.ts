@@ -25,10 +25,21 @@ export function parseQuery(input: QueryStorageEntry, isRemote: boolean = false):
     input._created, input._lastRun, input._runCount, isRemote);
 }
 
+/**
+ * Převede instanci třídy Query na rozhraní QueryStorageEntry
+ * toto rozhraní slouží k uložení do paměti
+ *
+ * @param query Doraz, který se má encodovat
+ */
 export function encodeQuery(query: Query): QueryStorageEntry {
   return JSON.parse(JSON.stringify(query, Query.structureGuard));
 }
 
+/**
+ * Převede pole instancí třídy Query[] na pole rozhraní QueryStorageEntry[]
+ *
+ * @param queries Dotazy, které se mají encodovat
+ */
 export function encodeQueries(queries: Query[]): QueryStorageEntry[] {
   return JSON.parse(JSON.stringify(queries, Query.structureGuard));
 }

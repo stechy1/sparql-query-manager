@@ -1,6 +1,10 @@
 import { Query } from './query';
 import { Observable } from 'rxjs';
 
+/**
+ * Rozhraní obsahující společné metody pro přístup k úložišti
+ * Každý poskytovatel dotazů musí implementovat toto rozhraní
+ */
 export interface QueryStorageProvider {
 
   /**
@@ -35,12 +39,21 @@ export interface QueryStorageProvider {
   observable(): Observable<QueryCollectionChange>;
 }
 
+/**
+ * Rozhraní reprezentující změnu v úložišti
+ */
 export interface QueryCollectionChange {
+  // Typ změny
   typeOfChange: TypeOfQueryChange;
+  // Dotaz, kterého se změna týká
   query: Query;
+  // Název implementující třídy, která tuto změnu vyvolala
   source?: string;
 }
 
+/**
+ * Rozhraní reprezentující typ změny v úložišti
+ */
 export enum TypeOfQueryChange {
   ADD, REMOVE, CLEAR
 }

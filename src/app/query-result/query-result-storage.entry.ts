@@ -1,5 +1,8 @@
 import { QueryResult, ResultState } from './query-result';
 
+/**
+ * Rozhraní obsahující vlastnosti výsledku dotazu, které se používá k serializaci dotazu a následnému uložení do paměti
+ */
 export interface QueryResultStorageEntry {
   _id: string;
   _name: string;

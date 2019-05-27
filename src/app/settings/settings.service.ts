@@ -22,7 +22,8 @@ interface QueryParameterFormat {
 })
 export class SettingsService {
 
-  static readonly SETTINGS_KEY = 'settings';
+  // Konstanta obsahující název klíče, pod který se ukládá nastavení aplikace
+  static readonly STORAGE_KEY = 'settings';
   static readonly DEFAULT_SETTINGS: Settings = window['__env'] && window['__env'].defaultUserSettings
     ? window['__env'].defaultUserSettings
     : {
@@ -43,11 +44,12 @@ export class SettingsService {
       }
     };
 
+  // Instance nastavení
   private readonly _settings: Settings;
 
   constructor(private _storage: LocalStorageService) {
     // Vytažení nastavení z localStorage, nebo použití výchozího nastavení
-    this._settings = this._storage.get<Settings>(SettingsService.SETTINGS_KEY) || SettingsService.DEFAULT_SETTINGS;
+    this._settings = this._storage.get<Settings>(SettingsService.STORAGE_KEY) || SettingsService.DEFAULT_SETTINGS;
     // Registrace globálního listeneru pro localStorage
     window.addEventListener('storage', ($event) => this._globalStorageEventListener($event.key, $event.newValue));
   }
@@ -59,7 +61,7 @@ export class SettingsService {
    * @param newValue Nová hodnota
    */
   private _globalStorageEventListener(key: string, newValue: string) {
-    if (key.indexOf(SettingsService.SETTINGS_KEY) === -1) {
+    if (key.indexOf(SettingsService.STORAGE_KEY) === -1) {
       return;
     }
 
@@ -72,7 +74,7 @@ export class SettingsService {
   }
 
   public save(): void {
-    this._storage.set(SettingsService.SETTINGS_KEY, this._settings);
+    this._storage.set(SettingsService.STORAGE_KEY, this._settings);
   }
 
   /**

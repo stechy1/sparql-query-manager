@@ -86,10 +86,6 @@ export class Query {
     return this._created;
   }
 
-  set created(created: number) {
-    this._created = created;
-  }
-
   get lastRun(): number {
     return this._lastRun;
   }

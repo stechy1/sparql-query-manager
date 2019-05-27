@@ -8,12 +8,18 @@ import { Query } from '../query';
 })
 export class QDescriptionComponent implements OnInit {
 
-  private _query: Query;
   @Output() dataChanged = new EventEmitter<Query>();
+  private _query: Query;
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  descriptionChanged(value: string) {
+    if (this._query.description !== value) {
+      this._query.description = value;
+      this.dataChanged.emit(this._query);
+    }
   }
 
   @Input()
@@ -23,12 +29,5 @@ export class QDescriptionComponent implements OnInit {
 
   get description() {
     return this._query.description;
-  }
-
-  descriptionChanged(value: string) {
-    if (this._query.description !== value) {
-      this._query.description = value;
-      this.dataChanged.emit(this._query);
-    }
   }
 }
