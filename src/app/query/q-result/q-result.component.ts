@@ -15,8 +15,7 @@ export class QResultComponent implements OnInit, AfterViewInit {
 
   constructor(private _toaster: ToastrService) { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngAfterViewInit(): void {
     setTimeout(() => this.windowHeight = window.innerHeight - 200, 500);

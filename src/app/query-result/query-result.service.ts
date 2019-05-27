@@ -12,22 +12,10 @@ export class QueryResultService {
   static readonly STORAGE_KEY = 'query-results';
 
   private _results = new Array<QueryResult>();
-  // private _resultsCollectionChange = new EventEmitter();
 
   constructor(private _storage: LocalStorageService) {
     this._loadQueryResults();
   }
-
-  // /**
-  //  * Metoda převede vstup na Query
-  //  *
-  //  * @param input Naparsovaný dotaz
-  //  */
-  // private static parseQueryResult(input: QueryResultStorageEntry): QueryResult {
-  //   return new QueryResult(input._id, input._name, input._content, input._result, input._params,
-  //     input._resultState, input._dateOfRun, input._runLength,
-  //     input._countOfSelect, input._countOfConstruct, input._format);
-  // }
 
   /**
    * Interní metoda pro načtení dotazů do paměti
@@ -38,7 +26,6 @@ export class QueryResultService {
     for (const rawQuery of queries) {
       const query = parseQueryResult(rawQuery);
       this._results.push(query);
-      // this._resultsCollectionChange.emit({typeOfChange: TypeOfQueryChange.ADD, query: query});
     }
   }
 
@@ -57,15 +44,28 @@ export class QueryResultService {
     this._storage.set(QueryResultService.STORAGE_KEY, JSON.parse(JSON.stringify(this._results)));
   }
 
+  /**
+   * Vrátí všechny výsledky dotazů
+   */
   allQueryResults(): QueryResult[] {
     return this._results;
   }
 
+  /**
+   * Přidá výsledek dotazu do paměti
+   *
+   * @param result Výsledek dotazu
+   */
   add(result: QueryResult) {
     this._results.push(result);
     this._saveQueryResults();
   }
 
+  /**
+   * Najde výsledek dotazu podle ID
+   *
+   * @param id ID výsledku, který se má nalézd
+   */
   byId(id: string): QueryResult {
   return this._results.find(value => value.id === id);
   }

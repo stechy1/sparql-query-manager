@@ -8,13 +8,13 @@ import { Query } from '../query';
 })
 export class QContentComponent implements OnInit {
 
+  @Output() dataChanged = new EventEmitter<Query>();
+  @Output() updateContentOnly = new EventEmitter<string>();
+  loading: boolean;
   @ViewChild('query_content')
   private _textArea: ElementRef;
   private _query: Query;
   private _content: string;
-  loading: boolean;
-  @Output() dataChanged = new EventEmitter<Query>();
-  @Output() updateContentOnly = new EventEmitter<string>();
 
   constructor() { }
 
@@ -34,6 +34,24 @@ export class QContentComponent implements OnInit {
     this.loading = true;
   }
 
+  handleUpdateContent() {
+    if (this._query.content === this.content) {
+      return;
+    }
+
+    this._recalculateTextAreaHeight();
+    this.updateContentOnly.emit(this.content);
+  }
+
+  handleSaveContent() {
+    if (this._query.content === this.content) {
+      return;
+    }
+
+    this._query.content = this.content;
+    this.dataChanged.emit(this._query);
+  }
+
   @Input()
   set query(value: Query) {
     this._query = value;
@@ -51,23 +69,5 @@ export class QContentComponent implements OnInit {
 
   get contentChanged(): boolean {
     return this._query.content !== this._content;
-  }
-
-  handleUpdateContent() {
-    if (this._query.content === this.content) {
-      return;
-    }
-
-    this._recalculateTextAreaHeight();
-    this.updateContentOnly.emit(this.content);
-  }
-
-  handleSaveContent() {
-    if (this._query.content === this.content) {
-      return;
-    }
-
-    this._query.content = this.content;
-    this.dataChanged.emit(this._query);
   }
 }

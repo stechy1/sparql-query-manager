@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { QueryFilterGroupSortService } from '../query-filter-group-sort.service';
 import { QueryService } from '../../query/query.service';
 

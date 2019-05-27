@@ -1,14 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { QueryService } from '../query/query.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Query } from '../query/query';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { QParamsComponent } from '../query/q-params/q-params.component';
 import { NavigationService } from '../navigation/navigation.service';
-import { EndpointCommunicatorService, ResponceFormat } from '../endpoint-communicator.service';
+import { EndpointCommunicatorService} from '../endpoint-communicator.service';
 import { ToastrService } from 'ngx-toastr';
 import { QueryResult } from '../query-result/query-result';
 import { SettingsService } from '../settings/settings.service';
+import { QueryService } from '../query/query.service';
 
 @Component({
   selector: 'app-edit',
@@ -25,27 +25,29 @@ import { SettingsService } from '../settings/settings.service';
 })
 export class EditComponent implements OnInit {
 
-  private _query: Query;
   saveProgress: string;
   @ViewChild(QParamsComponent) paramsComponent: QParamsComponent;
-  private _params: {};
   queryResult: QueryResult;
+  private _params: {};
+  private _query: Query;
 
-  constructor(private _route: ActivatedRoute, private _qservice: QueryService,
+  constructor(private _qservice: QueryService, private _settings: SettingsService,
               private _navService: NavigationService, private _endpointCommunicator: EndpointCommunicatorService,
-              private _toaster: ToastrService, private _settings: SettingsService) { }
+              private _toaster: ToastrService, private _route: ActivatedRoute,
+              private _router: Router) { }
 
   ngOnInit() {
     const id = this._route.snapshot.paramMap.get('id');
-    this._query = this._qservice.byId(id);
+    this._qservice.byId(id)
+    .then(value => this._query = value)
+    .catch(() => {
+      this._toaster.error('Nelze editovat přímo záznam z Firebase');
+      this._router.navigate(['browse-query']);
+    });
     this.saveProgress = 'notSaved';
     this._params = this._query.params;
     this._navService.setNavbar(null);
     this._navService.setSidebar(null);
-  }
-
-  get query(): Query {
-    return this._query;
   }
 
   /**
@@ -113,5 +115,9 @@ export class EditComponent implements OnInit {
     this._endpointCommunicator.makeRequest(this._query, ignoreStatistics).then(value => {
       this.queryResult = value;
     });
+  }
+
+  get query(): Query {
+    return this._query;
   }
 }

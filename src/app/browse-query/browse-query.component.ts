@@ -1,11 +1,12 @@
 import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { QueryService } from '../query/query.service';
 import { Query } from '../query/query';
 
 import { NavigationService } from '../navigation/navigation.service';
-import { BrowseToolbarComponent } from './browse-toolbar/browse-toolbar.component';
 import { QueryFilterGroupSortService } from './query-filter-group-sort.service';
 import { Router } from '@angular/router';
+import { DeleteHandler, FirebaseHandler, FirebaseHandlerType } from './handlers';
+import { QueryService } from '../query/query.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-browse-query',
@@ -14,17 +15,19 @@ import { Router } from '@angular/router';
 })
 export class BrowseQueryComponent implements OnInit, AfterViewInit {
 
-  private _lastYOffset: number;
   // Kolekce všech dotazů
   queries: Query[];
-  // Reference na input element
-  // @ViewChild('inputSearch') inputSearch: ElementRef;
+  // Reference na toolbar container
   @ViewChild('toolbarContainer') toolbar: ElementRef;
+  // Reference na query container
   @ViewChild('queryContainer') queryList: ElementRef;
+  // Pomocný příznak, pomocí kterého zobrazuji dropdown s výběrem typu importu
   showImportDropdown: boolean;
+  // Poslední yOffset toolbaru
+  private _lastYOffset: number;
 
   constructor(private _qservice: QueryService, private _navService: NavigationService,
-              private _router: Router,
+              private _router: Router, private _toastr: ToastrService,
               public qFilterGroupSortingService: QueryFilterGroupSortService) { }
 
   /**
@@ -38,7 +41,9 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
     const self = this;
       reader.onload = () => {
         const text = <string> reader.result;
-        self._qservice.import(text, override);
+        self._qservice.import(text, override).then(importedQueries => {
+          self._toastr.success(`Importovaných dotazů: ${importedQueries}.`);
+        });
       };
       reader.readAsText(input.files[0]);
   }
@@ -58,6 +63,14 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
     toolbarDiv.classList.add('sticky');
     toolbarDiv.classList.remove('hide');
     queryDiv.style.marginTop = `${divHeight}px`;
+  }
+
+  private _handleDownload(query: Query) {
+    this._qservice.create(query);
+  }
+
+  private _handleUpload(query: Query) {
+    this._qservice.create(query);
   }
 
   ngOnInit() {
@@ -118,16 +131,20 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
     return query.tags.indexOf(tag) !== -1;
   }
 
-  handleDeleteRequest(query: Query) {
-    this._qservice.delete(query.id);
-    setTimeout(() => this._recalculateQueryListMargin(), 100);
+  handleDeleteRequest(deleteHandler: DeleteHandler) {
+    this._qservice.delete(deleteHandler.query.id, deleteHandler.isRemote)
+    .then(() => {
+      setTimeout(() => this._recalculateQueryListMargin(), 100);
+    });
   }
 
-  handleExport() {
+  async handleExport() {
     // Vytvořím neviditelný odkaz
     const a = document.createElement('a');
+    // Počkám si na vyexportování dotazů do řetězce
+    const content = await this._qservice.export(this._qservice.allQueries().filter(value => value.selected));
     // Vytvořím balík dat (obsah souboru = serializované vybrané dotazy)
-    const file = new Blob([this._qservice.export(this.queries.filter(value => value.selected))], {type: 'text/plain'});
+    const file = new Blob([content], {type: 'text/plain'});
     // Nastavím odkaz na vytvořený balík dat
     a.href = URL.createObjectURL(file);
     // Požádám uživatele o název souboru, pod kterým se soubor uloží
@@ -163,6 +180,19 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   handleNewQuery() {
     const newId = this._qservice.create();
     this._router.navigate(['edit', newId]);
+  }
+
+  handleFirebaseRequest($event: FirebaseHandler) {
+    switch ($event.handlerType) {
+      case FirebaseHandlerType.DOWNLOAD:
+        this._handleDownload($event.query);
+        break;
+      case FirebaseHandlerType.UPLOAD:
+        this._handleUpload($event.query);
+        break;
+      default:
+        console.log('Neznámá akce.');
+    }
   }
 
   get endpoints(): string[] {

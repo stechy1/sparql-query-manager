@@ -8,36 +8,17 @@ import { FormControl} from '@angular/forms';
 })
 export class EditableValueComponent implements OnInit {
 
-  private _value: string|number;
-  private _original: string|number;
   @Input() useTextarea: boolean;
   isEditing: boolean;
   @Output() valueChanged = new EventEmitter<string|number>();
   hover: boolean;
   inputElement = new FormControl('');
+  private _value: string|number;
+  private _original: string|number;
 
   constructor() { }
 
   ngOnInit() {}
-
-  get value(): string | number {
-    return this._value;
-  }
-
-  @Input()
-  set value(value: string | number) {
-    this._value = value;
-    this._original = this._original === undefined ? this._value : this._original;
-    this.hover = this._value === '';
-  }
-
-  handleClick() {
-    if (this._value !== this._original) {
-      this._original = this._value;
-      this.valueChanged.emit(this._value);
-    }
-    this.isEditing = false;
-  }
 
   onKeyDown(event: any) {
     if (event.key === 'Escape') {
@@ -51,9 +32,28 @@ export class EditableValueComponent implements OnInit {
     }
   }
 
+  handleClick() {
+    if (this._value !== this._original) {
+      this._original = this._value;
+      this.valueChanged.emit(this._value);
+    }
+    this.isEditing = false;
+  }
+
   handleMouseLeave() {
     if (this._value !== '') {
       this.hover = false;
     }
+  }
+
+  get value(): string | number {
+    return this._value;
+  }
+
+  @Input()
+  set value(value: string | number) {
+    this._value = value;
+    this._original = this._original === undefined ? this._value : this._original;
+    this.hover = this._value === '';
   }
 }

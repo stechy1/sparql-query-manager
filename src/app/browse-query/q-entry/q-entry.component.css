@@ -2,3 +2,25 @@
   border-bottom: solid 1px #BDBDBD;
   min-height: 50px;
 }
+
+.q-entry-toolbar i {
+  cursor: pointer;
+}
+
+.q-icon {
+  color: #606060;
+}
+.q-icon:hover {
+  color: #000;
+}
+
+.q-information {
+  /*margin-left: 40px;*/
+}
+
+.cloud-indicator {
+  float: left;
+  /*position: absolute;*/
+  /*margin-top: 10px;*/
+}
+

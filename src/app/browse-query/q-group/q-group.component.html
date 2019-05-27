@@ -7,7 +7,10 @@
         </label>
       </div>
     </div>
-    <app-q-entry *ngFor="let query of getQueries(value)" [query]="query" (deleteRequest)="handleDeleteRequest(query)"></app-q-entry>
+    <app-q-entry *ngFor="let query of getQueries(value)"
+                 [query]="query"
+                 (deleteRequest)="handleDeleteRequest($event)"
+                 (firebaseRequest)="handleFirebaseRequest($event)"></app-q-entry>
     <div class="divider"></div>
   </div>
 </div>

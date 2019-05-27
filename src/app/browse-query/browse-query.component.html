@@ -11,11 +11,23 @@
     <div class="col s12 offset-m2 m8">
       <div class="collection" *ngIf="queries.length !== 0">
         <div class="q-group" *ngIf="qFilterGroupSortingService.selectedGroup === 'none'">
-          <app-q-entry *ngFor="let query of qFilterGroupSortingService.fuseQueries" [query]="query" (deleteRequest)="handleDeleteRequest($event)"></app-q-entry>
+          <app-q-entry *ngFor="let query of qFilterGroupSortingService.fuseQueries"
+                       [query]="query"
+                       (deleteRequest)="handleDeleteRequest($event)"
+                       (firebaseRequest)="handleFirebaseRequest($event)"></app-q-entry>
         </div>
-        <app-q-group [values]="endpoints" [queries]="qFilterGroupSortingService.fuseQueries" [filterFunction]="filterByEndpoint" (deleteRequest)="handleDeleteRequest($event)"
+        <app-q-group [values]="endpoints"
+                     [queries]="qFilterGroupSortingService.fuseQueries"
+                     [filterFunction]="filterByEndpoint"
+                     (deleteRequest)="handleDeleteRequest($event)"
+                     (firebaseRequest)="handleFirebaseRequest($event)"
                      *ngIf="qFilterGroupSortingService.selectedGroup === 'endpoint'"></app-q-group>
-        <app-q-group [values]="tags" [queries]="qFilterGroupSortingService.fuseQueries" [filterFunction]="filterByTag" (deleteRequest)="handleDeleteRequest($event)" *ngIf="qFilterGroupSortingService.selectedGroup === 'tag'"></app-q-group>
+        <app-q-group [values]="tags"
+                     [queries]="qFilterGroupSortingService.fuseQueries"
+                     [filterFunction]="filterByTag"
+                     (deleteRequest)="handleDeleteRequest($event)"
+                     (firebaseRequest)="handleFirebaseRequest($event)"
+                     *ngIf="qFilterGroupSortingService.selectedGroup === 'tag'"></app-q-group>
 
         Označeno dotazů: {{selectedQueries}}
         <div class="col s12 button-bar-wrapper">

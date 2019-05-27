@@ -1,46 +1,31 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { QueryLocalStorageProviderService } from './query-local-storage-provider.service';
+import { QueryFirebaseProviderService } from './query-firebase-provider.service';
+import { Injectable } from '@angular/core';
 import { Query } from './query';
-import { LocalStorageService } from 'angular-2-local-storage';
-import { Observable } from 'rxjs';
+import { QueryCollectionChange, TypeOfQueryChange } from './query-storage-provider';
 import { SettingsService } from '../settings/settings.service';
-
-interface QueryStorageEntry {
-  _id: string;
-  _name: string;
-  _description: string;
-  _tags: string[];
-  _endpoint: string;
-  _content: string;
-  _params: string[];
-  _created: number;
-  _lastRun: number;
-  _runCount: number;
-}
+import { Observable, Subject } from 'rxjs';
+import { parseQuery, QueryStorageEntry } from './query-storage-entry';
 
 @Injectable({
   providedIn: 'root'
 })
 export class QueryService {
 
-  // Konstanta obsahující název klíče, pod který se ukládají data o dotazech do local storage
-  static readonly STORAGE_KEY = 'queries';
+  // Subjekt, pomocí kterého se propagují změny v kolekci dále do světa
+  private readonly _querySubject = new Subject<QueryCollectionChange>();
+  // Kolekce všech existujících dotazů v aplikaci
+  private _queries: Query[] = [];
 
-  // Kolekce dotazů
-  private _queries = new Array<Query>();
-  private _queryCollectionChange = new EventEmitter<QueryCollectionChange>();
+  constructor(private _queryLocalStorageProvider: QueryLocalStorageProviderService,
+              private _queryFirebaseProvider: QueryFirebaseProviderService,
+              private _settings: SettingsService) {
 
-  constructor(private _storage: LocalStorageService, private _settings: SettingsService) {
-    this._loadQueries();
-  }
+    this._queryLocalStorageProvider.observable().subscribe(value => this._processQuery(value));
+    this._queryFirebaseProvider.observable().subscribe(value => this._processQuery(value));
 
-  /**
-   * Metoda převede vstup na Query
-   *
-   * @param input Naparsovaný dotaz
-   */
-  private static parseQuery(input: QueryStorageEntry): Query {
-    return new Query(input._id, input._name, input._endpoint, input._tags, input._content, input._params,
-      input._description, input._created, input._lastRun, input._runCount);
+    this._queryLocalStorageProvider.load();
+    this._queryFirebaseProvider.load();
   }
 
   /**
@@ -51,31 +36,86 @@ export class QueryService {
   }
 
   /**
-   * Interní metoda pro načtení dotazů do paměti
+   * Metoda pro zpracování změny v kolekci dotazů
    *
-   * @param queries Pole dotazů
+   * @param change Změna v kolekci dotazů
    */
-  private _loadQueriesInternal(queries: QueryStorageEntry[]): void {
-    for (const rawQuery of queries) {
-      const query = QueryService.parseQuery(rawQuery);
-      this._queries.push(query);
-      this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.ADD, query: query});
+  private _processQuery(change: QueryCollectionChange) {
+    // Definuji pomocnou proměnnou, která říká, zda-li mám nechat "probublat" událost k dalšímu zpracování
+    let continueProcessing = true;
+    // Podle typu akce se zachovám
+    switch (change.typeOfChange) {
+      // V případě přidání nového dotazu
+      case TypeOfQueryChange.ADD: {
+        // Pokusím se najít index dotazu v aktuální kolekci
+        const index = this._queries.findIndex(query => query.id === change.query.id);
+        // Pokud takový dotaz neexistuje,
+        if (index === -1) {
+          // tak ho přidám do kolekce a o víc se nestarám
+          this._queries.push(change.query);
+          // Opustím switch
+          break;
+        }
+
+        // Zde mám jistotu, že dotaz existuje
+        continueProcessing = false;
+        // Získám si instanci z aktuální kolekce
+        const localQuery = this._queries[index];
+        // To, že dotaz existuje znamená, že byl již jednou přídán
+        // ať už z localStorage, nebo z firebase
+        // naštěstí pro mě, tohle řešit nemusím a prostě
+        // nastavím dotazu parametry "downloaded" a "uploaded" na true
+        change.query.downloaded = change.query.uploaded = true;
+        localQuery.downloaded = localQuery.uploaded = true;
+      }
+        // Opustím switch
+        break;
+      // V případě odebrání dotazu
+      case TypeOfQueryChange.REMOVE: {
+        // Získám instanci odebraného dotazu
+        const removedQuery = change.query;
+        // Najdu index, na kterém se dotaz nachází v aktuální kolekci
+        const index = this._queries.findIndex(query => query.id === change.query.id);
+
+        // Pokud byl dotaz uložen i nahrán zároveň
+        if (removedQuery.downloaded && removedQuery.uploaded) {
+          // Vytáhnu si referenci dotazu z aktuální kolekce
+          const affectedQuery = this._queries[index];
+          // Podle zdroje odstranění dotazu
+          switch (change.source) {
+            // Odstranil jsem dotaz z localStorage
+            case QueryLocalStorageProviderService.QUERY_PROVIDER_NAME:
+              // Nastavím příznak "downloaded" na false
+              affectedQuery.downloaded = false;
+              break;
+            // Odstranil jsem dotaz z firebase
+            case QueryFirebaseProviderService.QUERY_PROVIDER_NAME:
+              // Nastavím příznak "uploaded" na false
+              affectedQuery.uploaded = false;
+              // Opustím switch
+              break;
+          }
+          // Přeruším propagování dalšího zpracování
+          continueProcessing = false;
+          // Opustím switch
+          break;
+        }
+        // Dotaz byl buď stažený, nebo nahraný, takže ho můžu bezpečně odstranit
+        // protože již neexistuje ani v jednom úložišti
+        this._queries.splice(index, 1);
+      }
+        // Opustím switch
+        break;
+      case TypeOfQueryChange.CLEAR:
+        this._queries.splice(0, this._queries.length - 1);
+        break;
     }
-  }
 
-  /**
-   * Načte data z localStorage
-   */
-  private _loadQueries(): void {
-    const dataRaw = this._storage.get<QueryStorageEntry[]>(QueryService.STORAGE_KEY) || new Array<QueryStorageEntry>();
-    this._loadQueriesInternal(dataRaw);
-  }
-
-  /**
-   * Uloží data do localStorage
-   */
-  private _saveQueries(): void {
-    this._storage.set(QueryService.STORAGE_KEY, JSON.parse(JSON.stringify(this._queries, Query.structureGuard)));
+    // Pokud můžu pokračovat ve zpracování změny
+    if (continueProcessing) {
+      // Nechám probublat změnu do dalšího kola
+      this._querySubject.next(change);
+    }
   }
 
   /**
@@ -90,79 +130,64 @@ export class QueryService {
    *
    * @param id ID dotazu, který se má vrátit
    */
-  byId(id: string): Query {
-    return this._queries.find(query => id === query.id);
+  byId(id: string): Promise<Query> {
+    return new Promise<Query>((resolve, reject) => {
+      const result = this._queries.find(query => id === query.id);
+      if (result === undefined || (result.uploaded && !result.downloaded) || !result.downloaded) {
+        reject();
+      }
+
+      resolve(result);
+    });
   }
 
   /**
    * Vytvoří nový prázdný dotaz
    */
-  create() {
-    const query = new Query(QueryService.makeID(), '', '', [], '', {}, '', new Date().getTime(), null, 0);
-    this._queries.push(query);
-    this._saveQueries();
-    this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.ADD, query: query});
-    return query.id;
+  create(query?: Query): Promise<string> {
+    if (query === undefined) {
+      query = new Query(QueryService.makeID(), '', '', [], '', {}, '', new Date().getTime(), null, 0);
+      return this._queryLocalStorageProvider.insert(query);
+    }
+
+    return query.uploaded
+      ? this._queryLocalStorageProvider.insert(query)
+      : this._queryFirebaseProvider.insert(query);
   }
 
   /**
    * Odstraní záznam podle ID
    *
    * @param id ID záznamu, který se má odstranit
+   * @param remote True, pokud se bude mazat z firebase, False pro smazání z localStorage
    */
-  delete(id: string) {
-      const index = this._queries.findIndex(value => value.id === id);
-      if (index === -1) {
-        return;
-      }
-
-      const query = this._queries[index];
-      this._queries.splice(index, 1);
-      this._saveQueries();
-      this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.REMOVE, query: query});
+  delete(id: string, remote: boolean = false): Promise<void> {
+    return remote
+      ? this._queryFirebaseProvider.delete(id)
+      : this._queryLocalStorageProvider.delete(id);
   }
 
   /**
-   * Vynucení uložení dotazů na disk
+   * Provede uložení pouze localStorage
+   * Firebase je synchronizována průběžně
    */
   performSave() {
-    this._saveQueries();
-  }
-
-  /**
-   * Serializuje vybrané dotazy do textové podoby
-   *
-   * @param queries Pole všech dotazů, které se budou exportovat
-   */
-  export(queries: Query[]): string {
-    const result = JSON.stringify(queries, Query.structureGuard);
-    this._queries.forEach(value => value.selected = false);
-    return result;
-  }
-
-  /**
-   * Importuje dotazy
-   *
-   * @param text Serializované dotazy
-   * @param override True, pokud importované dotazy mají přepsat lokální databázi, jinak false
-   */
-  import(text: string, override: boolean) {
-    if (override) {
-      this._queries.splice(0, this._queries.length);
-    }
-
-    this._loadQueriesInternal(JSON.parse(text));
-
-    this._saveQueries();
+    this._queryLocalStorageProvider.save();
   }
 
   /**
    * Vymaže celou lokální databázi
+   *
+   * @param remote True, pokud se má smazat i data z Firebase
    */
-  clear() {
-    this._queries.splice(0, this._queries.length);
-    this._saveQueries();
-    this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.CLEAR, query: undefined});
+  clear(remote: boolean = false): Promise<void> {
+    return Promise.all(this._queries.map(value => {
+      return value.uploaded
+        ? remote
+          ? this._queryFirebaseProvider.delete(value.id)
+          : Promise.resolve()
+        : this._queryLocalStorageProvider.delete(value.id);
+    })).then(() => null);
   }
 
   /**
@@ -171,26 +196,61 @@ export class QueryService {
    * @param query Dotaz {@link Query}, který se má zduplikovat
    * @return ID nového dotazu
    */
-  duplicate(query: Query): string {
+  duplicate(query: Query): Promise<string> {
     const newQuery = new Query(QueryService.makeID(), query.name + this._settings.suffixForDuplicatedQuery, query.endpoint,
       JSON.parse(JSON.stringify(query.tags)) || [], query.content, {}, query.description, Date.now(), 0, 0);
     newQuery.params = (JSON.parse(JSON.stringify(query.params)) || {});
 
-    this._queries.push(newQuery);
-    this._saveQueries();
-    this._queryCollectionChange.emit({typeOfChange: TypeOfQueryChange.ADD, query: newQuery});
+    return this._queryLocalStorageProvider.insert(newQuery);
+  }
 
-    return newQuery.id;
+  /**
+   * Serializuje vybrané dotazy do textové podoby
+   *
+   * @param queries Pole všech dotazů, které se budou exportovat
+   */
+  export(queries: Query[]): Promise<string> {
+    return new Promise<string>(resolve => {
+      const result = JSON.stringify(queries.filter(query => query.downloaded), Query.structureGuard);
+      this._queries.forEach(value => value.selected = false);
+      resolve(result);
+    });
+  }
+
+  /**
+   * Importuje dotazy
+   *
+   * @param text Serializované dotazy
+   * @param override True, pokud importované dotazy mají přepsat lokální databázi, jinak false
+   */
+  import(text: string, override: boolean): Promise<number> {
+    return new Promise<number>(resolve => {
+      // Inicializuji pomocnou proměnnou
+      let clear = Promise.resolve();
+      if (override) {
+        // Pokud mám přepsat celou lokální databázi, tak ji musím nejdříve vymazat
+        clear = this.clear(false);
+      }
+      // Po vymazání (pokud nějaké nastalo)
+      return clear.then(() => {
+        // Naprasuji text do pole typu "QueryStorageEntry
+        const queryEntries = JSON.parse(text) as QueryStorageEntry[];
+        const count = queryEntries.length;
+        // Vytvořím novou promise ze všech insertů:
+        Promise.all(queryEntries
+          // Projdu jednotlivé dotazy a každý vložím standartním způsobem
+          .map(query => this._queryLocalStorageProvider.insert(parseQuery(query))))
+          // Nakonec zavolám "resolve" nad hlavní promisou.
+          .then(() => resolve(count));
+      });
+    });
   }
 
   /**
    * Vygeneruje pole všech endpointů, které jsou v dotazech
    */
   get endpoints(): string[] {
-    const endpointArray: string[] = [];
-    this._queries.forEach(query => {
-      endpointArray.push(query.endpoint);
-    });
+    const endpointArray = this._queries.map(query => query.endpoint);
 
     return endpointArray
     .filter(((value, index, array) => array.indexOf(value) === index))
@@ -214,15 +274,6 @@ export class QueryService {
   }
 
   get collectionChange(): Observable<QueryCollectionChange> {
-    return this._queryCollectionChange.asObservable();
+    return this._querySubject;
   }
-}
-
-export enum TypeOfQueryChange {
-  ADD, REMOVE, CLEAR
-}
-
-export interface QueryCollectionChange {
-  typeOfChange: TypeOfQueryChange;
-  query: Query;
 }

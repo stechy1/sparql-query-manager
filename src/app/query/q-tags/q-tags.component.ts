@@ -16,15 +16,6 @@ export class QTagsComponent implements OnInit {
   ngOnInit() {
   }
 
-  @Input()
-  set tags(value: string[]) {
-    this._tags = value;
-  }
-
-  get tags(): string[] {
-    return this._tags;
-  }
-
   remove(tag: string): void {
     const index = this._tags.indexOf(tag);
 
@@ -41,5 +32,14 @@ export class QTagsComponent implements OnInit {
       srcElement.value = '';
       this.dataChanged.emit(this.tags);
     }
+  }
+
+  @Input()
+  set tags(value: string[]) {
+    this._tags = value;
+  }
+
+  get tags(): string[] {
+    return this._tags;
   }
 }

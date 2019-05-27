@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Query } from '../query';
 import { EndpointCommunicatorService, ResponceFormat } from '../../endpoint-communicator.service';
-import { QueryService } from '../query.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { QueryService } from '../query.service';
 
 @Component({
   selector: 'app-q-actions',
@@ -15,14 +15,29 @@ export class QActionsComponent implements OnInit {
   @Input() query: Query;
   @Output() doQuery = new EventEmitter();
 
-  private _responceFormats = Object.keys(ResponceFormat);
   ignoreStatistics: boolean;
+  private _responceFormats = Object.keys(ResponceFormat);
 
   constructor(private _endpointCommunicator: EndpointCommunicatorService, private _qservice: QueryService,
               private _toaster: ToastrService, private _router: Router) { }
 
   ngOnInit() {
     this.ignoreStatistics = false;
+  }
+
+  /**
+   * Reakce na tlačítko pro provedení dotazu
+   */
+  handleDoQuery() {
+    this.doQuery.emit(this.ignoreStatistics);
+  }
+
+  handleDuplicate() {
+    const newID = this._qservice.duplicate(this.query);
+    this._toaster.info('Dotaz byl úspěšně zduplikován');
+    this._router.navigate(['browse-query']).then(value => {
+      setTimeout(() => {this._router.navigate(['edit', newID]); }, 500);
+    });
   }
 
   /**
@@ -53,20 +68,5 @@ export class QActionsComponent implements OnInit {
    */
   get responceFormats(): Array<string> {
     return this._responceFormats;
-  }
-
-  /**
-   * Reakce na tlačítko pro provedení dotazu
-   */
-  handleDoQuery() {
-    this.doQuery.emit(this.ignoreStatistics);
-  }
-
-  handleDuplicate() {
-    const newID = this._qservice.duplicate(this.query);
-    this._toaster.info('Dotaz byl úspěšně zduplikován');
-    this._router.navigate(['browse-query']).then(value => {
-      setTimeout(() => {this._router.navigate(['edit', newID]); }, 500);
-    });
   }
 }

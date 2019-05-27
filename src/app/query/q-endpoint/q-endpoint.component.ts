@@ -8,12 +8,18 @@ import { Query } from '../query';
 })
 export class QEndpointComponent implements OnInit {
 
-  private _query: Query;
   @Output() dataChanged = new EventEmitter<Query>();
+  private _query: Query;
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit() {}
+
+  endpointChanged(value: string) {
+    if (this._query.endpoint !== value) {
+      this._query.endpoint = value;
+      this.dataChanged.emit(this._query);
+    }
   }
 
   @Input()
@@ -23,12 +29,5 @@ export class QEndpointComponent implements OnInit {
 
   get endpoint() {
     return this._query.endpoint;
-  }
-
-  endpointChanged(value: string) {
-    if (this._query.endpoint !== value) {
-      this._query.endpoint = value;
-      this.dataChanged.emit(this._query);
-    }
   }
 }
