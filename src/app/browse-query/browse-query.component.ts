@@ -148,7 +148,7 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
     // Nastavím odkaz na vytvořený balík dat
     a.href = URL.createObjectURL(file);
     // Požádám uživatele o název souboru, pod kterým se soubor uloží
-    a.download = prompt('Zadejte název souboru...', 'queries$.json');
+    a.download = prompt('Zadejte název souboru...', 'queries.json');
     // Stáhnu soubor
     a.click();
   }
