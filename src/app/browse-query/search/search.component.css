@@ -5,3 +5,10 @@ input {
 input::placeholder {
   color: #fff;
 }
+
+@media screen and (min-width: 992px) {
+  .mat-icon-fix {
+    top: 0;
+  }
+
+}
