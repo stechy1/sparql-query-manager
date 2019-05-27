@@ -81,7 +81,8 @@ export class QueryLocalStorageProviderService implements QueryStorageProvider {
       }
 
       const deletedQuery = this._queries[index];
-      this._queries.slice(index, 1);
+      this._queries.splice(index, 1);
+      this._saveQueries();
       this._querySubject.next({
         query: deletedQuery,
         typeOfChange: TypeOfQueryChange.REMOVE,
