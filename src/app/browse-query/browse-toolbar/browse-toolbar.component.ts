@@ -1,6 +1,11 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { QueryFilterGroupSortService } from '../query-filter-group-sort.service';
+import {
+  GroupByPosibilities,
+  OrderByPosibilities,
+  OrderTypePosibilities,
+  QueryFilterGroupSortService
+} from '../query-filter-group-sort.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { LocalStorageService } from 'angular-2-local-storage';
 
@@ -11,67 +16,76 @@ import { LocalStorageService } from 'angular-2-local-storage';
 })
 export class BrowseToolbarComponent implements OnInit, AfterViewInit {
 
-  // Skupina ovládacích prvků pro výběr seskupování
-  formGroupBy: FormGroup;
-  // Skupina ovládacích prvků pro výběr typu řazení
-  formOrderBy: FormGroup;
-  // Skupina ovládacích prvků pro určení směru řazení
-  formOrderType: FormGroup;
+  form: FormGroup;
 
-  constructor(private _storage: LocalStorageService, private _route: ActivatedRoute, private _router: Router,
-              public qfilterService: QueryFilterGroupSortService) { }
+  constructor(public qfilterService: QueryFilterGroupSortService,
+              private _storage: LocalStorageService,
+              private _route: ActivatedRoute, private _router: Router) { }
 
   private _handleParams(params: Params) {
-    const groupBy = params['groupBy'] || this._storage.get('groupBy') || 'none';
-    const orderBy = params['orderBy'] || this._storage.get('orderBy') || 'alphabeticaly';
-    const orderType = params['orderType'] || this._storage.get('orderType') || 'ascending';
-    this.formGroupBy.setValue({'groupBy': groupBy});
-    this.formOrderBy.setValue({'orderBy': orderBy});
-    this.formOrderType.setValue({'orderType': orderType});
+    const groupBy = params[GroupByPosibilities.KEY]
+      || this._storage.get(GroupByPosibilities.KEY)
+      || GroupByPosibilities.NONE.value;
+    const orderBy = params[OrderByPosibilities.KEY]
+      || this._storage.get(OrderByPosibilities.KEY)
+      || OrderByPosibilities.ALPHABET.value;
+    const orderType = params[OrderTypePosibilities.KEY]
+      || this._storage.get(OrderTypePosibilities.KEY)
+      || OrderTypePosibilities.ASCENDING.value;
+
+    const values = {};
+    values[GroupByPosibilities.KEY] = groupBy;
+    values[OrderByPosibilities.KEY] = orderBy;
+    values[OrderTypePosibilities.KEY] = orderType;
+
+    this.form.setValue(values);
 
     this.qfilterService.selectedGroup = groupBy;
     this.qfilterService.sort(orderBy, orderType);
   }
 
   ngOnInit() {
-    this.formGroupBy = new FormGroup({
-      groupBy: new FormControl('none')
-    });
-    this.formOrderBy = new FormGroup({
-      orderBy: new FormControl('alphabeticaly')
-    });
-    this.formOrderType = new FormGroup({
-      orderType: new FormControl('ascending')
+    this.form = new FormGroup({
+      groupBy: new FormControl(GroupByPosibilities.KEY),
+      orderBy: new FormControl(OrderByPosibilities.KEY),
+      orderType: new FormControl(OrderTypePosibilities.KEY),
     });
 
     // Nastavení handleru na změnu parametrů ve stavovém řádku
     // díky tomu se provádí řazení a seskupování v reálném čase
     this._route.params.subscribe(params => this._handleParams(params));
 
-    this.formGroupBy.valueChanges.subscribe(change => {
-      const groupBy = change['groupBy'];
-      this._storage.set('groupBy', groupBy);
-      const orderBy = this._route.snapshot.params['orderBy'] || this._storage.get('orderBy') || 'alphabeticaly';
-      const orderType = this._route.snapshot.params['orderType'] || this._storage.get('orderType') || 'ascending';
-      this._router.navigate([{'groupBy': groupBy, 'orderBy': orderBy, 'orderType': orderType}]);
-    });
-    this.formOrderBy.valueChanges.subscribe(change => {
-      const orderBy = change['orderBy'];
-      this._storage.set('orderBy', orderBy);
-      const groupBy = this._route.snapshot.params['groupBy'] || this._storage.get('groupBy') || 'none';
-      const orderType = this._route.snapshot.params['orderType'] || this._storage.get('orderType') || 'ascending';
-      this._router.navigate([{'groupBy': groupBy, 'orderBy': orderBy, 'orderType': orderType}]);
-    });
-    this.formOrderType.valueChanges.subscribe(change => {
-      const orderType = change['orderType'];
-      this._storage.set('orderType', orderType);
-      const orderBy = this._route.snapshot.params['orderBy'] || this._storage.get('orderBy') || 'alphabeticaly';
-      const groupBy = this._route.snapshot.params['groupBy'] || this._storage.get('groupBy') || 'none';
-      this._router.navigate([{'groupBy': groupBy, 'orderBy': orderBy, 'orderType': orderType}]);
+    this.form.valueChanges.subscribe(change => {
+      const groupBy = change[GroupByPosibilities.KEY];
+      const orderBy = change[OrderByPosibilities.KEY];
+      const orderType = change[OrderTypePosibilities.KEY];
+
+      this._storage.set(GroupByPosibilities.KEY, groupBy);
+      this._storage.set(OrderByPosibilities.KEY, orderBy);
+      this._storage.set(OrderTypePosibilities.KEY, orderType);
+
+      const values = {};
+      values[GroupByPosibilities.KEY] = groupBy;
+      values[OrderByPosibilities.KEY] = orderBy;
+      values[OrderTypePosibilities.KEY] = orderType;
+
+      this._router.navigate([values]);
     });
   }
 
   ngAfterViewInit(): void {
     this._handleParams(this._route.snapshot.params);
+  }
+
+  get groupPosibilities(): GroupByPosibilities[] {
+    return GroupByPosibilities.VALUES;
+  }
+
+  get orderPosibilities(): OrderByPosibilities[] {
+    return OrderByPosibilities.VALUES;
+  }
+
+  get orderTypePosibilities(): OrderTypePosibilities[] {
+    return OrderTypePosibilities.VALUES;
   }
 }

@@ -108,3 +108,75 @@ export class QueryFilterGroupSortService {
     return this._fuseQueries;
   }
 }
+
+export class GroupByPosibilities {
+  static readonly KEY = 'groupBy';
+
+  static readonly NONE = new GroupByPosibilities('Neseskupovat', 'none');
+  static readonly ENDPOINT = new GroupByPosibilities('Endpoint', 'endpoint');
+  static readonly TAG = new GroupByPosibilities('Tag', 'tag');
+
+  static readonly VALUES: GroupByPosibilities[] = [
+    GroupByPosibilities.NONE,
+    GroupByPosibilities.ENDPOINT,
+    GroupByPosibilities.TAG
+  ];
+
+  private constructor(private _name: string, private _value: string) {}
+
+  get name(): string {
+    return this._name;
+  }
+
+  get value(): string {
+    return this._value;
+  }
+}
+
+export class OrderByPosibilities {
+  static readonly KEY = 'orderBy';
+
+  static readonly ALPHABET = new OrderByPosibilities('Abecedně', 'alphabeticaly');
+  static readonly LAST_RUN = new OrderByPosibilities('Poslední spuštění', 'last_run');
+  static readonly CREATION_DATE = new OrderByPosibilities('Datum vytvoření', 'date_of_creation');
+  static readonly RUN_COUNT = new OrderByPosibilities('Počet spuštění', 'count_of_run');
+
+  static readonly VALUES: OrderByPosibilities[] = [
+    OrderByPosibilities.ALPHABET,
+    OrderByPosibilities.LAST_RUN,
+    OrderByPosibilities.CREATION_DATE,
+    OrderByPosibilities.RUN_COUNT
+  ];
+
+  private constructor(private _name: string, private _value: string) {}
+
+  get name(): string {
+    return this._name;
+  }
+
+  get value(): string {
+    return this._value;
+  }
+}
+
+export class OrderTypePosibilities {
+  static readonly KEY = 'orderType';
+
+  static readonly ASCENDING = new OrderTypePosibilities('Vzestupně', 'ascending');
+  static readonly DESCENDING = new OrderTypePosibilities('Sestupně', 'descending');
+
+  static readonly VALUES: OrderTypePosibilities[] = [
+    OrderTypePosibilities.ASCENDING,
+    OrderTypePosibilities.DESCENDING
+  ];
+
+  private constructor(private _name: string, private _value: string) {}
+
+  get name(): string {
+    return this._name;
+  }
+
+  get value(): string {
+    return this._value;
+  }
+}
