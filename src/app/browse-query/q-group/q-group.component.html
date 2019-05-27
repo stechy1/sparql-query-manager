@@ -1,12 +1,5 @@
 <div class="collection-item">
   <div *ngFor="let value of values" class="q-group">
-    <div class="row" *ngIf="getQueries(value).length > 0">
-      <div class="col s12">
-        <label>
-          <input type="checkbox" class="filled-in" [(ngModel)]="groupInformations[value].checked" (change)="handleCheckboxChange($event)" value="{{value}}"><span>{{value}}</span>
-        </label>
-      </div>
-    </div>
     <app-q-entry *ngFor="let query of getQueries(value)"
                  [query]="query"
                  (deleteRequest)="handleDeleteRequest($event)"
