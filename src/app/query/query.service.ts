@@ -5,6 +5,7 @@ import { Query } from './query';
 import { QueryCollectionChange, TypeOfQueryChange } from './query-storage-provider';
 import { SettingsService } from '../settings/settings.service';
 import { Observable, Subject } from 'rxjs';
+import { parseQuery, QueryStorageEntry } from './query-storage-entry';
 
 @Injectable({
   providedIn: 'root'
@@ -209,12 +210,11 @@ export class QueryService {
    * @param queries Pole všech dotazů, které se budou exportovat
    */
   export(queries: Query[]): Promise<string> {
-    return Promise.resolve('');
-    // return new Promise<string>(resolve => {
-    //   const result = JSON.stringify(queries, Query.structureGuard);
-    //   this._queries.forEach(value => value.selected = false);
-    //   resolve(result);
-    // });
+    return new Promise<string>(resolve => {
+      const result = JSON.stringify(queries.filter(query => query.downloaded), Query.structureGuard);
+      this._queries.forEach(value => value.selected = false);
+      resolve(result);
+    });
   }
 
   /**
@@ -223,19 +223,27 @@ export class QueryService {
    * @param text Serializované dotazy
    * @param override True, pokud importované dotazy mají přepsat lokální databázi, jinak false
    */
-  import(text: string, override: boolean): Promise<void> {
-    return Promise.resolve();
-    // return new Promise<void>(resolve => {
-    //   if (override) {
-    //     this._queries.splice(0, this._queries.length);
-    //     this._querySubject.next(this._queries);
-    //   }
-    //
-    //   this._loadQueriesInternal(JSON.parse(text));
-    //
-    //   this._saveQueries();
-    //   resolve();
-    // });
+  import(text: string, override: boolean): Promise<number> {
+    return new Promise<number>(resolve => {
+      // Inicializuji pomocnou proměnnou
+      let clear = Promise.resolve();
+      if (override) {
+        // Pokud mám přepsat celou lokální databázi, tak ji musím nejdříve vymazat
+        clear = this.clear(false);
+      }
+      // Po vymazání (pokud nějaké nastalo)
+      return clear.then(() => {
+        // Naprasuji text do pole typu "QueryStorageEntry
+        const queryEntries = JSON.parse(text) as QueryStorageEntry[];
+        const count = queryEntries.length;
+        // Vytvořím novou promise ze všech insertů:
+        Promise.all(queryEntries
+          // Projdu jednotlivé dotazy a každý vložím standartním způsobem
+          .map(query => this._queryLocalStorageProvider.insert(parseQuery(query))))
+          // Nakonec zavolám "resolve" nad hlavní promisou.
+          .then(() => resolve(count));
+      });
+    });
   }
 
   /**

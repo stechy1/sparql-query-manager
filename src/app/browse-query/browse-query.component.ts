@@ -6,6 +6,7 @@ import { QueryFilterGroupSortService } from './query-filter-group-sort.service';
 import { Router } from '@angular/router';
 import { DeleteHandler, FirebaseHandler, FirebaseHandlerType } from './handlers';
 import { QueryService } from '../query/query.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-browse-query',
@@ -24,7 +25,7 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   showImportDropdown: boolean;
 
   constructor(private _qservice: QueryService, private _navService: NavigationService,
-              private _router: Router,
+              private _router: Router, private _toastr: ToastrService,
               public qFilterGroupSortingService: QueryFilterGroupSortService) { }
 
   /**
@@ -38,7 +39,9 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
     const self = this;
       reader.onload = () => {
         const text = <string> reader.result;
-        self._qservice.import(text, override);
+        self._qservice.import(text, override).then(importedQueries => {
+          self._toastr.success(`Importovaných dotazů: ${importedQueries}.`);
+        });
       };
       reader.readAsText(input.files[0]);
   }
