@@ -9,7 +9,7 @@
     <span title="Dotaz je uložen lokálně"><i class="material-icons" *ngIf="query.downloaded && !query.uploaded">cloud_off</i></span>
     <span title="Dotaz je v cloudu"><i class="material-icons" *ngIf="!query.downloaded && query.uploaded">cloud</i></span>
   </div>
-  <div class="col s8">
+  <div class="col s9">
     <div>
       <a [routerLink]="['/edit', query.id]"><span>{{query.name}}</span></a> - <span>{{query.endpoint}}</span>
     </div>
@@ -17,10 +17,10 @@
       <span class="badge q-tag" *ngFor="let tag of query.tags">{{tag}}</span>
     </div>
   </div>
-  <div class="col s3 q-entry-toolbar">
-    <span title="Smazat z lokálního úložiště"><i class="material-icons q-icon" *ngIf="query.downloaded" (click)="handleDelete(false)">delete_forever</i></span>
-    <span title="Smazat z cloudu"><i class="material-icons q-icon" *ngIf="query.uploaded" (click)="handleDelete(true)">delete</i></span>
-    <span title="Nahrát do cloudu"><i class="material-icons q-icon" *ngIf="!query.uploaded" (click)="handleUpload()">cloud_upload</i></span>
-    <span title="Stáhnout z cloudu"><i class="material-icons q-icon" *ngIf="!query.downloaded" (click)="handleDownload()">cloud_download</i></span>
+  <div class="col s2 q-entry-toolbar">
+    <span title="Smazat z lokálního úložiště" class="right"><i class="material-icons q-icon" *ngIf="query.downloaded" (click)="handleDelete(false)">delete_forever</i></span>
+    <span title="Smazat z cloudu" class="right"><i class="material-icons q-icon" *ngIf="query.uploaded" (click)="handleDelete(true)">delete</i></span>
+    <span title="Nahrát do cloudu" class="right"><i class="material-icons q-icon" *ngIf="!query.uploaded" (click)="handleUpload()">cloud_upload</i></span>
+    <span title="Stáhnout z cloudu" class="right"><i class="material-icons q-icon" *ngIf="!query.downloaded" (click)="handleDownload()">cloud_download</i></span>
   </div>
 </div>
