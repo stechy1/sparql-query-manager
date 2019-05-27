@@ -73,14 +73,12 @@ export class QueryService {
       // V případě odebrání dotazu
       case TypeOfQueryChange.REMOVE: {
         // Získám instanci odebraného dotazu
-        const removedQuery = change.query;
-        // Najdu index, na kterém se dotaz nachází v aktuální kolekci
         const index = this._queries.findIndex(query => query.id === change.query.id);
+        // Vytáhnu si referenci dotazu z aktuální kolekce
+        const affectedQuery = this._queries[index];
 
         // Pokud byl dotaz uložen i nahrán zároveň
-        if (removedQuery.downloaded && removedQuery.uploaded) {
-          // Vytáhnu si referenci dotazu z aktuální kolekce
-          const affectedQuery = this._queries[index];
+        if (affectedQuery.downloaded && affectedQuery.uploaded) {
           // Podle zdroje odstranění dotazu
           switch (change.source) {
             // Odstranil jsem dotaz z localStorage
