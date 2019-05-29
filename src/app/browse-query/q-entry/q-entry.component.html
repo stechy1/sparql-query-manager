@@ -20,7 +20,7 @@
   <div class="col s2 q-entry-toolbar">
     <span title="Smazat z lokálního úložiště" class="right"><i class="material-icons q-icon" *ngIf="query.downloaded" (click)="handleDelete(false)">delete_forever</i></span>
     <span title="Smazat z cloudu" class="right"><i class="material-icons q-icon" *ngIf="query.uploaded" (click)="handleDelete(true)">delete</i></span>
-    <span title="Nahrát do cloudu" class="right"><i class="material-icons q-icon" *ngIf="!query.uploaded" (click)="handleUpload()">cloud_upload</i></span>
     <span title="Stáhnout z cloudu" class="right"><i class="material-icons q-icon" *ngIf="!query.downloaded" (click)="handleDownload()">cloud_download</i></span>
+    <span title="Nahrát do cloudu" class="right"><i class="material-icons q-icon" *ngIf="!query.uploaded" (click)="handleUpload()">cloud_upload</i></span>
   </div>
 </div>
