@@ -9,6 +9,7 @@ export class QTagsComponent implements OnInit {
 
   private _tags: string[];
 
+  @Input() title = 'Tagy';
   @Output() dataChanged = new EventEmitter<string[]>();
 
   constructor() { }

@@ -1,21 +1,9 @@
 <div class="card">
   <div class="card-content">
-    <span class="card-title">Tagy</span>
+    <span class="card-title">{{title}}</span>
     <div class="row">
-      <span class="badge q-tag" *ngFor="let tag of tags">{{tag}}<i class="material-icons right" (click)="remove(tag)">delete</i></span>
+      <span class="badge q-tag" *ngFor="let tag of tags" title="Odstranit">{{tag}}<i class="material-icons right" (click)="remove(tag)">delete</i></span>
     </div>
-    <input placeholder="Nový tag..." (keyup)="handleTagKeyUp($event) ">
-    <!--<mat-chip-list #chipTagList>
-      <mat-chip *ngFor="let tag of tags" [selectable]="selectable"
-                [removable]="removable" (removed)="remove(tag)">
-        {{tag}}
-        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-      </mat-chip>
-      <input placeholder="Nový tag..."
-             [matChipInputFor]="chipTagList"
-             [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-             [matChipInputAddOnBlur]="addOnBlur"
-             (matChipInputTokenEnd)="add($event)">
-    </mat-chip-list>-->
+    <input placeholder="Nový..." (keyup)="handleTagKeyUp($event) ">
   </div>
 </div>
