@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { DeleteHandler, FirebaseHandler, FirebaseHandlerType } from './handlers';
 import { QueryService } from '../query/query.service';
 import { ToastrService } from 'ngx-toastr';
+import { SettingsService } from '../settings/settings.service';
 
 @Component({
   selector: 'app-browse-query',
@@ -25,6 +26,7 @@ export class BrowseQueryComponent implements OnInit {
   showImportDropdown: boolean;
 
   constructor(private _qservice: QueryService, private _navService: NavigationService,
+              private _settings: SettingsService,
               private _router: Router, private _toastr: ToastrService,
               public qFilterGroupSortingService: QueryFilterGroupSortService) { }
 
@@ -93,18 +95,27 @@ export class BrowseQueryComponent implements OnInit {
   }
 
   async handleExport() {
+    // Požádám uživatele o název souboru, pod kterým se soubor uloží
+    const fileName = prompt('Zadejte název souboru...', this._settings.defaultExportFileName);
+    // Pokud uživatel klikne na tlačítko zrušit
+    if (fileName == null) {
+      // Nic se stahovat nebude
+      return;
+    }
     // Vytvořím neviditelný odkaz
     const a = document.createElement('a');
+    // Nastavím název exportovaného souboru
+    a.download = fileName;
     // Počkám si na vyexportování dotazů do řetězce
     const content = await this._qservice.export(this._qservice.allQueries().filter(value => value.selected));
     // Vytvořím balík dat (obsah souboru = serializované vybrané dotazy)
     const file = new Blob([content], {type: 'text/plain'});
     // Nastavím odkaz na vytvořený balík dat
     a.href = URL.createObjectURL(file);
-    // Požádám uživatele o název souboru, pod kterým se soubor uloží
-    a.download = prompt('Zadejte název souboru...', 'queries.json');
     // Stáhnu soubor
     a.click();
+    // Nakonec element odstraním z DOMu
+    a.remove();
   }
 
   handleImportOverride(event: Event) {

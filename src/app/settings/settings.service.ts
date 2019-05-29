@@ -9,6 +9,7 @@ interface Settings {
   saveDelay: number;
   queryResultTimeFormat: TimeFormat;
   queryParameterFormat: QueryParameterFormat;
+  defaultExportFileName: string;
 }
 
 interface QueryParameterFormat {
@@ -41,7 +42,8 @@ export class SettingsService {
         prefix: '$',
         suffixIsPrefix: true,
         suffix: '$'
-      }
+      },
+      defaultExportFileName: 'queries.json'
     };
 
   // Instance nastavení
@@ -137,4 +139,12 @@ export class SettingsService {
   set queryParameterFormat(format: QueryParameterFormat) {
     this._settings.queryParameterFormat = format;
   }
+
+  get defaultExportFileName(): string {
+    return this._settings.defaultExportFileName;
+  }
+
+  set defaultExportFileName(fileName: string) {
+    this._settings.defaultExportFileName = fileName;
+}
 }

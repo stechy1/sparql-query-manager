@@ -91,6 +91,16 @@
           </div>
         </div>
 
+        <!-- Výchozí název exportovaného souboru -->
+        <div class="row settings-entry">
+          <p>Výchozí název exportovaného souboru</p>
+          <div class="right">
+            <div class="row">
+              <app-editable-value [value]="settings.defaultExportFileName" (valueChanged)="settings.defaultExportFileName = $event" class="right"></app-editable-value>
+            </div>
+          </div>
+        </div>
+
         <!-- Nebezpečná zóna -->
         <div class="row settings-entry">
           <p class="background red">Nebezpečná sekce</p>
