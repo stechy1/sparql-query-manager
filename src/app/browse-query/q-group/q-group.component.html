@@ -1,11 +1,20 @@
 <div class="collection-item">
   <div *ngFor="let value of values">
-    <ul>
-      <li *ngFor="let query of getQueries(value)" class="q-entry-border">
-        <app-q-entry [query]="query"
-                     (deleteRequest)="handleDeleteRequest($event)"
-                     (firebaseRequest)="handleFirebaseRequest($event)"></app-q-entry>
-      </li>
-    </ul>
+    <div class="row" *ngIf="getQueries(value).length > 1">
+      <div class="col s12">
+        <label>
+          <input type="checkbox" class="filled-in" [(ngModel)]="groupInformations[value].checked" (change)="handleCheckboxChange($event)" value="{{value}}"><span>{{value}}</span>
+        </label>
+      </div>
+    </div>
+    <div class="row">
+      <ul>
+        <li *ngFor="let query of getQueries(value)" class="q-entry-border">
+          <app-q-entry [query]="query"
+                       (deleteRequest)="handleDeleteRequest($event)"
+                       (firebaseRequest)="handleFirebaseRequest($event)"></app-q-entry>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
