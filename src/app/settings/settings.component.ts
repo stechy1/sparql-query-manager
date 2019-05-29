@@ -10,11 +10,13 @@ import { Router } from '@angular/router';
 })
 export class SettingsComponent implements OnInit {
   testTime: number;
+  tags: Array<string>;
 
   constructor(public settings: SettingsService, private _toastr: ToastrService, private _router: Router) { }
 
   ngOnInit() {
     this.testTime = Date.now();
+    this.tags = this.settings.fuseKeys;
   }
 
   refreshTime() {
@@ -22,6 +24,7 @@ export class SettingsComponent implements OnInit {
   }
 
   handleSave() {
+    this.settings.fuseKeys = this.tags;
     this.settings.save();
     this._toastr.success('Nastavení bylo uloženo.');
   }
@@ -52,5 +55,9 @@ export class SettingsComponent implements OnInit {
           this._toastr.error(reason);
         });
     }
+  }
+
+  handleUpdateTags($event: string[]) {
+    this.tags = $event;
   }
 }

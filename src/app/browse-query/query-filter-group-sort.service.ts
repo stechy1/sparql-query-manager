@@ -4,6 +4,7 @@ import * as Fuse from 'fuse.js';
 import { FuseOptions } from 'fuse.js';
 import { QueryService } from '../query/query.service';
 import { TypeOfQueryChange } from '../query/query-storage-provider';
+import { SettingsService } from '../settings/settings.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,12 +18,12 @@ export class QueryFilterGroupSortService {
   // Pracovní kolekce dotazů získaná po fulltextovém vyhledávání, nad kterou se provádí filtrování a seskupování
   private readonly _fuseQueries: Query[];
 
-  constructor(private _qservice: QueryService) {
+  constructor(private _qservice: QueryService, private _settings: SettingsService) {
     this._selectedGroup = 'none';
     // Uložení dotazů do lokální proměnné
     const queries = this._qservice.allQueries();
     // Iniciaizace instance pro fulltextové vyhledávání
-    this._fusejs = new Fuse(queries, {keys: ['name', 'tags']});
+    this._fusejs = new Fuse(queries, {keys: this._settings.fuseKeys});
     // Vytvoření nové kolekce se všemi dotazy
     this._fuseQueries = [...queries];
     // Registrace změn v původní koleci dotazů

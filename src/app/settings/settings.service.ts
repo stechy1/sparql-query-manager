@@ -10,6 +10,7 @@ interface Settings {
   queryResultTimeFormat: TimeFormat;
   queryParameterFormat: QueryParameterFormat;
   defaultExportFileName: string;
+  fuseKeys: string[];
 }
 
 interface QueryParameterFormat {
@@ -43,7 +44,8 @@ export class SettingsService {
         suffixIsPrefix: true,
         suffix: '$'
       },
-      defaultExportFileName: 'queries.json'
+      defaultExportFileName: 'queries.json',
+      fuseKeys: ['name', 'tags']
     };
 
   // Instance nastavení
@@ -147,4 +149,12 @@ export class SettingsService {
   set defaultExportFileName(fileName: string) {
     this._settings.defaultExportFileName = fileName;
 }
+
+  get fuseKeys(): string[] {
+    return this._settings.fuseKeys;
+  }
+
+  set fuseKeys(keys: string[]) {
+    this._settings.fuseKeys = keys;
+  }
 }
