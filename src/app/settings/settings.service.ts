@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from 'angular-2-local-storage';
-import { TimeFormat } from '../time.pipe';
+import { TimeFormat } from '../share/time.pipe';
 
 interface Settings {
   suffix: string;

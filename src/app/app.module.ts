@@ -1,80 +1,48 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { QEndpointComponent } from './query/q-endpoint/q-endpoint.component';
-import { QNameComponent } from './query/q-name/q-name.component';
-import { QContentComponent } from './query/q-content/q-content.component';
-import { QDescriptionComponent } from './query/q-description/q-description.component';
-import { QParamsComponent } from './query/q-params/q-params.component';
-import { BrowseQueryComponent } from './browse-query/browse-query.component';
-import { EditComponent } from './edit/edit.component';
-import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
-import { ILocalStorageServiceConfig, LocalStorageModule } from 'angular-2-local-storage';
-import { QEntryComponent } from './browse-query/q-entry/q-entry.component';
-import { EditableValueComponent } from './editable-value/editable-value.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { QTagsComponent } from './query/q-tags/q-tags.component';
-import { QGroupComponent } from './browse-query/q-group/q-group.component';
-import { NavigationComponent } from './navigation/navigation.component';
-import { NavbarDirective } from './navigation/navbar.directive';
-import { SidebarDirective } from './navigation/sidebar.directive';
-import { BrowseToolbarComponent } from './browse-query/browse-toolbar/browse-toolbar.component';
+import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-import { QResultComponent } from './query/q-result/q-result.component';
-import { BeautifyPipe } from './query/beautify.pipe';
-import { BrowseResultsComponent } from './browse-results/browse-results.component';
-import { QrEntryComponent } from './browse-results/qr-entry/qr-entry.component';
-import { QrStatePipe } from './browse-results/qr-entry/qr-state.pipe';
-import { TimePipe } from './time.pipe';
-import { ResultViewerComponent } from './result-viewer/result-viewer.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { ToastrModule } from 'ngx-toastr';
-import { QActionsComponent } from './query/q-actions/q-actions.component';
-import { SettingsComponent } from './settings/settings.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { ILocalStorageServiceConfig, LocalStorageModule } from 'angular-2-local-storage';
+
+import { AppRoutingModule } from './app-routing.module';
+import { BrowseQueryModule } from './browse-query/browse-query.module';
+import { BrowseResultsModule } from './browse-results/browse-results.module';
+import { EditQueryModule } from './edit-query/edit-query.module';
+import { NavigationModule } from './navigation/navigation.module';
+import { ResultViewerModule } from './result-viewer/result-viewer.module';
+import { SettingsModule } from './settings/settings.module';
+
+import { AppComponent } from './app.component';
+
 import { environment } from '../environments/environment';
-import { SearchComponent } from './browse-query/search/search.component';
+import { PageNotFoundModule } from './page-not-found/page-not-found.module';
 
 @NgModule({
   declarations: [
     AppComponent,
-    PageNotFoundComponent,
-    BrowseQueryComponent,
-    NavigationComponent,
-    BrowseToolbarComponent,
-    BrowseResultsComponent,
-    ResultViewerComponent,
-    QEndpointComponent, QNameComponent, QContentComponent, QDescriptionComponent,
-    QParamsComponent, QEntryComponent, QTagsComponent, QGroupComponent, QResultComponent,
-    QrEntryComponent,
-    EditComponent,
-    EditableValueComponent,
-    NavbarDirective,
-    SidebarDirective,
-    BeautifyPipe,
-    QrStatePipe,
-    TimePipe,
-    QActionsComponent,
-    SettingsComponent,
-    SearchComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
-    ReactiveFormsModule,
     HttpClientModule,
     LocalStorageModule.withConfig(<ILocalStorageServiceConfig>environment.localStorage),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     BrowserAnimationsModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    // ------ Application Modules -------
+    BrowseQueryModule,
+    BrowseResultsModule,
+    EditQueryModule,
+    NavigationModule,
+    ResultViewerModule,
+    SettingsModule,
+    PageNotFoundModule
   ],
-  entryComponents: [BrowseToolbarComponent],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Query } from '../query/query';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+
+import { Query } from '../query/query';
 import { QParamsComponent } from '../query/q-params/q-params.component';
 import { NavigationService } from '../navigation/navigation.service';
 import { EndpointCommunicatorService} from '../endpoint-communicator.service';
@@ -11,9 +12,9 @@ import { SettingsService } from '../settings/settings.service';
 import { QueryService } from '../query/query.service';
 
 @Component({
-  selector: 'app-edit',
-  templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.css'],
+  selector: 'app-edit-query',
+  templateUrl: './edit-query.component.html',
+  styleUrls: ['./edit-query.component.css'],
   animations: [
     trigger('saveProgress', [
       state('notSaved', style({width: '0%', visibility: 'hidden'})),
@@ -23,18 +24,23 @@ import { QueryService } from '../query/query.service';
     ])
   ]
 })
-export class EditComponent implements OnInit {
+export class EditQueryComponent implements OnInit {
 
   saveProgress: string;
   @ViewChild(QParamsComponent) paramsComponent: QParamsComponent;
   queryResult: QueryResult;
   private _params: {};
-  private _query: Query;
 
   constructor(private _qservice: QueryService, private _settings: SettingsService,
               private _navService: NavigationService, private _endpointCommunicator: EndpointCommunicatorService,
               private _toaster: ToastrService, private _route: ActivatedRoute,
               private _router: Router) { }
+
+  private _query: Query;
+
+  get query(): Query {
+    return this._query;
+  }
 
   ngOnInit() {
     const id = this._route.snapshot.paramMap.get('id');
@@ -115,9 +121,5 @@ export class EditComponent implements OnInit {
     this._endpointCommunicator.makeRequest(this._query, ignoreStatistics).then(value => {
       this.queryResult = value;
     });
-  }
-
-  get query(): Query {
-    return this._query;
   }
 }

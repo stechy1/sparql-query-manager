@@ -1,14 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { QueryResult } from '../../query-result/query-result';
 import { SettingsService } from '../../settings/settings.service';
-import { TimeFormat } from '../../time.pipe';
+import { TimeFormat } from '../../share/time.pipe';
 
 @Component({
   selector: 'app-qr-entry',
-  templateUrl: './qr-entry.component.html',
-  styleUrls: ['./qr-entry.component.css']
+  templateUrl: './r-entry.component.html',
+  styleUrls: ['./r-entry.component.css']
 })
-export class QrEntryComponent implements OnInit {
+export class REntryComponent implements OnInit {
 
   @Input() queryResult: QueryResult;
 

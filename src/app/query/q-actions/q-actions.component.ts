@@ -36,7 +36,7 @@ export class QActionsComponent implements OnInit {
     const newID = this._qservice.duplicate(this.query);
     this._toaster.info('Dotaz byl úspěšně zduplikován');
     this._router.navigate(['browse-query']).then(value => {
-      setTimeout(() => {this._router.navigate(['edit', newID]); }, 500);
+      setTimeout(() => {this._router.navigate(['edit-query', newID]); }, 500);
     });
   }
 
