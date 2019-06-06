@@ -34,7 +34,7 @@ export interface QueryStorageProvider {
   delete(id: string): Promise<void>;
 
   /**
-   * Přihlásí se k odběru dotazů
+   * Vrátí pozorovatelnou instanci třídy Observable<QueryCollectionChange>
    */
   observable(): Observable<QueryCollectionChange>;
 }

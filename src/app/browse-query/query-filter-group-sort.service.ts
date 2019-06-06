@@ -13,10 +13,10 @@ export class QueryFilterGroupSortService {
 
   // Fusejs instance pro fulltextové vyhledávání
   private readonly _fusejs: Fuse<Query, FuseOptions<Query>>;
-  // Způsob seskupování
-  private _selectedGroup: string;
   // Pracovní kolekce dotazů získaná po fulltextovém vyhledávání, nad kterou se provádí filtrování a seskupování
   private readonly _fuseQueries: Query[];
+  // Způsob seskupování
+  private _selectedGroup: string;
 
   constructor(private _qservice: QueryService, private _settings: SettingsService) {
     this._selectedGroup = 'none';
