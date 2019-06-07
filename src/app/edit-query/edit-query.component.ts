@@ -27,7 +27,7 @@ import { QueryService } from '../query/query.service';
 export class EditQueryComponent implements OnInit {
 
   saveProgress: string;
-  @ViewChild(QParamsComponent) paramsComponent: QParamsComponent;
+  @ViewChild(QParamsComponent, { static: true }) paramsComponent: QParamsComponent;
   queryResult: QueryResult;
   private _params: {};
 

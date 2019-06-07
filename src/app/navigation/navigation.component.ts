@@ -12,8 +12,8 @@ import { SidebarComponent } from './sidebar.component';
 })
 export class NavigationComponent implements OnInit {
 
-  @ViewChild(NavbarDirective) navbar: NavbarDirective;
-  @ViewChild(SidebarDirective) sidebar: SidebarDirective;
+  @ViewChild(NavbarDirective, { static: true }) navbar: NavbarDirective;
+  @ViewChild(SidebarDirective, { static: true }) sidebar: SidebarDirective;
   showSidebar: boolean;
   private _navbarComponentComponentRef: ComponentRef<NavbarComponent>;
   private _sidebarComponentComponentRef: ComponentRef<SidebarComponent>;

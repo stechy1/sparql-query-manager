@@ -9,7 +9,7 @@ import { QueryService } from '../../query/query.service';
 })
 export class SearchComponent implements OnInit, AfterViewInit {
 
-  @ViewChild('inputSearch') inputSearch: ElementRef;
+  @ViewChild('inputSearch', { static: true }) inputSearch: ElementRef;
 
   constructor(private _qservice: QueryService,
               private qFilterGroupSortingService: QueryFilterGroupSortService) { }

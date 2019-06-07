@@ -11,7 +11,7 @@ export class QContentComponent implements OnInit {
   @Output() dataChanged = new EventEmitter<Query>();
   @Output() updateContentOnly = new EventEmitter<string>();
   loading: boolean;
-  @ViewChild('query_content')
+  @ViewChild('query_content', { static: true })
   private _textArea: ElementRef;
   private _query: Query;
   private _content: string;
