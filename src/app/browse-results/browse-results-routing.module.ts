@@ -5,7 +5,7 @@ import { BrowseResultsComponent } from './browse-results.component';
 
 const routes: Routes = [
   {
-    path: 'browse-results',
+    path: '',
     component: BrowseResultsComponent
   }
 ];

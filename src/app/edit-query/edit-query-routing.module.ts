@@ -5,7 +5,7 @@ import { EditQueryComponent } from './edit-query.component';
 
 const routes: Routes = [
   {
-    path: 'edit/:id',
+    path: ':id',
     component: EditQueryComponent
   }
 ];

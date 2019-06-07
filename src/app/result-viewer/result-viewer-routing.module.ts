@@ -5,12 +5,12 @@ import { ResultViewerComponent } from './result-viewer.component';
 
 const routes: Routes = [
   {
-    path: 'result-viewer',
+    path: '',
     pathMatch: 'full',
     redirectTo: 'result-viewer/last'
   },
   {
-    path: 'result-viewer/:id',
+    path: ':id',
     component: ResultViewerComponent
   }
 ];
