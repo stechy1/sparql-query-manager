@@ -26,7 +26,7 @@ import { PageNotFoundModule } from './page-not-found/page-not-found.module';
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    LocalStorageModule.withConfig(<ILocalStorageServiceConfig>environment.localStorage),
+    LocalStorageModule.forRoot(<ILocalStorageServiceConfig>environment.localStorage),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     ToastrModule.forRoot(),
