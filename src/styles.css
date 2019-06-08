@@ -63,3 +63,15 @@ select {
     border-bottom: solid 2px #BDBDBD;
     margin-bottom: 4px;
 }
+
+router-outlet ~ * {
+  position: absolute;
+  height: calc(100% - 56px);
+  width: 100%;
+}
+
+@media only screen and (min-width: 601px) {
+  router-outlet ~ * {
+    height: calc(100% - 64px);
+  }
+}
