@@ -60,8 +60,4 @@ export class QEntryComponent implements OnInit {
     const date = new Date(this._query.created);
     return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}`;
   }
-
-  handleAnimationEnd() {
-    console.log('Animation end with query: ' + this._query.name);
-  }
 }

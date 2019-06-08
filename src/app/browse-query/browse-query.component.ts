@@ -1,12 +1,13 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
-import { Query } from '../query/query';
-
-import { NavigationService } from '../navigation/navigation.service';
-import { QueryFilterGroupSortService } from './query-filter-group-sort.service';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { DeleteHandler, FirebaseHandler, FirebaseHandlerType } from './handlers';
-import { QueryService } from '../query/query.service';
+
 import { ToastrService } from 'ngx-toastr';
+
+import { Query } from '../query/query';
+import { QueryFilterGroupSortService } from './query-filter-group-sort.service';
+import { DeleteHandler, FirebaseHandler, FirebaseHandlerType } from './handlers';
+import { NavigationService } from '../navigation/navigation.service';
+import { QueryService } from '../query/query.service';
 import { SettingsService } from '../settings/settings.service';
 
 @Component({
@@ -21,7 +22,7 @@ export class BrowseQueryComponent implements OnInit {
   // Reference na query container
   @ViewChild('queryContainer', { static: true }) queryList: ElementRef;
   // Kolekce všech dotazů
-  queries: Query[];
+  private _queries: Query[];
   // Pomocný příznak, pomocí kterého zobrazuji dropdown s výběrem typu importu
   showImportDropdown: boolean;
 
@@ -63,7 +64,7 @@ export class BrowseQueryComponent implements OnInit {
 
   ngOnInit() {
     // Načtení všech dotazů
-    this.queries = this._qservice.allQueries();
+    this._queries = this._qservice.allQueries();
     this.showImportDropdown = false;
   }
 
@@ -127,11 +128,11 @@ export class BrowseQueryComponent implements OnInit {
   }
 
   handleSelectAll() {
-    this.queries.forEach(query => query.selected = true);
+    this._queries.forEach(query => query.selected = true);
   }
 
   handleSelectNone() {
-    this.queries.forEach(query => query.selected = false);
+    this._queries.forEach(query => query.selected = false);
   }
 
   handleDeleteAll() {
@@ -170,6 +171,14 @@ export class BrowseQueryComponent implements OnInit {
   }
 
   get selectedQueries(): number {
-    return this.queries.filter(value => value.selected).length;
+    return this._queries.filter(value => value.selected).length;
+  }
+
+  get queries(): Query[] {
+    return this.qFilterGroupSortingService.fuseQueries;
+  }
+
+  get queryExists(): boolean {
+    return this._qservice.allQueries().length !== 0;
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { QueryResult } from '../query-result/query-result';
 import { QueryResultService } from '../query-result/query-result.service';
 
@@ -7,14 +7,13 @@ import { QueryResultService } from '../query-result/query-result.service';
   templateUrl: './browse-results.component.html',
   styleUrls: ['./browse-results.component.css']
 })
-export class BrowseResultsComponent implements OnInit {
-
-  queryResults: QueryResult[];
+export class BrowseResultsComponent {
 
   constructor(private _qresultService: QueryResultService) { }
 
-  ngOnInit() {
-    this.queryResults = this._qresultService.allQueryResults();
+
+  get queryResults(): QueryResult[] {
+    return this._qresultService.allQueryResults();
   }
 
 }

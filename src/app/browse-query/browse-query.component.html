@@ -1,5 +1,5 @@
 <section>
-  <div class="toolbar-container" [style.display]="queries.length === 0 ? 'none' : 'block'" #toolbarContainer>
+  <div class="toolbar-container" [style.display]="!queryExists ? 'none' : 'block'" #toolbarContainer>
     <div class="row mobile-search">
       <div class="col s12 offset-m2 m8">
         <app-search></app-search>
@@ -7,12 +7,12 @@
     </div>
     <app-browse-toolbar class="browse-toolbar"></app-browse-toolbar>
   </div>
-  <div class="row" #queryContainer [class.query-container-margin]="queries.length !== 0">
+  <div class="row" #queryContainer [class.query-container-margin]="queryExists">
     <div class="col s12 offset-m2 m8">
-      <div class="collection" *ngIf="queries.length !== 0">
+      <div class="collection" *ngIf="queryExists">
         <div class="q-group" *ngIf="qFilterGroupSortingService.selectedGroup === 'none'">
           <ul>
-            <li *ngFor="let query of qFilterGroupSortingService.fuseQueries" class="q-entry-border">
+            <li *ngFor="let query of queries" class="q-entry-border">
               <app-q-entry [query]="query"
                            (deleteRequest)="handleDeleteRequest($event)"
                            (firebaseRequest)="handleFirebaseRequest($event)"></app-q-entry>
@@ -20,13 +20,13 @@
           </ul>
         </div>
         <app-q-group [values]="endpoints"
-                     [queries]="qFilterGroupSortingService.fuseQueries"
+                     [queries]="queries"
                      [filterFunction]="filterByEndpoint"
                      (deleteRequest)="handleDeleteRequest($event)"
                      (firebaseRequest)="handleFirebaseRequest($event)"
                      *ngIf="qFilterGroupSortingService.selectedGroup === 'endpoint'"></app-q-group>
         <app-q-group [values]="tags"
-                     [queries]="qFilterGroupSortingService.fuseQueries"
+                     [queries]="queries"
                      [filterFunction]="filterByTag"
                      (deleteRequest)="handleDeleteRequest($event)"
                      (firebaseRequest)="handleFirebaseRequest($event)"
@@ -67,7 +67,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="queries.length === 0" class="col s12 center-align">
+      <div *ngIf="!queryExists" class="col s12 center-align">
         <h1>Nebyly nalezeny žádné dotazy.</h1>
         <a (click)="handleNewQuery()" style="cursor: pointer;">Vytvořte nový dotaz</a>
         nebo
