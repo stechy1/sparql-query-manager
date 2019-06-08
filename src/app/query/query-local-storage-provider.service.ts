@@ -29,12 +29,32 @@ export class QueryLocalStorageProviderService implements QueryStorageProvider {
    * @param queries Pole dotazů
    */
   private _loadQueriesInternal(queries: QueryStorageEntry[]): void {
-    for (const rawQuery of queries) {
-      const query = parseQuery(rawQuery);
-      query.downloaded = true;
-      this._queries.push(query);
-      this._querySubject.next({query: query, typeOfChange: TypeOfQueryChange.ADD});
+    const iterator = queries.entries();
+    this._delayLoad(iterator);
+    // for (const rawQuery of queries) {
+    //   const query = parseQuery(rawQuery);
+    //   query.downloaded = true;
+    //   this._queries.push(query);
+    //   this._querySubject.next({query: query, typeOfChange: TypeOfQueryChange.ADD});
+    // }
+  }
+
+  /**
+   * Zpožděné načítání výsledků
+   *
+   * @param iterator Iterator pole dotazů
+   */
+  private _delayLoad(iterator: IterableIterator<[number, QueryStorageEntry]>) {
+    const entry = iterator.next();
+    if (entry.done) {
+      return;
     }
+
+    const query = parseQuery(entry.value[1]);
+    query.downloaded = true;
+    this._queries.push(query);
+    this._querySubject.next({query: query, typeOfChange: TypeOfQueryChange.ADD});
+    setTimeout(() => this._delayLoad(iterator), 100);
   }
 
   /**

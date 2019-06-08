@@ -1,5 +1,13 @@
 .q-entry {
   min-height: 50px;
+  margin: 0 4px;
+}
+
+.q-entry:hover {
+  -webkit-box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.75);
+  z-index: 2;
 }
 
 .q-entry-toolbar i {

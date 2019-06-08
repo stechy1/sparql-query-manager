@@ -1,4 +1,4 @@
-<div (mouseenter)="visible=true" (mouseleave)="visible=false" class="row valign-wrapper q-entry">
+<div [@queryAnimation] (@queryAnimation.done)="handleAnimationEnd()" (mouseenter)="visible=true" (mouseleave)="visible=false" class="row valign-wrapper q-entry">
   <div class="col s1">
     <label>
       <input type="checkbox" [(ngModel)]="query.selected" class="filled-in"><span></span>
