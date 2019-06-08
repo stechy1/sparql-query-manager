@@ -66,7 +66,13 @@ export class QueryService {
         // naštěstí pro mě, tohle řešit nemusím a prostě
         // nastavím dotazu parametry "downloaded" a "uploaded" na true
         // change.query.downloaded = change.query.uploaded = true;
-        localQuery.downloaded = localQuery.uploaded = true;
+        // localQuery.downloaded = localQuery.uploaded = true;
+        if (!localQuery.downloaded) {
+          localQuery.downloaded = change.query.downloaded;
+        }
+        if (!localQuery.uploaded) {
+          localQuery.uploaded = change.query.uploaded;
+        }
       }
         // Opustím switch
         break;
@@ -236,12 +242,23 @@ export class QueryService {
       return clear.then(() => {
         // Naprasuji text do pole typu "QueryStorageEntry
         const queryEntries = JSON.parse(text) as QueryStorageEntry[];
-        const count = queryEntries.length;
+        // Inicializuji proměnnou count na 0
+        // S každým importovaným dotazem se tato proměnná inkrementuje
+        let count = 0;
         // Vytvořím novou promise ze všech insertů:
         Promise.all(queryEntries
           // Projdu jednotlivé dotazy a každý vložím standartním způsobem
-          .map(query => this._queryLocalStorageProvider.insert(parseQuery(query))))
-          // Nakonec zavolám "resolve" nad hlavní promisou.
+          .map(query => this._queryLocalStorageProvider.insert(parseQuery(query)))
+          // Vyfiltruji pouze nově přidané dotazy
+          .filter(value => {
+            const exists = value !== null;
+            if (exists) {
+              count++;
+            }
+            return exists;
+          }))
+          // Nakonec zavolám "resolve" nad hlavní promisou
+          // Promise obsahuje počet importovaných dotazů
           .then(() => resolve(count));
       });
     });

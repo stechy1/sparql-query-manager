@@ -85,6 +85,11 @@ export class QueryLocalStorageProviderService implements QueryStorageProvider {
 
   insert(query: Query): Promise<string> {
     return new Promise<string>(resolve => {
+      const index = this._queries.findIndex(value => value.id === query.id);
+      if (index !== -1) {
+        resolve(null);
+        return;
+      }
       this._queries.push(query);
       this._saveQueries();
       this._querySubject.next({typeOfChange: TypeOfQueryChange.ADD, query: query});
