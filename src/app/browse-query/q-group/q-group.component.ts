@@ -18,6 +18,7 @@ export class QGroupComponent implements OnInit {
   @Input() filterFunction: Function;
   @Output() deleteRequest = new EventEmitter<DeleteHandler>();
   @Output() firebaseRequest = new EventEmitter<FirebaseHandler>();
+
   groupInformations = {};
 
   constructor() { }

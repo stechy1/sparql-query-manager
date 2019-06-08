@@ -9,6 +9,7 @@ import { Query } from '../query';
 export class QDescriptionComponent implements OnInit {
 
   @Output() dataChanged = new EventEmitter<Query>();
+
   private _query: Query;
 
   constructor() { }

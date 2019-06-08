@@ -26,9 +26,11 @@ import { QueryService } from '../query/query.service';
 })
 export class EditQueryComponent implements OnInit {
 
-  saveProgress: string;
   @ViewChild(QParamsComponent, { static: true }) paramsComponent: QParamsComponent;
+
+  saveProgress: string;
   queryResult: QueryResult;
+
   private _params: {};
 
   constructor(private _qservice: QueryService, private _settings: SettingsService,

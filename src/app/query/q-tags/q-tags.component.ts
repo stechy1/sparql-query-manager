@@ -7,10 +7,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class QTagsComponent implements OnInit {
 
-  private _tags: string[];
-
   @Input() title = 'Tagy';
   @Output() dataChanged = new EventEmitter<string[]>();
+
+  private _tags: string[];
 
   constructor() { }
 

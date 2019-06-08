@@ -14,7 +14,9 @@ export class NavigationComponent implements OnInit {
 
   @ViewChild(NavbarDirective, { static: true }) navbar: NavbarDirective;
   @ViewChild(SidebarDirective, { static: true }) sidebar: SidebarDirective;
+
   showSidebar: boolean;
+
   private _navbarComponentComponentRef: ComponentRef<NavbarComponent>;
   private _sidebarComponentComponentRef: ComponentRef<SidebarComponent>;
 

@@ -16,12 +16,12 @@ import { SettingsService } from '../settings/settings.service';
 })
 export class BrowseQueryComponent implements OnInit {
 
-  // Kolekce všech dotazů
-  queries: Query[];
   // Reference na toolbar container
   @ViewChild('toolbarContainer', { static: true }) toolbar: ElementRef;
   // Reference na query container
   @ViewChild('queryContainer', { static: true }) queryList: ElementRef;
+  // Kolekce všech dotazů
+  queries: Query[];
   // Pomocný příznak, pomocí kterého zobrazuji dropdown s výběrem typu importu
   showImportDropdown: boolean;
 

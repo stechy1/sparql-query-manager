@@ -16,6 +16,7 @@ export class QActionsComponent implements OnInit {
   @Output() doQuery = new EventEmitter();
 
   ignoreStatistics: boolean;
+
   private _responceFormats = Object.keys(ResponceFormat);
 
   constructor(private _endpointCommunicator: EndpointCommunicatorService, private _qservice: QueryService,

@@ -11,6 +11,7 @@ import { QueryResult } from '../../query-result/query-result';
 export class QResultComponent implements OnInit, AfterViewInit {
 
   @Input() result: QueryResult;
+
   windowHeight: number;
 
   constructor(private _toaster: ToastrService) { }

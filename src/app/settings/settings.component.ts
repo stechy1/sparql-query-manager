@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
+
   testTime: number;
   tags: Array<string>;
 

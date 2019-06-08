@@ -9,10 +9,12 @@ import { FormControl} from '@angular/forms';
 export class EditableValueComponent implements OnInit {
 
   @Input() useTextarea: boolean;
-  isEditing: boolean;
   @Output() valueChanged = new EventEmitter<string|number>();
+
+  isEditing: boolean;
   hover: boolean;
   inputElement = new FormControl('');
+
   private _value: string|number;
   private _original: string|number;
 
