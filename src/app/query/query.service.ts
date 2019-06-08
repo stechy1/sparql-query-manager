@@ -179,7 +179,10 @@ export class QueryService {
    * @param remote True, pokud se má smazat i data z Firebase
    */
   clear(remote: boolean = false): Promise<void> {
-    return Promise.all(this._queries.map(value => {
+    // Vytvořím si kopii dotazů
+    // Potřebuji pouze ID a příznak uploaded, tak využiju funkci map
+    const copy = this._queries.map(value => ({'id': value.id, 'uploaded': value.uploaded}));
+    return Promise.all(copy.map(value => {
       return value.uploaded
         ? remote
           ? this._queryFirebaseProvider.delete(value.id)
