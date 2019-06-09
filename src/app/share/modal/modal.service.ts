@@ -19,12 +19,17 @@ export class ModalService {
   }
 
   open(id: string) {
-    const modal: any = this._modals.filter(x => x.id === id)[0];
+    const modal: ModalComponent = this._modals.filter(x => x.id === id)[0];
     modal.open();
   }
 
+  openForResult(id: string): Promise<any> {
+    const modal: ModalComponent = this._modals.filter(x => x.id === id)[0];
+    return modal.openForResult();
+  }
+
   close(id: string) {
-    const modal: any = this._modals.filter(x => x.id === id)[0];
+    const modal: ModalComponent = this._modals.filter(x => x.id === id)[0];
     modal.close();
   }
 }
