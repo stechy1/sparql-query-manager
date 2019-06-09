@@ -113,6 +113,7 @@ export class QueryLocalStorageProviderService implements QueryStorageProvider {
         typeOfChange: TypeOfQueryChange.REMOVE,
         source: QueryLocalStorageProviderService.QUERY_PROVIDER_NAME
       });
+      resolve();
     });
   }
 
