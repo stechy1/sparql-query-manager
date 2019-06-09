@@ -3,6 +3,10 @@
 @import "palette.css";
 @import "cards-container.css";
 
+body.modal-open {
+  overflow: hidden;
+}
+
 .card .card-title {
   font-size: 22px;
 }

@@ -1,0 +1,27 @@
+.modal {
+  z-index: 1001;
+  position: absolute;
+  width: 90vw;
+}
+.modal .modal-title {
+  float: left;
+}
+.modal .modal-close {
+  cursor: pointer;
+}
+.modal-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vmax;
+  z-index: 1000;
+  background: rgba(0,0,0,0.4);
+}
+
+@media only screen and (min-width : 993px) {
+  .modal {
+    position: fixed;
+    width: 55vw;
+  }
+}

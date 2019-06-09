@@ -1,0 +1,14 @@
+<div title="" class="modal-background" [style.display]="_isOpen ? 'block' : 'none'" (click)="handleCLoseModal()"></div>
+<div [@modalAnimation]="isOpen ? 'open' : 'close'" id="modal1" class="modal">
+  <div class="modal-content">
+    <div class="row">
+      <h4 class="modal-title">{{title}}</h4>
+      <span class="right btn btn-tiny blue modal-close" (click)="handleCLoseModal()">X</span>
+    </div>
+    <ng-content></ng-content>
+  </div>
+  <div class="modal-footer">
+    <span class="btn-flat materialize-red-text" (click)="handleCancel()">Zrušit</span>
+    <span class="btn-flat" (click)="handleConfirm()">Potvrdit</span>
+  </div>
+</div>
