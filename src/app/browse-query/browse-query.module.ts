@@ -8,6 +8,8 @@ import { BrowseToolbarComponent } from './browse-toolbar/browse-toolbar.componen
 import { QEntryComponent } from './q-entry/q-entry.component';
 import { QGroupComponent } from './q-group/q-group.component';
 import { SearchComponent } from './search/search.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ImportDialogComponent } from './import-dialog/import-dialog.component';
 
 @NgModule({
   declarations: [
@@ -15,10 +17,12 @@ import { SearchComponent } from './search/search.component';
     BrowseToolbarComponent,
     QEntryComponent,
     QGroupComponent,
-    SearchComponent
+    SearchComponent,
+    ImportDialogComponent
   ],
   imports: [
     BrowseQueryRoutingModule,
+    BrowserAnimationsModule,
     ShareModule
   ],
   entryComponents: [

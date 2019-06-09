@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { ToastrService } from 'ngx-toastr';
@@ -9,6 +9,9 @@ import { DeleteHandler, FirebaseHandler, FirebaseHandlerType } from './handlers'
 import { NavigationService } from '../navigation/navigation.service';
 import { QueryService } from '../query/query.service';
 import { SettingsService } from '../settings/settings.service';
+import { ModalService } from '../share/modal/modal.service';
+import { ModalComponent } from '../share/modal/modal.component';
+import { QueryStorageEntry } from '../query/query-storage-entry';
 
 @Component({
   selector: 'app-browse-query',
@@ -21,6 +24,8 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   @ViewChild('toolbarContainer', { static: true }) toolbar: ElementRef;
   // Reference na query container
   @ViewChild('queryContainer', { static: true }) queryList: ElementRef;
+  // Reference na kontejner s modálním dialogem
+  @ViewChild('modalContainer', {static: true}) modalContainer: ModalComponent;
   // Kolekce všech dotazů
   private _queries: Query[];
   // Pomocný příznak, pomocí kterého zobrazuji dropdown s výběrem typu importu
@@ -29,6 +34,7 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   constructor(private _qservice: QueryService, private _navService: NavigationService,
               private _settings: SettingsService,
               private _router: Router, private _toastr: ToastrService,
+              private _modalService: ModalService,
               public qFilterGroupSortingService: QueryFilterGroupSortService) { }
 
   /**
@@ -46,7 +52,9 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
         .prepareImport(text, override)
         .catch(reason => {
           console.log('Nelze snadno importovat dotazy. Je potřeba vyřešit duplicity...');
-          return [];
+          return this._modalService.openForResult('modalContainer')
+          .then(value => console.log(value))
+          .then(() => []);
         })
         .then(parsedQueryEntries => {
           self._qservice.import(parsedQueryEntries, override)
@@ -75,6 +83,10 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
     // Načtení všech dotazů
     this._queries = this._qservice.allQueries();
     this.showImportDropdown = false;
+  }
+
+  ngAfterViewInit(): void {
+    this._modalService.add(this.modalContainer);
   }
 
   /**
@@ -136,7 +148,7 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
     this._import(<HTMLInputElement> event.target, false);
   }
 
-  handleUpdatedImport() {
+  handleUpdatedImport(entries: QueryStorageEntry[]) {
     console.log('Importuji správné záznamy');
   }
 

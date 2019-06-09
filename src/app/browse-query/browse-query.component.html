@@ -81,3 +81,7 @@
 </section>
 
 <span id="new-query" class="btn-floating btn-large waves-effect waves-light accent-color" (click)="handleNewQuery()"><i class="material-icons">add</i></span>
+<app-modal id="modalContainer" title="Import dotazů" [result]="importDialog.entries" (confirm)="importDialog.doImport()">
+  <app-import-dialog #importDialog></app-import-dialog>
+</app-modal>
+
