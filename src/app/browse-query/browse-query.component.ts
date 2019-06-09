@@ -15,7 +15,7 @@ import { SettingsService } from '../settings/settings.service';
   templateUrl: './browse-query.component.html',
   styleUrls: ['./browse-query.component.css']
 })
-export class BrowseQueryComponent implements OnInit {
+export class BrowseQueryComponent implements OnInit, AfterViewInit {
 
   // Reference na toolbar container
   @ViewChild('toolbarContainer', { static: true }) toolbar: ElementRef;
@@ -42,9 +42,18 @@ export class BrowseQueryComponent implements OnInit {
     const self = this;
       reader.onload = () => {
         const text = <string> reader.result;
-        self._qservice.import(text, override).then(importedQueries => {
-          self._toastr.success(`Importovaných dotazů: ${importedQueries}.`);
-          self.showImportDropdown = false;
+        self._qservice
+        .prepareImport(text, override)
+        .catch(reason => {
+          console.log('Nelze snadno importovat dotazy. Je potřeba vyřešit duplicity...');
+          return [];
+        })
+        .then(parsedQueryEntries => {
+          self._qservice.import(parsedQueryEntries, override)
+          .then(importedQueries => {
+            self._toastr.success(`Importovaných dotazů: ${importedQueries}.`);
+            self.showImportDropdown = false;
+          });
         });
       };
       reader.readAsText(input.files[0]);
@@ -125,6 +134,10 @@ export class BrowseQueryComponent implements OnInit {
 
   handleImportAppend(event: Event) {
     this._import(<HTMLInputElement> event.target, false);
+  }
+
+  handleUpdatedImport() {
+    console.log('Importuji správné záznamy');
   }
 
   handleSelectAll() {

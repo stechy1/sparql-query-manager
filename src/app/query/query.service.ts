@@ -7,6 +7,12 @@ import { SettingsService } from '../settings/settings.service';
 import { Observable, Subject } from 'rxjs';
 import { parseQuery, QueryStorageEntry } from './query-storage-entry';
 
+export interface QueryAnalyzeResult {
+  normal: Array<QueryStorageEntry>;
+  duplicated: Array<QueryStorageEntry>;
+  needHelp: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -122,6 +128,22 @@ export class QueryService {
     }
   }
 
+  private _analyzeImportedQueries(entries: QueryStorageEntry[], override: boolean): QueryAnalyzeResult {
+    const result: QueryAnalyzeResult = {normal: [], duplicated: [], needHelp: false};
+    if (override) {
+      result.normal.push(...entries);
+      return result;
+    }
+
+    for (const entry of entries) {
+      const index = this._queries.findIndex(value => value.id === entry._id);
+      result[(index === -1) ? 'normal' : 'duplicated'].push(entry);
+    }
+    result.needHelp = result.duplicated.length !== 0;
+
+    return result;
+  }
+
   /**
    * Vrátí kolekci všech dotazů
    */
@@ -184,7 +206,7 @@ export class QueryService {
    *
    * @param remote True, pokud se má smazat i data z Firebase
    */
-  clear(remote: boolean = false): Promise<void> {
+  clear(remote: boolean = false): Promise<any> {
     // Vytvořím si kopii dotazů
     // Potřebuji pouze ID a příznak uploaded, tak využiju funkci map
     const copy = this._queries.map(value => ({'id': value.id, 'uploaded': value.uploaded}));
@@ -194,7 +216,7 @@ export class QueryService {
           ? this._queryFirebaseProvider.delete(value.id)
           : Promise.resolve()
         : this._queryLocalStorageProvider.delete(value.id);
-    })).then(() => null);
+    }));
   }
 
   /**
@@ -225,12 +247,39 @@ export class QueryService {
   }
 
   /**
-   * Importuje dotazy
+   * Připraví importovaná data
+   * Pokud se v datech naleznou dotazy existující v lokální databázi,
+   * proces se přeruší, aby se tyto dotazy vyřešily
    *
    * @param text Serializované dotazy
-   * @param override True, pokud importované dotazy mají přepsat lokální databázi, jinak false
+   * @param override True, pokud se bude přepisovat celá lokální databáze, jinak False
    */
-  import(text: string, override: boolean): Promise<number> {
+  prepareImport(text: string, override: boolean): Promise<QueryStorageEntry[]> {
+    return new Promise<QueryStorageEntry[]>((resolve, reject) => {
+        // Naprasuji text do pole typu "QueryStorageEntry
+        const queryEntries = JSON.parse(text) as QueryStorageEntry[];
+        // Analyzuji naparsované dotazy, abych zjistil, zda-li neobsahují nějaké duplikáty
+        const analyzeResult = this._analyzeImportedQueries(queryEntries, override);
+        // Pokud analýza odhalí nějaké duplikované záznamy
+        if (analyzeResult.needHelp) {
+          // Nemůžu pokračovat ve standartním procesu importu
+          // Vrátím výsledek analýzy -> přejdu do větve "catch"
+          reject(analyzeResult);
+        } else {
+          // Můžu pokračovat ve standartním procesu
+          // Vrátím naparsované pole dotazů
+          resolve(queryEntries);
+        }
+      });
+  }
+
+  /**
+   * Importuje dotazy
+   *
+   * @param entries Pole dotazů, které se má importovat
+   * @param override True, pokud se má přepsat celá lokální databáze, jinak False
+   */
+  import(entries: QueryStorageEntry[], override: boolean): Promise<number> {
     return new Promise<number>(resolve => {
       // Inicializuji pomocnou proměnnou
       let clear = Promise.resolve();
@@ -238,28 +287,21 @@ export class QueryService {
         // Pokud mám přepsat celou lokální databázi, tak ji musím nejdříve vymazat
         clear = this.clear(false);
       }
+      // Inicializuji proměnnou count na 0
       // Po vymazání (pokud nějaké nastalo)
       return clear.then(() => {
-        // Naprasuji text do pole typu "QueryStorageEntry
-        const queryEntries = JSON.parse(text) as QueryStorageEntry[];
-        // Inicializuji proměnnou count na 0
-        // S každým importovaným dotazem se tato proměnná inkrementuje
-        let count = 0;
         // Vytvořím novou promise ze všech insertů:
-        Promise.all(queryEntries
-          // Projdu jednotlivé dotazy a každý vložím standartním způsobem
-          .map(query => this._queryLocalStorageProvider.insert(parseQuery(query)))
-          // Vyfiltruji pouze nově přidané dotazy
-          .filter(value => {
-            const exists = value !== null;
-            if (exists) {
-              count++;
-            }
-            return exists;
-          }))
-          // Nakonec zavolám "resolve" nad hlavní promisou
-          // Promise obsahuje počet importovaných dotazů
-          .then(() => resolve(count));
+        return Promise.all(entries
+        // Projdu jednotlivé dotazy a každý vložím standartním způsobem
+        .map(query => this._queryLocalStorageProvider.insert(parseQuery(query)))
+        // Vyfiltruji pouze nově přidané dotazy
+        .filter(value => value !== null))
+        .then((arr) => arr.length);
+        // Nakonec zavolám "resolve" nad hlavní promisou
+        // Promise obsahuje počet importovaných dotazů
+      })
+      .then((count) => {
+        resolve(count);
       });
     });
   }
