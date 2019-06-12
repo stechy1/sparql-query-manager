@@ -7,7 +7,7 @@ import { Query } from '../query/query';
 import { QueryFilterGroupSortService } from './query-filter-group-sort.service';
 import { DeleteHandler, FirebaseHandler, FirebaseHandlerType } from './handlers';
 import { NavigationService } from '../navigation/navigation.service';
-import { QueryService } from '../query/query.service';
+import { QueryAnalyzeResult, QueryService } from '../query/query.service';
 import { SettingsService } from '../settings/settings.service';
 import { ModalService } from '../share/modal/modal.service';
 import { ModalComponent } from '../share/modal/modal.component';
@@ -28,6 +28,7 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   @ViewChild('modalContainer', {static: true}) modalContainer: ModalComponent;
   // Kolekce všech dotazů
   private _queries: Query[];
+  private _analyzedResult: QueryAnalyzeResult = null;
   // Pomocný příznak, pomocí kterého zobrazuji dropdown s výběrem typu importu
   showImportDropdown: boolean;
 
@@ -44,27 +45,53 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
    * @param override true, pokud se má lokální databáze přepsat, false pro pouhé přidání nových dat
    */
   private _import(input: HTMLInputElement, override: boolean) {
+    // Vytvořím novou instanci třídy pro přečtení souboru
     const reader = new FileReader();
     const self = this;
-      reader.onload = () => {
-        const text = <string> reader.result;
-        self._qservice
-        .prepareImport(text, override)
-        .catch(reason => {
-          console.log('Nelze snadno importovat dotazy. Je potřeba vyřešit duplicity...');
-          return this._modalService.openForResult('modalContainer')
-          .then(value => console.log(value))
-          .then(() => []);
-        })
-        .then(parsedQueryEntries => {
-          self._qservice.import(parsedQueryEntries, override)
-          .then(importedQueries => {
-            self._toastr.success(`Importovaných dotazů: ${importedQueries}.`);
-            self.showImportDropdown = false;
-          });
+    // Nastavím payload, který se zavolá po přečtení souboru
+    reader.onload = () => {
+      // Nejdříve schovám dropdown
+      self.showImportDropdown = false;
+      // Získám přečtený text
+      const text = <string>reader.result;
+      // Nad službou dotazů
+      self._qservice
+      // Zavolám přípravu importu
+      .prepareImport(text, override)
+      // Catch blok pro případ, že bude potřeba vyřešit duplicity
+      .catch((analyzeResult: QueryAnalyzeResult) => {
+        // Zaloguji, že budu muset řešit duplicity
+        console.log('Nelze snadno importovat dotazy. Je potřeba vyřešit duplicity...');
+        // Uložím si výsledek analýzy
+        this._analyzedResult = analyzeResult;
+        // Otevřu dialogové okno pro vyřešení duplicit
+        return this._modalService.openForResult('modalContainer')
+        // Pokud zruším operaci, nemůžu pokračovat v importu
+        .catch(() => {
+          throw new Error('Nemuzu pokracovat');
         });
-      };
-      reader.readAsText(input.files[0]);
+      })
+      // Zachytím neúspěšný proces předpřipravení dotazů
+      .catch(() => {
+        // Zobrazím notifikaci, pro informování uživatele
+        self._toastr.error('Žádné dotazy se neimportovaly.');
+        throw new Error();
+      })
+      // V případě, že předzpracování proběhlo úspěšně (žádné duplicity již neexistují
+      .then(parsedQueryEntries => {
+        // Spustím samotný importovací proces
+        self._qservice.import(parsedQueryEntries, override)
+        // Výsledek importu je počet importovaných dotazů
+        .then(importedQueries => {
+          // Uživateli zobrazím počet importovaných dotazů
+          self._toastr.success(`Importovaných dotazů: ${importedQueries}.`);
+        });
+      })
+      // Nakonec neudělám nic
+      // Tento řádek tu musí být, abych odchytil případné zbývající errory
+      .finally(() => {});
+    };
+    reader.readAsText(input.files[0]);
   }
 
   private _handleDownload(query: Query) {
@@ -148,10 +175,6 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
     this._import(<HTMLInputElement> event.target, false);
   }
 
-  handleUpdatedImport(entries: QueryStorageEntry[]) {
-    console.log('Importuji správné záznamy');
-  }
-
   handleSelectAll() {
     this._queries.forEach(query => query.selected = true);
   }
@@ -205,5 +228,9 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
 
   get queryExists(): boolean {
     return this._qservice.allQueries().length !== 0;
+  }
+
+  get analyzedResult(): QueryAnalyzeResult {
+    return this._analyzedResult;
   }
 }
