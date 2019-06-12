@@ -1,11 +1,14 @@
 import { QueryLocalStorageProviderService } from './query-local-storage-provider.service';
 import { QueryFirebaseProviderService } from './query-firebase-provider.service';
 import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+
 import { Query } from './query';
 import { QueryCollectionChange, TypeOfQueryChange } from './query-storage-provider';
 import { SettingsService } from '../settings/settings.service';
-import { Observable, Subject } from 'rxjs';
-import { parseQuery, QueryStorageEntry } from './query-storage-entry';
+import { QueryStorageEntry } from './query-storage-entry';
+import { ImportEntry } from './import-entry';
+import { ImportStrategy } from './import-strategy';
 
 export interface QueryAnalyzeResult {
   normal: Array<QueryStorageEntry>;
@@ -37,7 +40,7 @@ export class QueryService {
   /**
    * Generátor náhodného ID dotazu
    */
-  private static makeID(): string {
+  public static makeID(): string {
     return '_' + Math.random().toString(36).substr(2, 9);
   }
 
@@ -254,8 +257,8 @@ export class QueryService {
    * @param text Serializované dotazy
    * @param override True, pokud se bude přepisovat celá lokální databáze, jinak False
    */
-  prepareImport(text: string, override: boolean): Promise<QueryStorageEntry[]> {
-    return new Promise<QueryStorageEntry[]>((resolve, reject) => {
+  prepareImport(text: string, override: boolean): Promise<ImportEntry[]> {
+    return new Promise<ImportEntry[]>((resolve, reject) => {
         // Naprasuji text do pole typu "QueryStorageEntry
         const queryEntries = JSON.parse(text) as QueryStorageEntry[];
         // Analyzuji naparsované dotazy, abych zjistil, zda-li neobsahují nějaké duplikáty
@@ -268,7 +271,7 @@ export class QueryService {
         } else {
           // Můžu pokračovat ve standartním procesu
           // Vrátím naparsované pole dotazů
-          resolve(queryEntries);
+          resolve(queryEntries.map(entry => new ImportEntry(entry)));
         }
       });
   }
@@ -279,7 +282,7 @@ export class QueryService {
    * @param entries Pole dotazů, které se má importovat
    * @param override True, pokud se má přepsat celá lokální databáze, jinak False
    */
-  import(entries: QueryStorageEntry[], override: boolean): Promise<number> {
+  import(entries: ImportEntry[], override: boolean): Promise<number> {
     return new Promise<number>(resolve => {
       // Inicializuji pomocnou proměnnou
       let clear = Promise.resolve();
@@ -293,7 +296,10 @@ export class QueryService {
         // Vytvořím novou promise ze všech insertů:
         return Promise.all(entries
         // Projdu jednotlivé dotazy a každý vložím standartním způsobem
-        .map(query => this._queryLocalStorageProvider.insert(parseQuery(query)))
+        .map(importEntry => {
+          const importStrategy = ImportStrategy[importEntry.importStrategy.toUpperCase()];
+          return importStrategy.applyStrategy(this, importEntry.queryStorageEntry);
+        })
         // Vyfiltruji pouze nově přidané dotazy
         .filter(value => value !== null))
         .then((arr) => arr.length);
