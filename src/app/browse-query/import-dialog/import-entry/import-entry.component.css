@@ -1,0 +1,12 @@
+.import-entry {
+  background: antiquewhite;
+  padding: 4px;
+  margin: 2px 0;
+}
+
+.import-entry:hover {
+  -webkit-box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.75);
+  z-index: 2;
+}

@@ -1,0 +1,10 @@
+<div class="row import-entry">
+  <div class="col s8">{{entry.name}}</div>
+  <div class="col s4">
+    <form action="#" [formGroup]="form">
+      <select formControlName="importStrategy">
+        <option *ngFor="let importStrategy of importStrategies" [value]="importStrategy.value">{{importStrategy.name}}</option>
+      </select>
+    </form>
+  </div>
+</div>
