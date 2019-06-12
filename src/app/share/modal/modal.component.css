@@ -2,6 +2,7 @@
   z-index: 1001;
   position: absolute;
   width: 90vw;
+  padding: 24px;
 }
 .modal .modal-title {
   float: left;
