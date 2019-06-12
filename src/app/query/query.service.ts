@@ -76,11 +76,11 @@ export class QueryService {
         // nastavím dotazu parametry "downloaded" a "uploaded" na true
         // change.query.downloaded = change.query.uploaded = true;
         // localQuery.downloaded = localQuery.uploaded = true;
-        if (!localQuery.downloaded) {
-          localQuery.downloaded = change.query.downloaded;
+        if (change.source === QueryLocalStorageProviderService.QUERY_PROVIDER_NAME && !localQuery.downloaded) {
+          localQuery.downloaded = true;
         }
-        if (!localQuery.uploaded) {
-          localQuery.uploaded = change.query.uploaded;
+        if (change.source === QueryFirebaseProviderService.QUERY_PROVIDER_NAME && !localQuery.uploaded) {
+          localQuery.uploaded = true;
         }
       }
         // Opustím switch

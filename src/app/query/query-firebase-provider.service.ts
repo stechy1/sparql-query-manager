@@ -56,15 +56,17 @@ export class QueryFirebaseProviderService implements QueryStorageProvider {
           // Nebudu nic provádět
           return id;
         }
-        console.log('Přidávám query.');
-        console.log(data);
         // Naparsuji dotaz
         const query = parseQuery(data, true);
         query.uploaded = true;
         // Uložím ho do lokální kolekce
         self._queries.push(query);
         // Inform rest of the worl, that new query arrived
-        self._querySubject.next({query: query, typeOfChange: TypeOfQueryChange.ADD});
+        self._querySubject.next({
+          query: query,
+          typeOfChange: TypeOfQueryChange.ADD,
+          source: QueryFirebaseProviderService.QUERY_PROVIDER_NAME
+        });
         // Vrátím ID dotazu
         return id;
       })))

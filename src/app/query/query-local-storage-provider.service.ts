@@ -92,7 +92,11 @@ export class QueryLocalStorageProviderService implements QueryStorageProvider {
       }
       this._queries.push(query);
       this._saveQueries();
-      this._querySubject.next({typeOfChange: TypeOfQueryChange.ADD, query: query});
+      this._querySubject.next({
+        typeOfChange: TypeOfQueryChange.ADD,
+        query: query, source:
+        QueryLocalStorageProviderService.QUERY_PROVIDER_NAME
+      });
       resolve(query.id);
     });
   }
