@@ -1,7 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
-import { QueryStorageEntry } from '../../query/query-storage-entry';
 import { QueryAnalyzeResult } from '../../query/query.service';
+import { ImportEntry } from '../../query/import-entry';
+import { ImportStrategy } from '../../query/import-strategy';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-import-dialog',
@@ -10,19 +12,31 @@ import { QueryAnalyzeResult } from '../../query/query.service';
 })
 export class ImportDialogComponent implements OnInit {
 
-  @Input() analyzedResult: QueryAnalyzeResult;
-  @Output() entries = new EventEmitter<QueryStorageEntry[]>();
+  @Input() analyzedResult: Observable<QueryAnalyzeResult>;
+  @Output() entries = new EventEmitter<ImportEntry[]>();
+
+  private _uniqueEntries: ImportEntry[] = [];
+  private _duplicatedEntries: ImportEntry[] = [];
 
   constructor() { }
 
   ngOnInit() {
+    this.analyzedResult.subscribe(value => {
+      this._uniqueEntries = value.normal.map(entry => new ImportEntry(entry, ImportStrategy.IMPORT_AS_NEW.value));
+      this._duplicatedEntries = value.duplicated.map(entry => new ImportEntry(entry));
+    });
   }
 
   doImport() {
-    console.log(this.analyzedResult);
-    this.entries.emit([]);
-    // this.entries.emit([{_id: 'id', _content: 'content', _created: 0, _description: 'descr', _endpoint: 'endpoint',
-    // _lastRun: 0, _name: 'name', _params: [], _runCount: 0, _tags: []}]);
+    this.entries.emit(this._uniqueEntries.concat(this._duplicatedEntries));
+  }
+
+  get uniqueEntries(): ImportEntry[] {
+    return this._uniqueEntries;
+  }
+
+  get duplicatedEntries(): ImportEntry[] {
+    return this._duplicatedEntries;
   }
 
 }

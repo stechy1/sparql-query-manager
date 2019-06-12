@@ -11,7 +11,7 @@ import { QueryAnalyzeResult, QueryService } from '../query/query.service';
 import { SettingsService } from '../settings/settings.service';
 import { ModalService } from '../share/modal/modal.service';
 import { ModalComponent } from '../share/modal/modal.component';
-import { QueryStorageEntry } from '../query/query-storage-entry';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-browse-query',
@@ -28,7 +28,7 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   @ViewChild('modalContainer', {static: true}) modalContainer: ModalComponent;
   // Kolekce všech dotazů
   private _queries: Query[];
-  private _analyzedResult: QueryAnalyzeResult = null;
+  private _analyzedResult: Subject<QueryAnalyzeResult> = new Subject<QueryAnalyzeResult>();
   // Pomocný příznak, pomocí kterého zobrazuji dropdown s výběrem typu importu
   showImportDropdown: boolean;
 
@@ -63,7 +63,7 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
         // Zaloguji, že budu muset řešit duplicity
         console.log('Nelze snadno importovat dotazy. Je potřeba vyřešit duplicity...');
         // Uložím si výsledek analýzy
-        this._analyzedResult = analyzeResult;
+        this._analyzedResult.next(analyzeResult);
         // Otevřu dialogové okno pro vyřešení duplicit
         return this._modalService.openForResult('modalContainer')
         // Pokud zruším operaci, nemůžu pokračovat v importu
@@ -230,7 +230,7 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
     return this._qservice.allQueries().length !== 0;
   }
 
-  get analyzedResult(): QueryAnalyzeResult {
+  get analyzedResult(): Observable<QueryAnalyzeResult> {
     return this._analyzedResult;
   }
 }

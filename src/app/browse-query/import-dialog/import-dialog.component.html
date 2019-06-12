@@ -1,16 +1,16 @@
-<div *ngIf="analyzedResult?.normal.length !== 0">
+<div *ngIf="(analyzedResult | async)?.normal.length !== 0">
   <h5>Unikátní dotazy</h5>
   <ul>
-    <li *ngFor="let unique of analyzedResult?.normal">
-      {{unique._name}}
+    <li *ngFor="let unique of uniqueEntries">
+      <app-import-entry [entry]="unique"></app-import-entry>
     </li>
   </ul>
 </div>
-<div *ngIf="analyzedResult?.duplicated.length !== 0">
+<div *ngIf="(analyzedResult | async)?.duplicated.length !== 0">
   <h5>Duplicitní dotazy</h5>
   <ul>
-    <li *ngFor="let duplicated of analyzedResult?.duplicated">
-      {{duplicated._name}}
+    <li *ngFor="let duplicated of duplicatedEntries">
+      <app-import-entry [entry]="duplicated"></app-import-entry>
     </li>
   </ul>
 </div>
