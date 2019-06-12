@@ -8,7 +8,6 @@ import { BrowseToolbarComponent } from './browse-toolbar/browse-toolbar.componen
 import { QEntryComponent } from './q-entry/q-entry.component';
 import { QGroupComponent } from './q-group/q-group.component';
 import { SearchComponent } from './search/search.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ImportDialogComponent } from './import-dialog/import-dialog.component';
 import { ImportEntryComponent } from './import-dialog/import-entry/import-entry.component';
 
@@ -24,7 +23,6 @@ import { ImportEntryComponent } from './import-dialog/import-entry/import-entry.
   ],
   imports: [
     BrowseQueryRoutingModule,
-    BrowserAnimationsModule,
     ShareModule
   ],
   entryComponents: [
