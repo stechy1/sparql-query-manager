@@ -31,7 +31,7 @@ export class ImportEntryComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     const values = {};
-    values[ImportStrategy.KEY] = ImportStrategy.OVERRIDE_LOCAL.value;
+    values[ImportStrategy.KEY] = this.entry.importStrategy;
     this.form.setValue(values);
   }
 

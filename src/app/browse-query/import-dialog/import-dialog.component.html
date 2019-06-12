@@ -1,16 +1,20 @@
-<div *ngIf="(analyzedResult | async)?.normal.length !== 0">
-  <h5>Unikátní dotazy</h5>
-  <ul>
-    <li *ngFor="let unique of uniqueEntries">
-      <app-import-entry [entry]="unique"></app-import-entry>
-    </li>
-  </ul>
+<div class="row">
+  <div class="col s12">
+  <div *ngIf="(analyzedResult | async)?.normal.length !== 0">
+    <h5>Unikátní dotazy</h5>
+    <ul>
+      <li *ngFor="let unique of uniqueEntries">
+        <app-import-entry [entry]="unique"></app-import-entry>
+      </li>
+    </ul>
+  </div>
+  <div *ngIf="(analyzedResult | async)?.duplicated.length !== 0">
+    <h5>Duplicitní dotazy</h5>
+    <ul>
+      <li *ngFor="let duplicated of duplicatedEntries">
+        <app-import-entry [entry]="duplicated"></app-import-entry>
+      </li>
+    </ul>
+  </div>
 </div>
-<div *ngIf="(analyzedResult | async)?.duplicated.length !== 0">
-  <h5>Duplicitní dotazy</h5>
-  <ul>
-    <li *ngFor="let duplicated of duplicatedEntries">
-      <app-import-entry [entry]="duplicated"></app-import-entry>
-    </li>
-  </ul>
 </div>
