@@ -1,1 +1,16 @@
-Test
+<div *ngIf="analyzedResult?.normal.length !== 0">
+  <h5>Unikátní dotazy</h5>
+  <ul>
+    <li *ngFor="let unique of analyzedResult?.normal">
+      {{unique._name}}
+    </li>
+  </ul>
+</div>
+<div *ngIf="analyzedResult?.duplicated.length !== 0">
+  <h5>Duplicitní dotazy</h5>
+  <ul>
+    <li *ngFor="let duplicated of analyzedResult?.duplicated">
+      {{duplicated._name}}
+    </li>
+  </ul>
+</div>
