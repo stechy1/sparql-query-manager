@@ -173,13 +173,13 @@ export class QueryService {
   /**
    * Vytvoří nový prázdný dotaz
    */
-  create(query?: Query): Promise<string> {
+  create(query?: Query, local?: boolean): Promise<string> {
     if (query === undefined) {
       query = new Query(QueryService.makeID(), '', '', [], '', {}, '', new Date().getTime(), null, 0);
       return this._queryLocalStorageProvider.insert(query);
     }
 
-    return query.uploaded
+    return local
       ? this._queryLocalStorageProvider.insert(query)
       : this._queryFirebaseProvider.insert(query);
   }
@@ -271,7 +271,7 @@ export class QueryService {
         } else {
           // Můžu pokračovat ve standartním procesu
           // Vrátím naparsované pole dotazů
-          resolve(queryEntries.map(entry => new ImportEntry(entry)));
+          resolve(queryEntries.map(entry => new ImportEntry(entry, ImportStrategy.IMPORT_AS_NEW.value)));
         }
       });
   }

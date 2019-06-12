@@ -95,13 +95,13 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   }
 
   private _handleDownload(query: Query) {
-    this._qservice.create(query).then(() => {
+    this._qservice.create(query, true).then(() => {
       this._toastr.success('Dotaz byl úspěšně stažen.');
     });
   }
 
   private _handleUpload(query: Query) {
-    this._qservice.create(query).then(() => {
+    this._qservice.create(query, false).then(() => {
       this._toastr.success('Dotaz byl úspěšně nahrán.');
     });
   }
