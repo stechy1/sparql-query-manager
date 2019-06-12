@@ -10,6 +10,7 @@ import { QGroupComponent } from './q-group/q-group.component';
 import { SearchComponent } from './search/search.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ImportDialogComponent } from './import-dialog/import-dialog.component';
+import { ImportEntryComponent } from './import-dialog/import-entry/import-entry.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { ImportDialogComponent } from './import-dialog/import-dialog.component';
     QEntryComponent,
     QGroupComponent,
     SearchComponent,
-    ImportDialogComponent
+    ImportDialogComponent,
+    ImportEntryComponent
   ],
   imports: [
     BrowseQueryRoutingModule,
