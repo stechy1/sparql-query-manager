@@ -8,22 +8,26 @@ export class ImportStrategy {
   static readonly OVERRIDE_LOCAL = new ImportStrategy('Přepsat lokální záznam', 'override_local',
     (service: QueryService, entry: QueryStorageEntry) => {
       // Fyzicky odstraní starý dotaz a nahradí ho novým
-      return service.delete(entry._id).then(() => service.create(parseQuery(entry)));
+      return service.delete(entry._id).then(() => service.create(parseQuery(entry), true));
     });
   // Strategie importu dotazu jako nového
   static readonly IMPORT_AS_NEW = new ImportStrategy('Vytvořit nový záznam', 'import_as_new',
     (service: QueryService, entry: QueryStorageEntry) => {
       // Zkusím najít dotaz
       return service.byId(entry._id)
+      // Dotaz existuje
+      .then((query) => {
+        if (query.downloaded) {
+          // Vytvořím ho tedy jako duplikovaný
+          return service.duplicate(parseQuery(entry));
+        } else {
+          throw new Error();
+        }
+      })
       // Pokud neexistuje
       .catch(() => {
         // Vložím ho standartní cestou
-        return service.create(parseQuery(entry));
-      })
-      // Dotaz existuje
-      .then(() => {
-        // Vytvořím ho tedy jako duplikovaný
-        return service.duplicate(parseQuery(entry));
+        return service.create(parseQuery(entry), true);
       });
     });
   // Strategie nevložení dotazu
