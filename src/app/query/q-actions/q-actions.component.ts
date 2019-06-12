@@ -4,6 +4,7 @@ import { EndpointCommunicatorService, ResponceFormat } from '../../endpoint-comm
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { QueryService } from '../query.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-q-actions',
@@ -12,11 +13,12 @@ import { QueryService } from '../query.service';
 })
 export class QActionsComponent implements OnInit {
 
-  @Input() query: Query;
+  @Input() query: Observable<Query>;
   @Output() doQuery = new EventEmitter();
 
   ignoreStatistics: boolean;
 
+  private _query: Query;
   private _responceFormats = Object.keys(ResponceFormat);
 
   constructor(private _endpointCommunicator: EndpointCommunicatorService, private _qservice: QueryService,
@@ -24,6 +26,9 @@ export class QActionsComponent implements OnInit {
 
   ngOnInit() {
     this.ignoreStatistics = false;
+    this.query.subscribe(value => {
+      this._query = value;
+    });
   }
 
   /**
@@ -34,7 +39,7 @@ export class QActionsComponent implements OnInit {
   }
 
   handleDuplicate() {
-    const newID = this._qservice.duplicate(this.query);
+    const newID = this._qservice.duplicate(this._query);
     this._toaster.info('Dotaz byl úspěšně zduplikován');
     this._router.navigate(['browse-query']).then(value => {
       setTimeout(() => {this._router.navigate(['edit-query', newID]); }, 500);
@@ -70,4 +75,6 @@ export class QActionsComponent implements OnInit {
   get responceFormats(): Array<string> {
     return this._responceFormats;
   }
+
+
 }

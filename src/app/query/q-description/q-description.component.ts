@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Query } from '../query';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-q-description',
@@ -8,13 +9,18 @@ import { Query } from '../query';
 })
 export class QDescriptionComponent implements OnInit {
 
+  @Input() query: Observable<Query>;
   @Output() dataChanged = new EventEmitter<Query>();
 
   private _query: Query;
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.query.subscribe(value => {
+      this._query = value;
+    });
+  }
 
   descriptionChanged(value: string) {
     if (this._query.description !== value) {
@@ -23,12 +29,7 @@ export class QDescriptionComponent implements OnInit {
     }
   }
 
-  @Input()
-  set query(value: Query) {
-    this._query = value;
-  }
-
   get description() {
-    return this._query.description;
+    return (this._query) ? this._query.description : '';
   }
 }

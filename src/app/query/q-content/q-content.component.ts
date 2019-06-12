@@ -1,5 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Query } from '../query';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-q-content',
@@ -11,6 +12,7 @@ export class QContentComponent implements OnInit {
   @ViewChild('query_content', { static: true })
   private _textArea: ElementRef;
 
+  @Input() query: Observable<Query>;
   @Output() dataChanged = new EventEmitter<Query>();
   @Output() updateContentOnly = new EventEmitter<string>();
 
@@ -35,6 +37,11 @@ export class QContentComponent implements OnInit {
 
   ngOnInit() {
     this.loading = true;
+    this.query.subscribe(value => {
+      this._query = value;
+      this._content = this._query.content;
+      this._recalculateTextAreaHeight();
+    });
   }
 
   handleUpdateContent() {
@@ -55,13 +62,6 @@ export class QContentComponent implements OnInit {
     this.dataChanged.emit(this._query);
   }
 
-  @Input()
-  set query(value: Query) {
-    this._query = value;
-    this._content = this._query.content;
-    this._recalculateTextAreaHeight();
-  }
-
   get content() {
     return this._content;
   }
@@ -71,6 +71,6 @@ export class QContentComponent implements OnInit {
   }
 
   get contentChanged(): boolean {
-    return this._query.content !== this._content;
+    return (this._query) ? this._query.content !== this._content : false;
   }
 }

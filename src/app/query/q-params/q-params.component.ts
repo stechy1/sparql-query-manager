@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import { SettingsService } from '../../settings/settings.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-q-params',
@@ -8,8 +9,10 @@ import { SettingsService } from '../../settings/settings.service';
 })
 export class QParamsComponent implements OnInit {
 
-  @Input() params = {};
+  @Input() params: Observable<{}>;
   @Input() content = '';
+
+  private _params = {};
 
   constructor(private _settings: SettingsService) {}
 
@@ -28,7 +31,10 @@ export class QParamsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.findVariables(this.content, this.params);
+    this.params.subscribe(value => {
+      this._params = value;
+    });
+    // this.findVariables(this.content, this.params);
   }
 
   findVariables(content: string, params: {}): {} {
@@ -56,17 +62,17 @@ export class QParamsComponent implements OnInit {
         continue;
       }
       const variable = content.substring(prefix, suffix);
-      if (!this.params[variable]) {
-        this.params[variable] = {'defaultValue': '', 'usedValue': ''};
+      if (!this._params[variable]) {
+        this._params[variable] = {'defaultValue': '', 'usedValue': ''};
       } else {
         if (params[variable]) {
-          this.params[variable] = params[variable];
+          this._params[variable] = params[variable];
         }
       }
     }
 
     this.content = content;
-    return this.params;
+    return this._params;
   }
 
   isParameterToRemove(parameter: string): boolean {
@@ -74,24 +80,24 @@ export class QParamsComponent implements OnInit {
   }
 
   handleDefaultValueChange(event: string | number, key: string) {
-    this.params[key]['defaultValue'] = event;
+    this._params[key]['defaultValue'] = event;
   }
 
   handleUsedValueChange(event: string | number, key: string) {
-    this.params[key]['usedValue'] = event;
+    this._params[key]['usedValue'] = event;
   }
 
   get keys(): string[] {
-    return Object.keys(this.params);
+    return Object.keys(this._params);
   }
 
   get variablesWithoutUnused(): {} {
     const result = {};
 
-    for (const param in this.params) {
+    for (const param in this._params) {
       // tslint:disable-next-line:max-line-length
       if (this.content.indexOf(`${this._settings.queryParameterFormat.prefix}${param}${this._settings.queryParameterFormat.suffix}`) !== -1) {
-        result[param] = this.params[param];
+        result[param] = this._params[param];
       }
     }
 

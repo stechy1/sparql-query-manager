@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { QueryResult } from '../query-result/query-result';
 import { SettingsService } from '../settings/settings.service';
 import { QueryService } from '../query/query.service';
+import { Observable, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-edit-query',
@@ -31,7 +32,8 @@ export class EditQueryComponent implements OnInit {
   saveProgress: string;
   queryResult: QueryResult;
 
-  private _params: {};
+  private _querySubject = new Subject<Query>();
+  private _paramsSubject = new Subject<{}>();
 
   constructor(private _qservice: QueryService, private _settings: SettingsService,
               private _navService: NavigationService, private _endpointCommunicator: EndpointCommunicatorService,
@@ -39,21 +41,22 @@ export class EditQueryComponent implements OnInit {
               private _router: Router) { }
 
   private _query: Query;
-
-  get query(): Query {
-    return this._query;
-  }
+  private _params: {};
 
   ngOnInit() {
     const id = this._route.snapshot.paramMap.get('id');
     this._qservice.byId(id)
-    .then(value => this._query = value)
+    .then(value => {
+      this._query = value;
+      this._params = value.params;
+      this._querySubject.next(value);
+      this._paramsSubject.next(this._query.params);
+    })
     .catch(() => {
       this._toaster.error('Nelze editovat přímo záznam z Firebase');
       this._router.navigate(['browse-query']);
     });
     this.saveProgress = 'notSaved';
-    this._params = this._query.params;
     this._navService.setNavbar(null);
     this._navService.setSidebar(null);
   }
@@ -123,5 +126,13 @@ export class EditQueryComponent implements OnInit {
     this._endpointCommunicator.makeRequest(this._query, ignoreStatistics).then(value => {
       this.queryResult = value;
     });
+  }
+
+  get query(): Observable<Query> {
+    return this._querySubject;
+  }
+
+  get params(): Observable<{}> {
+    return this._paramsSubject;
   }
 }

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Query } from '../query';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-q-name',
@@ -8,6 +9,7 @@ import { Query } from '../query';
 })
 export class QNameComponent implements OnInit {
 
+  @Input() query: Observable<Query>;
   @Output() dataChanged = new EventEmitter<Query>();
 
   private _query: Query;
@@ -15,6 +17,9 @@ export class QNameComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    this.query.subscribe(value => {
+      this._query = value;
+    });
   }
 
   nameChanged(value: string) {
@@ -24,12 +29,7 @@ export class QNameComponent implements OnInit {
     }
   }
 
-  @Input()
-  set query(value: Query) {
-    this._query = value;
-  }
-
   get name() {
-    return this._query.name;
+    return (this._query) ? this._query.name : '';
   }
 }
