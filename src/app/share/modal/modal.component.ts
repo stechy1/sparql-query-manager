@@ -68,6 +68,17 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.element = el.nativeElement;
   }
 
+  private _unsubscrie() {
+    if (this._resultSubscription) {
+      this._resultSubscription.unsubscribe();
+      this._resultSubscription = null;
+    }
+    if (this._cancelSubscription) {
+      this._cancelSubscription.unsubscribe();
+      this._cancelSubscription = null;
+    }
+  }
+
   ngOnInit(): void {
     // Ujistím se, že dialog má nastavené ID
     if (!this.id) {
@@ -86,6 +97,7 @@ export class ModalComponent implements OnInit, OnDestroy {
     this._modalService.remove(this.id);
     // Teď ho odeberu z DOMu
     this.element.remove();
+    this._unsubscrie();
   }
 
   /**
@@ -102,6 +114,7 @@ export class ModalComponent implements OnInit, OnDestroy {
    * Otevře dialog s čekáním na výsledek
    */
   openForResult(): Promise<any> {
+    this._unsubscrie();
     return new Promise<any>((resolve, reject) => {
       this.open();
       this._resultSubscription = this.result.subscribe((value) => {
@@ -109,7 +122,6 @@ export class ModalComponent implements OnInit, OnDestroy {
         resolve(value);
       });
       this._cancelSubscription = this.cancel.subscribe(() => {
-        this.close();
         reject();
       });
     });
@@ -121,22 +133,11 @@ export class ModalComponent implements OnInit, OnDestroy {
   close(): void {
     this._isOpen = false;
     document.body.classList.remove('modal-open');
-    if (this._resultSubscription) {
-      this._resultSubscription.unsubscribe();
-      this._resultSubscription = null;
-    }
-    if (this._cancelSubscription) {
-      this._cancelSubscription.unsubscribe();
-      this._cancelSubscription = null;
-    }
-  }
-
-  handleCLoseModal() {
-    this._modalService.close(this.id);
+    this.cancel.emit();
   }
 
   handleCancel() {
-    this.cancel.emit();
+    this.close();
   }
 
   handleConfirm() {

@@ -1,9 +1,9 @@
-<div title="" class="modal-background" [style.display]="_isOpen ? 'block' : 'none'" (click)="handleCLoseModal()"></div>
+<div title="" class="modal-background" [style.display]="_isOpen ? 'block' : 'none'" (click)="handleCancel()"></div>
 <div [@modalAnimation]="isOpen ? 'open' : 'close'" id="modal1" class="modal">
   <div class="modal-content">
     <div class="row">
       <h4 class="modal-title">{{title}}</h4>
-      <span class="right btn btn-tiny blue modal-close" (click)="handleCLoseModal()">X</span>
+      <span class="right btn btn-tiny blue modal-close" (click)="handleCancel()">X</span>
     </div>
     <ng-content></ng-content>
   </div>
