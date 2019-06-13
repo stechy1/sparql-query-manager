@@ -85,3 +85,6 @@
   <app-import-dialog #modalContent [analyzedResult]="analyzedResult"></app-import-dialog>
 </app-modal>
 
+<app-modal id="confirmContainer" title="Potvrďte" (confirm)="handleConfirmDeleteAll()">
+  <app-confirm-dialog confirmText="asdf"></app-confirm-dialog>
+</app-modal>

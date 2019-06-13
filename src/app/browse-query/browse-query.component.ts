@@ -18,7 +18,7 @@ import { Observable, Subject } from 'rxjs';
   templateUrl: './browse-query.component.html',
   styleUrls: ['./browse-query.component.css']
 })
-export class BrowseQueryComponent implements OnInit, AfterViewInit {
+export class BrowseQueryComponent implements OnInit {
 
   // Reference na toolbar container
   @ViewChild('toolbarContainer', { static: true }) toolbar: ElementRef;
@@ -112,10 +112,6 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
     this.showImportDropdown = false;
   }
 
-  ngAfterViewInit(): void {
-    this._modalService.add(this.modalContainer);
-  }
-
   /**
    * Metoda pro vyfiltrování dotazu podle endpointu
    *
@@ -184,11 +180,13 @@ export class BrowseQueryComponent implements OnInit, AfterViewInit {
   }
 
   handleDeleteAll() {
-    if (confirm('Opravdu si přejete smazat celou databázi?')) {
-      this._qservice.clear().then(() => {
-        this._toastr.success('Dotazy byy smazány.');
-      });
-    }
+    this._modalService.open('confirmContainer');
+  }
+
+  handleConfirmDeleteAll() {
+    this._qservice.clear().then(() => {
+      this._toastr.success('Dotazy byly smazány.');
+    });
   }
 
   handleNewQuery() {
