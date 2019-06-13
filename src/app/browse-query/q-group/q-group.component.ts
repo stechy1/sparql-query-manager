@@ -18,6 +18,7 @@ export class QGroupComponent implements OnInit {
   @Input() filterFunction: Function;
   @Output() deleteRequest = new EventEmitter<DeleteHandler>();
   @Output() firebaseRequest = new EventEmitter<FirebaseHandler>();
+  @Output() editRequest = new EventEmitter<string>();
 
   groupInformations = {};
 
@@ -48,5 +49,9 @@ export class QGroupComponent implements OnInit {
 
     this.getQueries(value).forEach(query => query.selected = checked);
     this.groupInformations[value].checked = checked;
+  }
+
+  handleEditRequest($event: string) {
+    this.editRequest.emit($event);
   }
 }

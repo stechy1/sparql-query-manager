@@ -19,6 +19,7 @@ export class QEntryComponent implements OnInit {
 
   @Output() deleteRequest = new EventEmitter<DeleteHandler>();
   @Output() firebaseRequest = new EventEmitter<FirebaseHandler>();
+  @Output() editRequest = new EventEmitter<string>();
 
   constructor() {
   }
@@ -37,6 +38,10 @@ export class QEntryComponent implements OnInit {
 
   handleDownload() {
     this.firebaseRequest.emit({query: this._query, handlerType: FirebaseHandlerType.DOWNLOAD});
+  }
+
+  handleEdit() {
+    this.editRequest.emit(this._query.id);
   }
 
   @Input()

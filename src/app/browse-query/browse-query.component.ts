@@ -208,6 +208,10 @@ export class BrowseQueryComponent implements OnInit {
     }
   }
 
+  handleEdit($event: string) {
+    this._router.navigate(['edit', $event]);
+  }
+
   get endpoints(): string[] {
     return this._qservice.endpoints;
   }

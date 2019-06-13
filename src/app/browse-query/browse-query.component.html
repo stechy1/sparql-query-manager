@@ -15,7 +15,8 @@
             <li *ngFor="let query of queries" class="q-entry-border">
               <app-q-entry [query]="query"
                            (deleteRequest)="handleDeleteRequest($event)"
-                           (firebaseRequest)="handleFirebaseRequest($event)"></app-q-entry>
+                           (firebaseRequest)="handleFirebaseRequest($event)"
+                           (editRequest)="handleEdit($event)"></app-q-entry>
             </li>
           </ul>
         </div>
@@ -24,12 +25,14 @@
                      [filterFunction]="filterByEndpoint"
                      (deleteRequest)="handleDeleteRequest($event)"
                      (firebaseRequest)="handleFirebaseRequest($event)"
+                     (editRequest)="handleEdit($event)"
                      *ngIf="qFilterGroupSortingService.selectedGroup === 'endpoint'"></app-q-group>
         <app-q-group [values]="tags"
                      [queries]="queries"
                      [filterFunction]="filterByTag"
                      (deleteRequest)="handleDeleteRequest($event)"
                      (firebaseRequest)="handleFirebaseRequest($event)"
+                     (editRequest)="handleEdit($event)"
                      *ngIf="qFilterGroupSortingService.selectedGroup === 'tag'"></app-q-group>
 
         Označeno dotazů: {{selectedQueries}}
