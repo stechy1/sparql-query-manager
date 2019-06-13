@@ -20,6 +20,9 @@ import { Observable, Subject } from 'rxjs';
 })
 export class BrowseQueryComponent implements OnInit {
 
+  private static readonly CONFIRM_DELETE_ALL = 'Opravdu si přejete smazat veškeré lokální dotazy?';
+  private static readonly CONFIRM_DELETE = 'Opravdu si přejete smazat vybraný dotaz?';
+
   // Reference na toolbar container
   @ViewChild('toolbarContainer', { static: true }) toolbar: ElementRef;
   // Reference na query container
@@ -31,6 +34,7 @@ export class BrowseQueryComponent implements OnInit {
   private _analyzedResult: Subject<QueryAnalyzeResult> = new Subject<QueryAnalyzeResult>();
   // Pomocný příznak, pomocí kterého zobrazuji dropdown s výběrem typu importu
   showImportDropdown: boolean;
+  confirmText: string;
 
   constructor(private _qservice: QueryService, private _navService: NavigationService,
               private _settings: SettingsService,
@@ -133,10 +137,14 @@ export class BrowseQueryComponent implements OnInit {
   }
 
   handleDeleteRequest(deleteHandler: DeleteHandler) {
-    this._qservice.delete(deleteHandler.query.id, deleteHandler.isRemote)
-    .then(() => {
-      this._toastr.success('Dotaz byl smazán.');
-    });
+    this.confirmText = BrowseQueryComponent.CONFIRM_DELETE;
+    this._modalService.openForResult('confirmContainer').then(() => {
+      this._qservice.delete(deleteHandler.query.id, deleteHandler.isRemote)
+      .then(() => {
+        this._toastr.success('Dotaz byl smazán.');
+      });
+    })
+    .finally(() => {});
   }
 
   async handleExport() {
@@ -180,6 +188,7 @@ export class BrowseQueryComponent implements OnInit {
   }
 
   handleDeleteAll() {
+    this.confirmText = BrowseQueryComponent.CONFIRM_DELETE_ALL;
     this._modalService.open('confirmContainer');
   }
 

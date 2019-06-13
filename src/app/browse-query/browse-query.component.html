@@ -88,6 +88,6 @@
   <app-import-dialog #modalContent [analyzedResult]="analyzedResult"></app-import-dialog>
 </app-modal>
 
-<app-modal id="confirmContainer" title="Potvrďte" (confirm)="handleConfirmDeleteAll()">
-  <app-confirm-dialog confirmText="Opravdu si přejete smazat veškeré lokální dotazy?"></app-confirm-dialog>
+<app-modal id="confirmContainer" title="Potvrďte" confirmText="Potvrzuji" (confirm)="handleConfirmDeleteAll()">
+  <app-confirm-dialog [confirmText]="confirmText"></app-confirm-dialog>
 </app-modal>
