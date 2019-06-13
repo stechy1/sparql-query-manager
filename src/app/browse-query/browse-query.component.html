@@ -1,14 +1,14 @@
 <section>
   <div class="toolbar-container" [style.display]="!queryExists ? 'none' : 'block'" #toolbarContainer>
     <div class="row mobile-search">
-      <div class="col s12 offset-m2 m8">
+      <div class="col s12 offset-m1 m10 offset-l2 l8">
         <app-search></app-search>
       </div>
     </div>
     <app-browse-toolbar class="browse-toolbar"></app-browse-toolbar>
   </div>
   <div class="row" #queryContainer [class.query-container-margin]="queryExists">
-    <div class="col s12 offset-m2 m8">
+    <div class="col s12 offset-m1 m10 offset-l2 l8">
       <div class="collection" *ngIf="queryExists">
         <div class="q-group" *ngIf="qFilterGroupSortingService.selectedGroup === 'none'">
           <ul>
