@@ -11,6 +11,7 @@ import { QueryResult } from '../query-result/query-result';
 import { SettingsService } from '../settings/settings.service';
 import { QueryService } from '../query/query.service';
 import { Observable, Subject } from 'rxjs';
+import { ModalService } from '../share/modal/modal.service';
 
 @Component({
   selector: 'app-edit-query',
@@ -37,6 +38,7 @@ export class EditQueryComponent implements OnInit {
 
   constructor(private _qservice: QueryService, private _settings: SettingsService,
               private _navService: NavigationService, private _endpointCommunicator: EndpointCommunicatorService,
+              private _modalService: ModalService,
               private _toaster: ToastrService, private _route: ActivatedRoute,
               private _router: Router) { }
 
@@ -52,9 +54,14 @@ export class EditQueryComponent implements OnInit {
       this._querySubject.next(value);
       this._paramsSubject.next(this._query.params);
     })
-    .catch(() => {
-      this._toaster.error('Nelze editovat přímo záznam z Firebase');
-      this._router.navigate(['browse-query']);
+    .catch((result) => {
+      if (result === undefined) {
+        this._toaster.error('Dotaz nebyl nalezen!');
+        this._router.navigate(['browse-query']);
+      } else {
+        this._query = result;
+        this._modalService.open('confirmContainer');
+      }
     });
     this.saveProgress = 'notSaved';
     this._navService.setNavbar(null);
@@ -126,6 +133,18 @@ export class EditQueryComponent implements OnInit {
     this._endpointCommunicator.makeRequest(this._query, ignoreStatistics).then(value => {
       this.queryResult = value;
     });
+  }
+
+  handleConfirmDownloadForEdit() {
+    this._qservice.create(this._query, true).then(newID => {
+      this._router.navigate(['browse-query']).then(() => {
+        this._router.navigate(['edit', newID]);
+      });
+    });
+  }
+
+  handleCancelDownloadForEdit() {
+    this._router.navigate(['browse-query']);
   }
 
   get query(): Observable<Query> {

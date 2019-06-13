@@ -15,3 +15,7 @@
 </div>
 
 <a id="save-query" (click)="handleManualQuerySave()" class="btn-floating btn-large waves-effect waves-light red"><i class="material-icons">save</i></a>
+
+<app-modal id="confirmContainer" (confirm)="handleConfirmDownloadForEdit()" (cancel)="handleCancelDownloadForEdit()">
+  <app-confirm-dialog confirmText="Nelze editovat přímo záznam z Firebase! Přejete si dotaz stáhnout?"></app-confirm-dialog>
+</app-modal>

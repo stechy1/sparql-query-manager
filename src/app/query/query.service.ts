@@ -163,7 +163,7 @@ export class QueryService {
     return new Promise<Query>((resolve, reject) => {
       const result = this._queries.find(query => id === query.id);
       if (result === undefined || (result.uploaded && !result.downloaded) || !result.downloaded) {
-        reject();
+        reject(result);
       }
 
       resolve(result);
