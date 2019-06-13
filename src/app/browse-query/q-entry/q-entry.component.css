@@ -13,6 +13,9 @@
 .q-entry-toolbar i {
   cursor: pointer;
 }
+.q-entry-toolbar span {
+  margin-left: 10px;
+}
 
 .q-icon {
   color: #606060;
