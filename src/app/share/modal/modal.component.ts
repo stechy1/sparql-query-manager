@@ -122,8 +122,6 @@ export class ModalComponent implements OnInit, OnDestroy {
     return new Promise<any>((resolve, reject) => {
       this.open();
       this._resultSubscription = this.result.subscribe((value) => {
-        this._isOpen = false;
-        document.body.classList.remove('modal-open');
         resolve(value);
       });
       this._cancelSubscription = this.cancel.subscribe(() => {
@@ -147,6 +145,8 @@ export class ModalComponent implements OnInit, OnDestroy {
 
   handleConfirm() {
     this.confirm.emit();
+    this._isOpen = false;
+    document.body.classList.remove('modal-open');
   }
 
   get isOpen(): boolean {
