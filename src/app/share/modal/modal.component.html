@@ -8,7 +8,7 @@
       <ng-content></ng-content>
     </div>
   <div class="row modal-footer">
-    <span class="btn-flat materialize-red-text" (click)="handleCancel()">Zrušit</span>
-    <span class="btn-flat" (click)="handleConfirm()">Potvrdit</span>
+    <span class="btn-flat materialize-red-text" (click)="handleCancel()" *ngIf="confirmText">{{cancelText}}</span>
+    <span class="btn-flat" (click)="handleConfirm()" *ngIf="confirmText">{{confirmText}}</span>
   </div>
 </div>

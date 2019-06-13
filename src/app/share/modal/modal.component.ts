@@ -48,6 +48,10 @@ export class ModalComponent implements OnInit, OnDestroy {
   @Input() id: string;
   // Titulek dialogu
   @Input() title: string;
+  // Text v potvrzovacím tlačítku
+  @Input() confirmText = 'Použít';
+  // Text v cancel tlačítku
+  @Input() cancelText = 'Zrušit';
   // Pozorovatelný výsledek, který se použije v metodě openForResult
   @Input() result: Observable<any>;
   // Zrušení akce v dialogu
