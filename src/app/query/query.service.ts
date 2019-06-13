@@ -214,10 +214,10 @@ export class QueryService {
     // Potřebuji pouze ID a příznak uploaded, tak využiju funkci map
     const copy = this._queries.map(value => ({'id': value.id, 'uploaded': value.uploaded}));
     return Promise.all(copy.map(value => {
-      return value.uploaded
-        ? remote
+      return remote
+        ? value.uploaded
           ? this._queryFirebaseProvider.delete(value.id)
-          : Promise.resolve()
+          : this._queryLocalStorageProvider.delete(value.id)
         : this._queryLocalStorageProvider.delete(value.id);
     }));
   }
