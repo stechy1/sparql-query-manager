@@ -29,7 +29,7 @@ import { PageNotFoundModule } from './page-not-found/page-not-found.module';
     LocalStorageModule.forRoot(<ILocalStorageServiceConfig>environment.localStorage),
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({closeButton: true}),
     // ------ Application Modules -------
     BrowseQueryModule,
     NavigationModule,
