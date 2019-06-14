@@ -106,6 +106,32 @@
           <app-q-tags [tags]="tags" title="Vyhledávací klíče" (dataChanged)="handleUpdateTags($event)"></app-q-tags>
         </div>
 
+        <!-- Nastavení gest -->
+        <div class="row settings-entry">
+          <p>Nastavení gest</p>
+          <div class="right">
+            <div class="row">
+              <label>
+                <input type="checkbox" [(ngModel)]="settings.useGestures">
+                <span>Povolit gesta</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Vždy zobrazit import dialog -->
+        <div class="row settings-entry">
+          <p>Nastavení importovacího dialogu dotazů</p>
+          <div class="right">
+            <div class="row">
+              <label>
+                <input type="checkbox" [(ngModel)]="settings.alwaysShowImportDialog">
+                <span>Vždy zobrazit importovací dialog dotazů</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
         <!-- Nebezpečná zóna -->
         <div class="row settings-entry">
           <p class="background red">Nebezpečná sekce</p>

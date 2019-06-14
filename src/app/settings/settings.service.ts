@@ -11,6 +11,8 @@ interface Settings {
   queryParameterFormat: QueryParameterFormat;
   defaultExportFileName: string;
   fuseKeys: string[];
+  useGestures: boolean;
+  alwaysShowImportDialog: boolean;
 }
 
 interface QueryParameterFormat {
@@ -45,7 +47,9 @@ export class SettingsService {
         suffix: '$'
       },
       defaultExportFileName: 'queries.json',
-      fuseKeys: ['name', 'tags']
+      fuseKeys: ['name', 'tags'],
+      useGestures: true,
+      alwaysShowImportDialog: false
     };
 
   // Instance nastavení
@@ -156,5 +160,21 @@ export class SettingsService {
 
   set fuseKeys(keys: string[]) {
     this._settings.fuseKeys = keys;
+  }
+
+  get useGestures(): boolean {
+    return this._settings.useGestures;
+  }
+
+  set useGestures(useGestures: boolean) {
+    this._settings.useGestures = useGestures;
+  }
+
+  get alwaysShowImportDialog(): boolean {
+    return this._settings.alwaysShowImportDialog;
+  }
+
+  set alwaysShowImportDialog(alwaysShowImportDialog: boolean) {
+    this._settings.alwaysShowImportDialog = alwaysShowImportDialog;
   }
 }
