@@ -189,12 +189,10 @@ export class BrowseQueryComponent implements OnInit {
 
   handleDeleteAll() {
     this.confirmText = BrowseQueryComponent.CONFIRM_DELETE_ALL;
-    this._modalService.open('confirmContainer');
-  }
-
-  handleConfirmDeleteAll() {
-    this._qservice.clear().then(() => {
-      this._toastr.success('Dotazy byly smazány.');
+    this._modalService.openForResult('confirmContainer').then(() => {
+      this._qservice.clear().then(() => {
+        this._toastr.success('Dotazy byly smazány.');
+      });
     });
   }
 

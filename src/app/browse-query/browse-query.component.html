@@ -89,6 +89,6 @@
   <app-import-dialog #modalContent [analyzedResult]="analyzedResult"></app-import-dialog>
 </app-modal>
 
-<app-modal id="confirmContainer" title="Potvrďte" confirmText="Potvrzuji" (confirm)="handleConfirmDeleteAll()">
+<app-modal #confirmDialog id="confirmContainer" title="Potvrďte" confirmText="Potvrzuji" [result]="confirmDialog.confirm">
   <app-confirm-dialog [confirmText]="confirmText"></app-confirm-dialog>
 </app-modal>
