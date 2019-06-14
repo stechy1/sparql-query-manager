@@ -221,6 +221,19 @@ export class BrowseQueryComponent implements OnInit {
     this._router.navigate(['edit', $event]);
   }
 
+  handleSwipeLeft($event: Query) {
+    const deletePromises = [];
+    if ($event.downloaded) {
+      deletePromises.push(this._qservice.delete($event.id));
+    }
+    if ($event.uploaded) {
+      deletePromises.push(this._qservice.delete($event.id, true));
+    }
+    Promise.all(deletePromises).then(() => {
+      this._toastr.success('Dotaz byl smazán.');
+    });
+  }
+
   get endpoints(): string[] {
     return this._qservice.endpoints;
   }

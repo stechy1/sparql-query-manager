@@ -1,31 +1,43 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { Query } from '../../query/query';
 import { DeleteHandler, FirebaseHandler, FirebaseHandlerType } from '../handlers';
-import { animation } from './q-entry.animation';
+import { animation, swipeLeft } from './q-entry.animation';
 
 @Component({
   selector: 'app-q-entry',
   templateUrl: './q-entry.component.html',
   styleUrls: ['./q-entry.component.css'],
   animations: [
-    animation
+    animation,
+    swipeLeft
   ]
 })
-export class QEntryComponent implements OnInit {
-
-  private _query: Query;
-  private _visible: boolean;
+export class QEntryComponent implements OnInit, AfterViewInit {
 
   @Output() deleteRequest = new EventEmitter<DeleteHandler>();
   @Output() firebaseRequest = new EventEmitter<FirebaseHandler>();
   @Output() editRequest = new EventEmitter<string>();
+  @Output() swipeLeftRequest = new EventEmitter<Query>();
+
+  querySwipe: string;
+
+  private _query: Query;
+  private _visible: boolean;
+  private _enableGestures: boolean;
 
   constructor() {
+    this._enableGestures = false;
   }
 
   ngOnInit() {
     this._visible = false;
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this._enableGestures = true;
+    }, 1000);
   }
 
   handleDelete(isRemote: boolean) {
@@ -42,6 +54,17 @@ export class QEntryComponent implements OnInit {
 
   handleEdit() {
     this.editRequest.emit(this._query.id);
+  }
+
+  handleSwipeLeft() {
+    this.querySwipe = 'slideOutLeft';
+  }
+
+  handleSwipeLeftDone() {
+    if (!this._enableGestures) {
+      return;
+    }
+    this.swipeLeftRequest.emit(this._query);
   }
 
   @Input()

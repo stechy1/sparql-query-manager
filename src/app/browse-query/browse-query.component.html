@@ -16,6 +16,7 @@
               <app-q-entry [query]="query"
                            (deleteRequest)="handleDeleteRequest($event)"
                            (firebaseRequest)="handleFirebaseRequest($event)"
+                           (swipeLeftRequest)="handleSwipeLeft($event)"
                            (editRequest)="handleEdit($event)"></app-q-entry>
             </li>
           </ul>

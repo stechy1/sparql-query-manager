@@ -1,4 +1,4 @@
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import { animate, keyframes, state, style, transition, trigger } from '@angular/animations';
 
 export const animation = trigger('queryAnimation', [
   state('*', style({
@@ -18,4 +18,11 @@ export const animation = trigger('queryAnimation', [
       opacity: 0
     }))
   ])
+]);
+
+export const swipeLeft = trigger('querySwipe', [
+  transition('* => slideOutLeft', animate(1000, keyframes([
+    style({transform: 'translate3d(0, 0, 0)', offset: 0}),
+    style({transform: 'translate3d(-150%, 0, 0)', opacity: 0, offset: 1}),
+  ])))
 ]);
