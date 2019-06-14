@@ -264,7 +264,8 @@ export class QueryService {
         // Analyzuji naparsované dotazy, abych zjistil, zda-li neobsahují nějaké duplikáty
         const analyzeResult = this._analyzeImportedQueries(queryEntries, override);
         // Pokud analýza odhalí nějaké duplikované záznamy
-        if (analyzeResult.needHelp) {
+        // nebo mám nechat zobrazit importovací dialog za každou cenu
+        if (analyzeResult.needHelp || this._settings.alwaysShowImportDialog) {
           // Nemůžu pokračovat ve standartním procesu importu
           // Vrátím výsledek analýzy -> přejdu do větve "catch"
           reject(analyzeResult);
