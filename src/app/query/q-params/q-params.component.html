@@ -9,10 +9,10 @@
     <div class="row" *ngFor="let key of keys">
       <div class="col s4"><span [style.text-decoration]="isParameterToRemove(key) ? 'line-through' : 'inherit'">{{key}}</span></div>
       <div class="col s4">
-        <app-editable-value [value]="params[key]['defaultValue']" (valueChanged)="handleDefaultValueChange($event, key)"></app-editable-value>
+        <app-editable-value [value]="parameters[key]['defaultValue']" (valueChanged)="handleDefaultValueChange($event, key)"></app-editable-value>
       </div>
       <div class="col s4">
-        <app-editable-value [value]="params[key]['usedValue']" (valueChanged)="handleUsedValueChange($event, key)"></app-editable-value>
+        <app-editable-value [value]="parameters[key]['usedValue']" (valueChanged)="handleUsedValueChange($event, key)"></app-editable-value>
       </div>
     </div>
   </div>

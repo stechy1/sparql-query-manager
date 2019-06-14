@@ -103,4 +103,8 @@ export class QParamsComponent implements OnInit {
 
     return result;
   }
+
+  get parameters() {
+    return this._params;
+  }
 }

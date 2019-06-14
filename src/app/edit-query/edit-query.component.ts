@@ -116,6 +116,7 @@ export class EditQueryComponent implements OnInit {
    */
   handleUpdateParams(event: string) {
     this._params = this.paramsComponent.findVariables(event, this._params);
+    this._paramsSubject.next(this._params);
   }
 
   /**
