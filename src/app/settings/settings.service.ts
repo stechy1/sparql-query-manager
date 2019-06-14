@@ -13,6 +13,8 @@ interface Settings {
   fuseKeys: string[];
   useGestures: boolean;
   alwaysShowImportDialog: boolean;
+  corsHack: boolean;
+  corsURL: string;
 }
 
 interface QueryParameterFormat {
@@ -49,7 +51,9 @@ export class SettingsService {
       defaultExportFileName: 'queries.json',
       fuseKeys: ['name', 'tags'],
       useGestures: true,
-      alwaysShowImportDialog: false
+      alwaysShowImportDialog: false,
+      corsHack: true,
+      corsURL: 'https://cors-anywhere.herokuapp.com'
     };
 
   // Instance nastavení
@@ -176,5 +180,21 @@ export class SettingsService {
 
   set alwaysShowImportDialog(alwaysShowImportDialog: boolean) {
     this._settings.alwaysShowImportDialog = alwaysShowImportDialog;
+  }
+
+  get corsHack(): boolean {
+    return this._settings.corsHack;
+  }
+
+  set corsHack(corsHack: boolean) {
+    this._settings.corsHack = corsHack;
+  }
+
+  get corsURL(): string {
+    return this._settings.corsURL;
+  }
+
+  set corsURL(corsURL: string) {
+    this._settings.corsURL = corsURL;
   }
 }

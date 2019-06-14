@@ -132,6 +132,22 @@
           </div>
         </div>
 
+        <!-- Nastavení CORS hacku -->
+        <div class="row settings-entry">
+          <p>Nastavení CORS</p>
+          <div class="right">
+            <div class="row">
+              <label>
+                <input type="checkbox" [(ngModel)]="settings.corsHack">
+                <span>Použít CORS hack</span>
+              </label>
+            </div>
+            <div class="row">
+              <app-editable-value [value]="settings.corsURL" (valueChanged)="settings.corsURL = $event" class="right"></app-editable-value>
+            </div>
+          </div>
+        </div>
+
         <!-- Nebezpečná zóna -->
         <div class="row settings-entry">
           <p class="background red">Nebezpečná sekce</p>
