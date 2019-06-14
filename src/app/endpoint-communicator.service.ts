@@ -24,8 +24,6 @@ export class EndpointCommunicatorService {
   static readonly BODY_FORMAT = 'query=';
   // Regulární výraz pro řetězec: "http://localhost:3030"
   static readonly LOCALHOST_REGEX = new RegExp('(http:\/\/)?localhost(:[0-9]+)?\/');
-  // CORS hack, abych mohl posílat požadavky kdekoliv; pouze na localhost to nebude fungovat
-  static readonly CORS_HACK = 'https://cors-anywhere.herokuapp.com';
 
   // Příznak, zda-li se zpracovává požadavek na server
   private _working: boolean;
@@ -39,15 +37,17 @@ export class EndpointCommunicatorService {
    * V souboru 'proxy.config.json' je pak podle těchto prefixů požadavek přesměrován.
    *
    * @param endpoint Adresa odkazu
+   * @param useCorsHack True, pokud se má použít CORS hack
+   * @param corsURL URL adresa pro CORS hack
    */
-  private static _buildAddress(endpoint: string): string {
+  private static _buildAddress(endpoint: string, useCorsHack: boolean, corsURL: string): string {
     // Zjistím, zda-li se jedná o produkční verzi aplikace
     const isProduction = environment.production;
 
     // Pokud se jedná o produkci, pošlu požadavek přes externí adresu
     // abych obešel CORS problém
     if (isProduction) {
-      return `${this.CORS_HACK}/${endpoint}`;
+      return useCorsHack ? `${corsURL}/${endpoint}` : endpoint;
     }
 
     // Další věci se týkají pouze dev serveru
@@ -114,7 +114,7 @@ export class EndpointCommunicatorService {
     // Uložím si čas spuštění dotazu
     const start = query.lastRun;
     // Sestavení adresy, kam se bude odesílat dotaz
-    const address = EndpointCommunicatorService._buildAddress(query.endpoint);
+    const address = EndpointCommunicatorService._buildAddress(query.endpoint, this._settings.corsHack, this._settings.corsURL);
     // Zaloguji sestavenou adresu
     console.log(address);
     // Připravím si formát těla požadavku, který budu posílat na server
