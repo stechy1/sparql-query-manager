@@ -3,6 +3,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@
 import { Query } from '../../query/query';
 import { DeleteHandler, FirebaseHandler, FirebaseHandlerType } from '../handlers';
 import { animation, swipeLeft } from './q-entry.animation';
+import { SettingsService } from '../../settings/settings.service';
 
 @Component({
   selector: 'app-q-entry',
@@ -26,7 +27,7 @@ export class QEntryComponent implements OnInit, AfterViewInit {
   private _visible: boolean;
   private _enableGestures: boolean;
 
-  constructor() {
+  constructor(private _settings: SettingsService) {
     this._enableGestures = false;
   }
 
@@ -35,9 +36,11 @@ export class QEntryComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
-      this._enableGestures = true;
-    }, 1000);
+    if (this._settings.useGestures) {
+      setTimeout(() => {
+        this._enableGestures = true;
+      }, 1000);
+    }
   }
 
   handleDelete(isRemote: boolean) {
@@ -57,6 +60,9 @@ export class QEntryComponent implements OnInit, AfterViewInit {
   }
 
   handleSwipeLeft() {
+    if (!this._enableGestures) {
+      return;
+    }
     this.querySwipe = 'slideOutLeft';
   }
 
