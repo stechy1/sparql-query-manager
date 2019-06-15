@@ -28,12 +28,17 @@ import { ModalService } from '../share/modal/modal.service';
 })
 export class EditQueryComponent implements OnInit {
 
+  // Reference na komponentu spravující parametry dotazu
   @ViewChild(QParamsComponent, { static: true }) paramsComponent: QParamsComponent;
 
+  // Aktuální stav save progresu
   saveProgress: string;
+  // Reference na výsledek dotazu
   queryResult: QueryResult;
 
+  // Subject, který se aktualizuje, když se načte dotaz
   private _querySubject = new Subject<Query>();
+  // Subjekt, který se aktualizuje, když se získají parametry z dotazu
   private _paramsSubject = new Subject<{}>();
 
   constructor(private _qservice: QueryService, private _settings: SettingsService,
@@ -42,28 +47,45 @@ export class EditQueryComponent implements OnInit {
               private _toaster: ToastrService, private _route: ActivatedRoute,
               private _router: Router) { }
 
+  // Reference na aktuální dotaz
   private _query: Query;
+  // Reference na aktuální parametry
   private _params: {};
 
   ngOnInit() {
+    // Získám ID dotazu, který chci editovat
     const id = this._route.snapshot.paramMap.get('id');
+    // Vyžádám si dotaz ze služby dotazů
     this._qservice.byId(id)
+    // V případě, že dotaz existuje
     .then(value => {
+      // Uložím si jeho záznam
       this._query = value;
+      // Uložím si parametry dotazu
       this._params = value.params;
+      // Aktualizuji subjekt dotazu (tím se aktualizují všechny subcomponenty
       this._querySubject.next(value);
+      // AKtualizuji subjekt parametrů dotazu
       this._paramsSubject.next(this._query.params);
     })
     .catch((result) => {
+      // V případě, že dotaz nebyl nalezen
       if (result === undefined) {
+        // Zobrazím notifikací uživateli
         this._toaster.error('Dotaz nebyl nalezen!');
+        // Přesměruji uživatele zpátky na prohlížeč dotazů
         this._router.navigate(['browse-query']);
       } else {
+        // Dotaz byl sice nalezen, ale je uložen pouze v cloudu
         this._query = result;
+        // Zobrazím potvrzovací dialog s otázkou, zda-li chce uživatel
+        // stáhnout dotaz, aby ho mohl editovat
         this._modalService.open('confirmContainer');
       }
     });
+    // Nastavím ukládací stav na neuloženo
     this.saveProgress = 'notSaved';
+    // V navigační službě vymažu navbar a sidebar
     this._navService.setNavbar(null);
     this._navService.setSidebar(null);
   }
@@ -136,6 +158,9 @@ export class EditQueryComponent implements OnInit {
     });
   }
 
+  /**
+   * Reakce na tlačítko pro potvrzení stažení dotazu z cloudu pro editaci dotazu
+   */
   handleConfirmDownloadForEdit() {
     this._qservice.create(this._query, true).then(newID => {
       this._router.navigate(['browse-query']).then(() => {
@@ -144,6 +169,9 @@ export class EditQueryComponent implements OnInit {
     });
   }
 
+  /**
+   * Reakce na tlačítko pro nepřijmutí stažení dotazu z cloudu
+   */
   handleCancelDownloadForEdit() {
     this._router.navigate(['browse-query']);
   }

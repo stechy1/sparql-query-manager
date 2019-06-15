@@ -16,15 +16,21 @@ import { SettingsService } from '../../settings/settings.service';
 })
 export class QEntryComponent implements OnInit, AfterViewInit {
 
+  // Událost, která se zavolá v případě, že uživatel bude chtít smazat dotaz
   @Output() deleteRequest = new EventEmitter<DeleteHandler>();
+  // Událost, která se zavolá v případě, že uživatel chce komunikovat s firebase
   @Output() firebaseRequest = new EventEmitter<FirebaseHandler>();
+  // Událost, která se zavolá v případě, že uživatel chce editovat dotaz
   @Output() editRequest = new EventEmitter<string>();
+  // Událost, která se zavolá v případě, že uživatel přejel přes položku doleva
   @Output() swipeLeftRequest = new EventEmitter<Query>();
 
+  // Stav pro animaci
   querySwipe: string;
 
+  // Lokální reference na dotaz
   private _query: Query;
-  private _visible: boolean;
+  // True, pokud jsou povolená gesta, jinak false
   private _enableGestures: boolean;
 
   constructor(private _settings: SettingsService) {
@@ -32,33 +38,53 @@ export class QEntryComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this._visible = false;
   }
 
   ngAfterViewInit(): void {
+    // Pokud jsou povolená gesta
     if (this._settings.useGestures) {
+      // Nastavím timeout na jednu vteřinu
       setTimeout(() => {
+        // poté povolám gesta
+        // je to menší hack, abych předešel nechtěnému spuštění
         this._enableGestures = true;
       }, 1000);
     }
   }
 
+  /**
+   * Reakce na tlačítko pro smažání dotazu
+   *
+   * @param isRemote True, pokud chci smazat dotaz z cloudu, jinak se smaže z lokálního úložiště
+   */
   handleDelete(isRemote: boolean) {
     this.deleteRequest.emit({query: this._query, isRemote: isRemote});
   }
 
+  /**
+   * Reakce na tlačítko pro nahrání dotazu do cloudu
+   */
   handleUpload() {
     this.firebaseRequest.emit({query: this._query, handlerType: FirebaseHandlerType.UPLOAD});
   }
 
+  /**
+   * Reakce na tlašítko pro stažení dotazu z cloudu do lokálního úložiště
+   */
   handleDownload() {
     this.firebaseRequest.emit({query: this._query, handlerType: FirebaseHandlerType.DOWNLOAD});
   }
 
+  /**
+   * Reakce na tlačítko pro editaci dotazu
+   */
   handleEdit() {
     this.editRequest.emit(this._query.id);
   }
 
+  /**
+   * Reakce na spuštění gesta
+   */
   handleSwipeLeft() {
     if (!this._enableGestures) {
       return;
@@ -66,6 +92,9 @@ export class QEntryComponent implements OnInit, AfterViewInit {
     this.querySwipe = 'slideOutLeft';
   }
 
+  /**
+   * Reakce na dokončení gesta
+   */
   handleSwipeLeftDone() {
     if (!this._enableGestures) {
       return;
@@ -80,14 +109,6 @@ export class QEntryComponent implements OnInit, AfterViewInit {
 
   get query(): Query {
     return this._query;
-  }
-
-  set visible(value: boolean) {
-    this._visible = value;
-  }
-
-  get visible(): boolean {
-    return this._visible;
   }
 
   get formatedDateOfCreation() {

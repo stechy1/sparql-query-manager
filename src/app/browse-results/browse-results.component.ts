@@ -11,7 +11,6 @@ export class BrowseResultsComponent {
 
   constructor(private _qresultService: QueryResultService) { }
 
-
   get queryResults(): QueryResult[] {
     return this._qresultService.allQueryResults();
   }

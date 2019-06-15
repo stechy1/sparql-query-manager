@@ -72,6 +72,9 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.element = el.nativeElement;
   }
 
+  /**
+   * Odhlásí z odběru subscription result a cancel události
+   */
   private _unsubscrie() {
     if (this._resultSubscription) {
       this._resultSubscription.unsubscribe();
@@ -118,13 +121,20 @@ export class ModalComponent implements OnInit, OnDestroy {
    * Otevře dialog s čekáním na výsledek
    */
   openForResult(): Promise<any> {
+    // Odhlásím z odběru předchozí odběratele
     this._unsubscrie();
+    // Vrátím novou promise
     return new Promise<any>((resolve, reject) => {
+      // Otevřu dialog
       this.open();
+      // Přihlásím se k odběru výsledku
       this._resultSubscription = this.result.subscribe((value) => {
+        // Příjde-li výsledek, považuji to za úspěšné vyřešení dialogu
         resolve(value);
       });
+      // Přihlásím se k odběru zrušení dialogu
       this._cancelSubscription = this.cancel.subscribe(() => {
+        // Příjde-li zrušení, považuji to za zrušení celého dialogu
         reject();
       });
     });
@@ -139,10 +149,16 @@ export class ModalComponent implements OnInit, OnDestroy {
     this.cancel.emit();
   }
 
+  /**
+   * Reakce na tlačítko cancel
+   */
   handleCancel() {
     this.close();
   }
 
+  /**
+   * Reakce na tlačítko pro potvrzení
+   */
   handleConfirm() {
     this.confirm.emit();
     this._isOpen = false;

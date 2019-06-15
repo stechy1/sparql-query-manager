@@ -31,9 +31,11 @@ export class BrowseQueryComponent implements OnInit {
   @ViewChild('modalContainer', {static: true}) modalContainer: ModalComponent;
   // Kolekce všech dotazů
   private _queries: Query[];
-  private _analyzedResult: Subject<QueryAnalyzeResult> = new Subject<QueryAnalyzeResult>();
+  // Subjekt pro analyzovaný výsledek při importu dotazů
+  private _analyzedResult = new Subject<QueryAnalyzeResult>();
   // Pomocný příznak, pomocí kterého zobrazuji dropdown s výběrem typu importu
   showImportDropdown: boolean;
+  // Potvrzovací text, který se zobrazí v dialogu
   confirmText: string;
 
   constructor(private _qservice: QueryService, private _navService: NavigationService,
@@ -98,12 +100,22 @@ export class BrowseQueryComponent implements OnInit {
     reader.readAsText(input.files[0]);
   }
 
+  /**
+   * Obecná metoda pro stažení dotazu
+   *
+   * @param query Dotaz, který se má stáhnout
+   */
   private _handleDownload(query: Query) {
     this._qservice.create(query, true).then(() => {
       this._toastr.success('Dotaz byl úspěšně stažen.');
     });
   }
 
+  /**
+   * Obecná metoda pro nahrání dotazu
+   *
+   * @param query Dotaz, který se má nahrát
+   */
   private _handleUpload(query: Query) {
     this._qservice.create(query, false).then(() => {
       this._toastr.success('Dotaz byl úspěšně nahrán.');
@@ -136,6 +148,11 @@ export class BrowseQueryComponent implements OnInit {
     return query.tags.indexOf(tag) !== -1;
   }
 
+  /**
+   * Reakce na tlačítko pro smazání dotazu
+   *
+   * @param deleteHandler Informace o smazání
+   */
   handleDeleteRequest(deleteHandler: DeleteHandler) {
     this.confirmText = BrowseQueryComponent.CONFIRM_DELETE;
     this._modalService.openForResult('confirmContainer').then(() => {
@@ -147,7 +164,10 @@ export class BrowseQueryComponent implements OnInit {
     .finally(() => {});
   }
 
-  async handleExport() {
+  /**
+   * Reakce na tlačítko pro export vybraných dotazů
+   */
+  handleExport() {
     // Požádám uživatele o název souboru, pod kterým se soubor uloží
     const fileName = prompt('Zadejte název souboru...', this._settings.defaultExportFileName);
     // Pokud uživatel klikne na tlačítko zrušit
@@ -160,48 +180,84 @@ export class BrowseQueryComponent implements OnInit {
     // Nastavím název exportovaného souboru
     a.download = fileName;
     // Počkám si na vyexportování dotazů do řetězce
-    const content = await this._qservice.export(this._qservice.allQueries().filter(value => value.selected));
-    // Vytvořím balík dat (obsah souboru = serializované vybrané dotazy)
-    const file = new Blob([content], {type: 'text/plain'});
-    // Nastavím odkaz na vytvořený balík dat
-    a.href = URL.createObjectURL(file);
-    // Stáhnu soubor
-    a.click();
-    // Nakonec element odstraním z DOMu
-    a.remove();
+    this._qservice.export(this._qservice.allQueries().filter(value => value.selected)).then((content) => {
+        // Vytvořím balík dat (obsah souboru = serializované vybrané dotazy)
+        const file = new Blob([content], {type: 'text/plain'});
+        // Nastavím odkaz na vytvořený balík dat
+        a.href = URL.createObjectURL(file);
+        // Stáhnu soubor
+        a.click();
+        // Nakonec element odstraním z DOMu
+        a.remove();
+      });
   }
 
+  /**
+   * Reakce na tlačítko pro import dotazů
+   * importované dotazy přepíší celou lokální databázi
+   *
+   * @param event Událost vyvolaná tlačítkem
+   */
   handleImportOverride(event: Event) {
     this._import(<HTMLInputElement> event.target, true);
   }
 
+  /**
+   * Reakce na tlačítko pro import dotazů
+   * importované dotazy se připojí k aktuální databázi
+   *
+   * @param event Událost vyvolaná tlačítkem
+   */
   handleImportAppend(event: Event) {
     this._import(<HTMLInputElement> event.target, false);
   }
 
+  /**
+   * Reakce na tlačítko pro označení všech dotazů
+   */
   handleSelectAll() {
     this._queries.forEach(query => query.selected = true);
   }
 
+  /**
+   * Reakce na tlačítko pro odoznačení všech dotazů
+   */
   handleSelectNone() {
     this._queries.forEach(query => query.selected = false);
   }
 
+  /**
+   * Reakce na tlačítko pro smazání všech lokálních dotazů
+   */
   handleDeleteAll() {
+    // Nastavím potvrzovací text
     this.confirmText = BrowseQueryComponent.CONFIRM_DELETE_ALL;
+    // Otevřu modální dialog, kde počkám na potvrzení od uživatele
     this._modalService.openForResult('confirmContainer').then(() => {
+      // Uživatel potvrdil, že opravdu chce smazat všechny dotazy
       this._qservice.clear().then(() => {
+        // Informuji uživatele, že jsem smažal všechny dotazy
         this._toastr.success('Dotazy byly smazány.');
       });
     });
   }
 
+  /**
+   * Reakce na tlačitko pro vytvoření nového dotazu
+   */
   handleNewQuery() {
+    // Nechám sluzbu vytvořit nový prázdný dotaz
     this._qservice.create().then(newId => {
+      // Přesměruji uživatele do editoru tohoto dotazu
       this._router.navigate(['edit', newId]);
     });
   }
 
+  /**
+   * Handler pro práci s firebase
+   *
+   * @param $event Událost obsahující důležité parametry ke zpracování
+   */
   handleFirebaseRequest($event: FirebaseHandler) {
     switch ($event.handlerType) {
       case FirebaseHandlerType.DOWNLOAD:
@@ -215,17 +271,27 @@ export class BrowseQueryComponent implements OnInit {
     }
   }
 
-  handleEdit($event: string) {
-    this._router.navigate(['edit', $event]);
+  /**
+   * Reakce na tlačítko pro editaci dotazu
+   *
+   * @param id ID dotazu, který se má editovat
+   */
+  handleEdit(id: string) {
+    this._router.navigate(['edit', id]);
   }
 
-  handleSwipeLeft($event: Query) {
+  /**
+   * Reakce na tažení prstem doleva
+   *
+   * @param query Dotaz, nad kterým se táhlo prstem doleva
+   */
+  handleSwipeLeft(query: Query) {
     const deletePromises = [];
-    if ($event.downloaded) {
-      deletePromises.push(this._qservice.delete($event.id));
+    if (query.downloaded) {
+      deletePromises.push(this._qservice.delete(query.id));
     }
-    if ($event.uploaded) {
-      deletePromises.push(this._qservice.delete($event.id, true));
+    if (query.uploaded) {
+      deletePromises.push(this._qservice.delete(query.id, true));
     }
     Promise.all(deletePromises).then(() => {
       this._toastr.success('Dotaz byl smazán.');
