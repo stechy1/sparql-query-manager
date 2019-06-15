@@ -41,11 +41,15 @@ export class ResultViewerComponent implements OnInit {
 
   ngOnInit() {
     const resultId = this._route.snapshot.params['id'];
+    if (!this._route.snapshot.queryParams['tab']) {
+      this._router.navigate(['result-viewer', resultId], {queryParams: {tab: 'source'}});
+      return;
+    }
     this._loadQueryResult(resultId);
     this._route.params.subscribe(value => {
       this._loadQueryResult(value['id']);
     });
-    this.showResult = this._route.snapshot.queryParams['tab'] === 'result';
+    this.showResult = this._route.snapshot.queryParams['tab'] !== 'source';
   }
 
   handleCopyResult() {
