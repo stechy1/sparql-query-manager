@@ -1,12 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { LocalStorageService } from 'angular-2-local-storage';
-import { ParameterValue, Query } from './query/query';
-import { QueryResultService } from './query-result/query-result.service';
-import { QueryResult, ResultState } from './query-result/query-result';
-import { parseQueryResult, QueryResultStorageEntry } from './query-result/query-result-storage.entry';
-import { SettingsService } from './settings/settings.service';
-import { environment } from '../environments/environment';
+import { ParameterValue, Query } from '../query/query';
+import { QueryResultService } from '../query-result/query-result.service';
+import { QueryResult, ResultState } from '../query-result/query-result';
+import { parseQueryResult, QueryResultStorageEntry } from '../query-result/query-result-storage.entry';
+import { SettingsService } from '../settings/settings.service';
+import { environment } from '../../environments/environment';
+import { ServerResponceParserFactory } from './server-responce-parsers/server-responce-parser-factory';
+import { ResponceFormat } from './responce.format';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +26,8 @@ export class EndpointCommunicatorService {
   static readonly BODY_FORMAT = 'query=';
   // Regulární výraz pro řetězec: "http://localhost:3030"
   static readonly LOCALHOST_REGEX = new RegExp('(http:\/\/)?localhost(:[0-9]+)?\/');
+  // Sdílená statická továrna pro parsery odpovědi ze serveru
+  static readonly SERVER_RESPONCE_FACTORY = new ServerResponceParserFactory();
 
   // Příznak, zda-li se zpracovává požadavek na server
   private _working: boolean;
@@ -110,7 +114,7 @@ export class EndpointCommunicatorService {
    * @param query Instance třídy {@link Query}, pro kterou se posílá požadavek na server
    * @param ignoreStatistics True, pokud se výsledek dotazu nemá započítávat do statistik, jinak False
    */
-  makeRequest(query: Query, ignoreStatistics: boolean): Promise<any> {
+  makeRequest(query: Query, ignoreStatistics: boolean): Promise<QueryResult> {
     // Nastavím příznak, že komunikuji se serverem
     this._working = true;
     // Uložím si čas spuštění dotazu
@@ -141,8 +145,10 @@ export class EndpointCommunicatorService {
       console.log('Přišla nějaká data.');
       console.log(responce);
       const end = Date.now();
+      const responceParser = EndpointCommunicatorService.SERVER_RESPONCE_FACTORY
+        .getResponceParser(query, responce, ResponceFormat[this.responceFormat]);
       const qresult = new QueryResult(query.id, query.name, query.content, responce, query.usedParams(),
-        ResultState.OK, end, end - start, 0, 0, this.responceFormat);
+        ResultState.OK, end, end - start, responceParser.countOfSelect(), responceParser.countOfConstruct(), this.responceFormat);
       // Pokud se má výsledek započítat do statistik
       if (!ignoreStatistics) {
         // Uložím výsledek
@@ -206,9 +212,3 @@ export class EndpointCommunicatorService {
   }
 }
 
-export enum ResponceFormat {
-  JSON = 'application/sparql-results+json,*/*;q=0.9',
-  XML = 'application/sparql-results+xml',
-  CSV = 'text/csv',
-  TSV = 'text/tab-separated-values'
-}
