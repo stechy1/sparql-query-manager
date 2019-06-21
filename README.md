@@ -57,7 +57,7 @@ Tyto funkce budou možná zahrnuty do projektu, ale nemusí
   - parametry dotazu
 
 ## Technické informace
-Aplikace je psaná v TypeScriptu a využívá framework [Angular 7](https://angular.io/).
+Aplikace je psaná v TypeScriptu a využívá framework [Angular 8](https://angular.io/).
 Pro základní styly je použit responzivní framework [Materialize](https://materializecss.com/)
 Jako persistentní uložiště je použit [HTML5 Web Storage](https://www.w3schools.com/HTML/html5_webstorage.asp)
 
