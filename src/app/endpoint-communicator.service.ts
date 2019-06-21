@@ -44,9 +44,11 @@ export class EndpointCommunicatorService {
     // Zjistím, zda-li se jedná o produkční verzi aplikace
     const isProduction = environment.production;
 
-    // Pokud se jedná o produkci, pošlu požadavek přes externí adresu
-    // abych obešel CORS problém
-    if (isProduction) {
+    // Pokud se jedná o produkci, nebo nechci použít CORS hack,
+    // (ne)upravím výslednou URL adresu
+    if (isProduction || !useCorsHack) {
+      // Pokud chci použít CORS hack, přidám před url adresu prefix,
+      // jinak vrátím původní adresu
       return useCorsHack ? `${corsURL}/${endpoint}` : endpoint;
     }
 
