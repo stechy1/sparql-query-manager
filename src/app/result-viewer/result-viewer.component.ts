@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { EndpointCommunicatorService } from '../endpoint-communicator.service';
+import { EndpointCommunicatorService } from '../share/endpoint-communicator.service';
 import { copyToClipboard } from '../content-to-clipboard';
 import { ActivatedRoute, Router } from '@angular/router';
 import { QueryResultService } from '../query-result/query-result.service';

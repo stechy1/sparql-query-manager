@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import * as beautify from 'js-beautify';
-import { ResponceFormat } from '../endpoint-communicator.service';
+import { ResponceFormat } from '../share/responce.format';
 
 @Pipe({
   name: 'beautify'

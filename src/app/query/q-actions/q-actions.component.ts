@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Query } from '../query';
-import { EndpointCommunicatorService, ResponceFormat } from '../../endpoint-communicator.service';
+import { EndpointCommunicatorService} from '../../share/endpoint-communicator.service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { QueryService } from '../query.service';
 import { Observable } from 'rxjs';
+import { ResponceFormat } from '../../share/responce.format';
 
 @Component({
   selector: 'app-q-actions',

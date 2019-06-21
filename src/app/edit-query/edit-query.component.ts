@@ -5,7 +5,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { Query } from '../query/query';
 import { QParamsComponent } from '../query/q-params/q-params.component';
 import { NavigationService } from '../navigation/navigation.service';
-import { EndpointCommunicatorService} from '../endpoint-communicator.service';
+import { EndpointCommunicatorService} from '../share/endpoint-communicator.service';
 import { ToastrService } from 'ngx-toastr';
 import { QueryResult } from '../query-result/query-result';
 import { SettingsService } from '../settings/settings.service';
@@ -153,9 +153,10 @@ export class EditQueryComponent implements OnInit {
       this._qservice.performSave();
     }
 
-    this._endpointCommunicator.makeRequest(this._query, ignoreStatistics).then(value => {
-      this.queryResult = value;
-    });
+    this._endpointCommunicator.makeRequest(this._query, ignoreStatistics)
+      .then(value => {
+        this.queryResult = value;
+      });
   }
 
   /**
