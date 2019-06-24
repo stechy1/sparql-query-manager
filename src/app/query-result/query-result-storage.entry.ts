@@ -12,8 +12,7 @@ export interface QueryResultStorageEntry {
   _resultState: ResultState;
   _dateOfRun: number;
   _runLength: number;
-  _countOfSelect: number;
-  _countOfConstruct: number;
+  _countOfTriples: number;
   _format: number;
 }
 
@@ -25,5 +24,5 @@ export interface QueryResultStorageEntry {
 export function parseQueryResult(input: QueryResultStorageEntry): QueryResult {
   return new QueryResult(input._id, input._name, input._content, input._result, input._params,
     input._resultState, input._dateOfRun, input._runLength,
-    input._countOfSelect, input._countOfConstruct, input._format);
+    input._countOfTriples, input._format);
 }

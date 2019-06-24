@@ -1,8 +1,9 @@
 import { ServerResponceParser } from '../../server-responce-parser';
 
 import { parse } from 'fast-xml-parser';
+import { TripleType } from '../../triple-type';
 
-interface XMLResult {
+interface XMLSelectResult {
   sparql: {
     head: {
       variable: string[]
@@ -15,53 +16,24 @@ interface XMLResult {
   };
 }
 
-// <?xml version="1.0"?>
-// <sparql xmlns="http://www.w3.org/2005/sparql-results#">
-// <head>
-//   <variable name="class"/>
-// <variable name="label"/>
-// <variable name="description"/>
-// </head>
-// <results>
-// <result>
-//   <binding name="class">
-//   <uri>http://www.europeana.eu/schemas/edm/WebResource</uri>
-// </binding>
-// <binding name="label">
-// <literal>Nettressurs</literal>
-// </binding>
-// </result>
-// <result>
-// <binding name="class">
-//   <uri>http://www.europeana.eu/schemas/edm/WebResource</uri>
-// </binding>
-// <binding name="label">
-//   <literal xml:lang="en">Web Resource</literal>
-// </binding>
-// </result>
-// </results>
-// </sparql>
-
 export class XmlParser implements ServerResponceParser {
 
-  private _constructs = 0;
-  private _selects = 0;
+  private _triples = 0;
 
-  constructor(private readonly _responce: string) {
-    this._parseResponce();
+  constructor(private readonly _responce: string, tripleType: TripleType) {
+    this._parseResponce(tripleType);
   }
 
-  private _parseResponce() {
-    const obj = <XMLResult>parse(this._responce);
-    console.log(obj);
-    this._constructs = obj.sparql.results.result.length;
+  private _parseResponce(tripleType: TripleType) {
+    if (tripleType === TripleType.SELECT) {
+      const obj = <XMLSelectResult>parse(this._responce);
+      this._triples = obj.sparql.results.result.length;
+    } else {
+      console.error('Jiný typ dotazu zatím není podporovaný.');
+    }
   }
 
-  countOfConstruct(): number {
-    return this._constructs;
-  }
-
-  countOfSelect(): number {
-    return this._selects;
+  countOfTriples(): number {
+    return this._triples;
   }
 }

@@ -1,24 +1,24 @@
 import { ServerResponceParser } from '../../server-responce-parser';
+import { TripleType } from '../../triple-type';
 
 export class CsvParser implements ServerResponceParser {
 
-  private _constructs = 0;
-  private _selects = 0;
+  private _triples = 0;
 
-  constructor(private readonly _responce: string, private readonly _separator = ',') {
-    this._parseResponce();
+  constructor(private readonly _responce: string, tripleType: TripleType, private readonly _separator = ',') {
+    this._parseResponce(tripleType);
   }
 
-  private _parseResponce() {
-    const obj = this._responce.split('\n');
-     this._constructs = obj.length - 2;
+  private _parseResponce(tripleType: TripleType) {
+    if (tripleType === TripleType.SELECT) {
+      const obj = this._responce.split('\n');
+      this._triples = obj.length - 2;
+    } else {
+      console.error('Jiný typ dotazu zatím není podporovaný.');
+    }
   }
 
-  countOfConstruct(): number {
-    return this._constructs;
-  }
-
-  countOfSelect(): number {
-    return this._selects;
+  countOfTriples(): number {
+    return this._triples;
   }
 }

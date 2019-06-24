@@ -1,8 +1,14 @@
+import { findTripleType, TripleType } from '../share/server-responce-parsers/triple-type';
+
 export class QueryResult {
+
+  private readonly _tripleType: TripleType;
 
   constructor(private _id, private _name: string, private _content: string, private _result: string, private _params: {},
               private _resultState: ResultState, private _dateOfRun: number, private _runLength: number,
-              private _countOfSelect: number, private _countOfConstruct: number, private _format) {}
+              private _countOfTriples: TripleType = undefined, private _format) {
+    this._tripleType = findTripleType(_content);
+  }
 
   get id() {
     return this._id;
@@ -36,12 +42,12 @@ export class QueryResult {
     return this._runLength;
   }
 
-  get countOfSelect(): number {
-    return this._countOfSelect;
+  get countOfTriples(): number {
+    return this._countOfTriples;
   }
 
-  get countOfConstruct(): number {
-    return this._countOfConstruct;
+  get tripleType(): TripleType {
+    return this._tripleType;
   }
 
   get format(): string {
@@ -56,3 +62,4 @@ export class QueryResult {
 export enum ResultState {
   OK, KO
 }
+

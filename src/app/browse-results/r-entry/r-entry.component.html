@@ -17,12 +17,8 @@
       <span class="qr-entry-value">{{queryResult.runLength | time:timeFormat}}</span>
     </div>
     <div *ngIf="queryResult.isOk">
-      <span class="qr-entry-parameter">Počet řádek: </span>
-      <span class="qr-entry-value">{{queryResult.countOfSelect}}</span>
-    </div>
-    <div *ngIf="queryResult.isOk">
-      <span class="qr-entry-parameter">Počet trojic: </span>
-      <span class="qr-entry-value">{{queryResult.countOfConstruct}}</span>
+      <span class="qr-entry-parameter">{{queryResult.tripleType | RTripleType}}</span>
+      <span class="qr-entry-value">{{queryResult.countOfTriples}}</span>
     </div>
   </div>
   <div class="card-action">

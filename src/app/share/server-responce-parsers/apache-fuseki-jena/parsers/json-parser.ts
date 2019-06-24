@@ -1,6 +1,7 @@
 import { ServerResponceParser } from '../../server-responce-parser';
+import { TripleType } from '../../triple-type';
 
-interface JSONResult {
+interface JSONSelectResult {
   head: {
     vars: string[]
   };
@@ -20,23 +21,22 @@ interface JSONResult {
 
 export class JsonParser implements ServerResponceParser {
 
-  private _constructs = 0;
-  private _selects = 0;
+  private _triples = 0;
 
-  constructor(private readonly _responce: string) {
-    this._parseResponce();
+  constructor(private readonly _responce: string, tripleType: TripleType) {
+    this._parseResponce(tripleType);
   }
 
-  private _parseResponce() {
-    const obj = <JSONResult>JSON.parse(this._responce);
-    this._constructs = obj.results.bindings.length;
+  private _parseResponce(tripleType: TripleType) {
+    if (tripleType === TripleType.SELECT) {
+      const obj = <JSONSelectResult>JSON.parse(this._responce);
+      this._triples = obj.results.bindings.length;
+    } else {
+      console.error('Jiný typ dotazu zatím není podporovaný.');
+    }
   }
 
-  countOfConstruct(): number {
-    return this._constructs;
-  }
-
-  countOfSelect(): number {
-    return this._selects;
+  countOfTriples(): number {
+    return this._triples;
   }
 }
