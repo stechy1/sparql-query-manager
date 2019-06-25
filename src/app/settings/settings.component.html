@@ -164,3 +164,7 @@
     </div>
   </div>
 </div>
+
+<app-modal id="confirmContainer" title="Potvrďte" confirmText="Potvrzuji" [modalType]="modalType" (confirm)="handleConfirmDeleteAll()">
+  <app-confirm-dialog confirmText="Opravdu si přejete vymazat veškerá data?"></app-confirm-dialog>
+</app-modal>

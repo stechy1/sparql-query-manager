@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { SettingsService } from './settings.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { ModalType } from '../share/modal/modal-type';
+import { ModalService } from '../share/modal/modal.service';
 
 @Component({
   selector: 'app-settings',
@@ -13,7 +15,11 @@ export class SettingsComponent implements OnInit {
   testTime: number;
   tags: Array<string>;
 
-  constructor(public settings: SettingsService, private _toastr: ToastrService, private _router: Router) { }
+  readonly modalType = ModalType.WARNING;
+
+  constructor(public settings: SettingsService,
+              private _modalService: ModalService,
+              private _toastr: ToastrService, private _router: Router) { }
 
   ngOnInit() {
     this.testTime = Date.now();
@@ -45,20 +51,22 @@ export class SettingsComponent implements OnInit {
   }
 
   handleDeleteAll() {
-    if (confirm('Opravdu si přejete vymazat veškerá data?')) {
-      this.settings
-        .deleteLocalStorage()
-        .then(_ => {
-          this._toastr.success('Data byla vymazána.');
-          this._router.navigate(['/']);
-        })
-        .catch(reason => {
-          this._toastr.error(reason);
-        });
-    }
+    this._modalService.open('confirmContainer');
   }
 
   handleUpdateTags($event: string[]) {
     this.tags = $event;
+  }
+
+  handleConfirmDeleteAll() {
+    this.settings
+      .deleteLocalStorage()
+      .then(_ => {
+        this._toastr.success('Data byla vymazána.');
+        this._router.navigate(['/']);
+      })
+      .catch(reason => {
+        this._toastr.error(reason);
+      });
   }
 }
