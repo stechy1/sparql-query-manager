@@ -3,6 +3,7 @@ import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output }
 import { ModalService } from './modal.service';
 import { animation } from './modal.animation';
 import { Observable, Subscription } from 'rxjs';
+import { ModalType } from './modal-type';
 
 /**
  * Komponenta reprezentující modální dialog
@@ -52,6 +53,8 @@ export class ModalComponent implements OnInit, OnDestroy {
   @Input() confirmText = 'Použít';
   // Text v cancel tlačítku
   @Input() cancelText = 'Zrušit';
+  // Typ modálního okna
+  @Input() modalType = ModalType.SUCCESS;
   // Pozorovatelný výsledek, který se použije v metodě openForResult
   @Input() result: Observable<any>;
   // Zrušení akce v dialogu

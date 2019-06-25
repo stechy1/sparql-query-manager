@@ -1,7 +1,7 @@
 <div title="" class="modal-background" [style.display]="isOpen ? 'block' : 'none'" (click)="handleCancel()"></div>
 <div [@modalAnimation]="isOpen ? 'open' : 'close'" id="modal1" class="modal">
     <div class="row">
-      <h4 class="modal-title">{{title}}</h4>
+      <h4 class="modal-title"><span><i class="material-icons">{{modalType}}</i></span> {{title}}</h4>
       <span class="right btn btn-tiny blue modal-close" (click)="handleCancel()">X</span>
     </div>
     <div class="row modal-inserted-content">
