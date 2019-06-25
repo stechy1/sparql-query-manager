@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { Injector, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -16,6 +16,7 @@ import { AppComponent } from './app.component';
 
 import { environment } from '../environments/environment';
 import { PageNotFoundModule } from './page-not-found/page-not-found.module';
+// import { createCustomElement } from '@angular/elements';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,17 @@ import { PageNotFoundModule } from './page-not-found/page-not-found.module';
     NavigationModule,
     PageNotFoundModule
   ],
-  bootstrap: [AppComponent]
+  // providers: [AppComponent],
+  bootstrap: [AppComponent],
+  // entryComponents: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+  constructor(private readonly injector: Injector) {}
+
+  // ngDoBootstrap() {
+    // const el = createCustomElement(AppComponent, { injector: this.injector });
+    // customElements.define('app-embeded', el);
+  // }
+
+}
