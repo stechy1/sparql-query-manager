@@ -12,6 +12,7 @@ import { SettingsService } from '../settings/settings.service';
 import { QueryService } from '../query/query.service';
 import { Observable, Subject } from 'rxjs';
 import { ModalService } from '../share/modal/modal.service';
+import { ModalType } from '../share/modal/modal-type';
 
 @Component({
   selector: 'app-edit-query',
@@ -40,6 +41,12 @@ export class EditQueryComponent implements OnInit {
   private _querySubject = new Subject<Query>();
   // Subjekt, který se aktualizuje, když se získají parametry z dotazu
   private _paramsSubject = new Subject<{}>();
+  // Reference na aktuální dotaz
+  private _query: Query;
+  // Reference na aktuální parametry
+  private _params: {};
+
+  readonly modalType = ModalType.WARNING;
 
   constructor(private _qservice: QueryService, private _settings: SettingsService,
               private _navService: NavigationService, private _endpointCommunicator: EndpointCommunicatorService,
@@ -47,10 +54,6 @@ export class EditQueryComponent implements OnInit {
               private _toaster: ToastrService, private _route: ActivatedRoute,
               private _router: Router) { }
 
-  // Reference na aktuální dotaz
-  private _query: Query;
-  // Reference na aktuální parametry
-  private _params: {};
 
   ngOnInit() {
     // Získám ID dotazu, který chci editovat
