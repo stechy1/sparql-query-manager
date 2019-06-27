@@ -249,7 +249,7 @@ export class BrowseQueryComponent implements OnInit {
     // Nechám sluzbu vytvořit nový prázdný dotaz
     this._qservice.create().then(newId => {
       // Přesměruji uživatele do editoru tohoto dotazu
-      this._router.navigate(['edit', newId]);
+      this.handleEdit(newId);
     });
   }
 

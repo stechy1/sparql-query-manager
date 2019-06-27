@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { QueryResultService } from '../query-result/query-result.service';
 import { ToastrService } from 'ngx-toastr';
 import { QueryResult } from '../query-result/query-result';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-result-viewer',
@@ -22,6 +23,7 @@ export class ResultViewerComponent implements OnInit {
 
   constructor(private _endpointCommunicator: EndpointCommunicatorService, private _qrservice: QueryResultService,
               private _route: ActivatedRoute, private _router: Router,
+              private _location: Location,
               private _toaster: ToastrService) { }
 
   /**
@@ -55,7 +57,8 @@ export class ResultViewerComponent implements OnInit {
     // Pokud není v navigaci uložena hodnota 'tab'
     if (!this._route.snapshot.queryParams['tab']) {
       // Přesměruji na stejnou stránku, pouze přidám do parametrů hodnotu pro tab
-      this._router.navigate(['result-viewer', resultId], {queryParams: {tab: 'source'}});
+      // this._router.navigate(['result-viewer', resultId], {queryParams: {tab: 'source'}});
+      this._location.replaceState(`result-viewer/${resultId}`, 'tab=source');
       return;
     }
     // Postarám se o načtení dotazu
