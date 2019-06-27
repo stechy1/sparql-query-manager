@@ -1,11 +1,40 @@
 <section>
   <div class="row" #queryResultContainer>
-    <div class="col s12 offset-m2 m8 cards-container tiny-count1 small-count3 medium-count4" *ngIf="queryResults.length !== 0">
-      <div class="collection">
-        <div *ngFor="let queryResult of queryResults">
-          <app-qr-entry [queryResult]="queryResult"></app-qr-entry>
-        </div>
+
+    <div class="col s12 offset-m2 m8">
+      <!-- Stav dotazu -->
+      <div class="col s1">
+        Stav
       </div>
+
+      <!-- Název dotazu -->
+      <div class="col s4">
+        Název
+      </div>
+
+      <!-- Spuštěno -->
+      <div class="col s3">
+        Spuštěno
+      </div>
+
+      <!-- Doba běhu -->
+      <div class="col s2">
+        Doba běhu
+      </div>
+
+      <!-- Počet trojic -->
+      <div class="col s2">
+        Počet trojic
+      </div>
+    </div>
+    <div class="col s12 offset-m2 m8" *ngIf="queryResults.length !== 0">
+      <ul>
+        <li *ngFor="let queryResult of queryResults">
+          <a [routerLink]="['/result-viewer', queryResult.id]" style="color: #000;">
+          <app-qr-entry [queryResult]="queryResult"></app-qr-entry>
+          </a>
+        </li>
+      </ul>
     </div>
     <div *ngIf="queryResults.length === 0" class="col s12 center-align">
       <h1>Nebyly nalezeny žádné výsledky dotazů.</h1>

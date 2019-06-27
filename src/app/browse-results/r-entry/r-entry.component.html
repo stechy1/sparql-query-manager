@@ -1,27 +1,58 @@
-<div [@resultAnimation] class="card qr-entry">
-  <div class="card-title">{{queryResult.name}}</div>
-  <div class="card-content">
-    <div>
-      <span class="qr-entry-parameter">Stav: </span>
-      <span class="qr-entry-value">
-        {{queryResult.resultState | RState}}
-        <i class="material-icons" style="font-size: 18px">{{queryResult.isOk ? 'check_circle' : 'error'}}</i>
-      </span>
-    </div>
-    <div>
-      <span class="qr-entry-parameter">Spuštěno: </span>
-      <span class="qr-entry-value">{{queryResult.dateOfRun | date}}</span>
-    </div>
-    <div>
-      <span class="qr-entry-parameter">Doba běhu: </span>
-      <span class="qr-entry-value">{{queryResult.runLength | time:timeFormat}}</span>
-    </div>
-    <div *ngIf="queryResult.isOk">
-      <span class="qr-entry-parameter">{{queryResult.tripleType | RTripleType}}</span>
-      <span class="qr-entry-value">{{queryResult.countOfTriples}}</span>
+<div class="row r-entry">
+
+  <!-- Stav dotazu -->
+  <div class="col s1">
+  <div class="valign-wrapper">
+    <i class="material-icons" style="font-size: 18px">{{queryResult.isOk ? 'check_circle' : 'error'}}</i>
     </div>
   </div>
-  <div class="card-action">
-    <a [routerLink]="['/result-viewer', queryResult.id]" class="btn btn-tiny default-primary-color">Zobrazit</a>
+
+  <!-- Název dotazu -->
+  <div class="col s4">
+    {{queryResult.name}}
+  </div>
+
+  <!-- Spuštěno -->
+  <div class="col s3">
+    {{queryResult.dateOfRun | date}}
+  </div>
+
+  <!-- Doba běhu -->
+  <div class="col s2">
+    {{queryResult.runLength | time:timeFormat}}
+  </div>
+
+  <!-- Počet trojic -->
+  <div class="col s2">
+    {{queryResult.countOfTriples}}
   </div>
 </div>
+
+
+<!--<div [@resultAnimation] class="card qr-entry">-->
+<!--  <div class="card-title">{{queryResult.name}}</div>-->
+<!--  <div class="card-content">-->
+<!--    <div>-->
+<!--      <span class="qr-entry-parameter">Stav: </span>-->
+<!--      <span class="qr-entry-value">-->
+<!--        {{queryResult.resultState | RState}}-->
+<!--        <i class="material-icons" style="font-size: 18px">{{queryResult.isOk ? 'check_circle' : 'error'}}</i>-->
+<!--      </span>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--      <span class="qr-entry-parameter">Spuštěno: </span>-->
+<!--      <span class="qr-entry-value">{{queryResult.dateOfRun | date}}</span>-->
+<!--    </div>-->
+<!--    <div>-->
+<!--      <span class="qr-entry-parameter">Doba běhu: </span>-->
+<!--      <span class="qr-entry-value">{{queryResult.runLength | time:timeFormat}}</span>-->
+<!--    </div>-->
+<!--    <div *ngIf="queryResult.isOk">-->
+<!--      <span class="qr-entry-parameter">{{queryResult.tripleType | RTripleType}}</span>-->
+<!--      <span class="qr-entry-value">{{queryResult.countOfTriples}}</span>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--  <div class="card-action">-->
+<!--    <a [routerLink]="['/result-viewer', queryResult.id]" class="btn btn-tiny default-primary-color">Zobrazit</a>-->
+<!--  </div>-->
+<!--</div>-->
