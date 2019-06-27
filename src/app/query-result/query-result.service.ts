@@ -48,7 +48,7 @@ export class QueryResultService {
    * Vrátí všechny výsledky dotazů
    */
   allQueryResults(): QueryResult[] {
-    return this._results;
+    return this._results.reverse();
   }
 
   /**
