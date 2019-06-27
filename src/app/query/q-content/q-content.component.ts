@@ -29,7 +29,7 @@ export class QContentComponent implements OnInit {
       const natElement = <HTMLTextAreaElement> this._textArea.nativeElement;
       natElement.style.height = '1px';
       const scrollHeight = natElement.scrollHeight;
-      natElement.style.height = ((25 + scrollHeight) + 'px');
+      natElement.style.height = (((this._content ? 25 : 150) + scrollHeight) + 'px');
       natElement.disabled = false;
       this.loading = false;
     }, 500);
