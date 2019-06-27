@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SettingsService } from '../../settings/settings.service';
 import { Observable } from 'rxjs';
 
@@ -11,6 +11,7 @@ export class QParamsComponent implements OnInit {
 
   @Input() params: Observable<{}>;
   @Input() content = '';
+  @Output() dataChanged = new EventEmitter<void>();
 
   private _params = {};
 
@@ -81,10 +82,12 @@ export class QParamsComponent implements OnInit {
 
   handleDefaultValueChange(event: string | number, key: string) {
     this._params[key]['defaultValue'] = event;
+    this.dataChanged.emit();
   }
 
   handleUsedValueChange(event: string | number, key: string) {
     this._params[key]['usedValue'] = event;
+    this.dataChanged.emit();
   }
 
   get keys(): string[] {

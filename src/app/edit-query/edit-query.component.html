@@ -7,7 +7,7 @@
     <app-q-result [result]="queryResult"></app-q-result>
   </div>
   <div class="col s12 m5 l3">
-    <app-q-params [content]="(query | async)?.content" [params]="params"></app-q-params>
+    <app-q-params [content]="(query | async)?.content" [params]="params" (dataChanged)="handleQueryChange()"></app-q-params>
     <app-q-endpoint [query]="query" (dataChanged)="handleQueryChange()"></app-q-endpoint>
     <app-q-description [query]="query" (dataChanged)="handleQueryChange()"></app-q-description>
     <app-q-tags [tags]="(query | async)?.tags" (dataChanged)="handleQueryChange()"></app-q-tags>

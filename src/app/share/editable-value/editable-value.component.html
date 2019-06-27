@@ -1,16 +1,17 @@
-  <a (dblclick)="isEditing = !isEditing" *ngIf="!isEditing" (mouseenter)="hover=true" (mouseleave)="handleMouseLeave()">
-    {{value}}
-    <i class="material-icons tiny" *ngIf="hover">create</i>
-  </a>
-  <div class="row" *ngIf="isEditing">
-    <div class="col m7">
+  <div class="row">
+    <div class="col m12">
       <div *ngIf="!useTextarea">
-        <input type="text" class="tiny-input validate" [formControl]="inputElement" [ngClass]="(inputElement.valid)?'valid':'invalid'" required [(ngModel)]="value" (keydown)="onKeyDown($event)">
-        <span class="helper-text" data-error="vyplňte" data-success="">Helper text</span>
+        <input type="text" class="tiny-input validate"
+               required
+               [formControl]="inputElement"
+               [ngClass]="(inputElement.valid)?'valid':'invalid'"
+               [(ngModel)]="value"
+               (keydown)="onKeyDown($event)">
+        <span class="helper-text" data-error="vyplňte" data-success=""></span>
       </div>
       <textarea *ngIf="useTextarea" [(ngModel)]="value"></textarea>
     </div>
-    <div class="col m2">
-      <button class="btn btn-tiny green" [disabled]="!inputElement.valid" (click)="handleClick()">Potvrdit</button>
+    <div class="col m12" *ngIf="useTextarea">
+      <button class="btn btn-tiny green" [disabled]="!inputElement.valid" (click)="save()">OK</button>
     </div>
   </div>
