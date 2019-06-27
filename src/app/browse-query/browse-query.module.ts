@@ -26,7 +26,8 @@ import { ImportEntryComponent } from './import-dialog/import-entry/import-entry.
     ShareModule
   ],
   entryComponents: [
-    BrowseToolbarComponent
+    BrowseToolbarComponent,
+    SearchComponent
   ]
 })
 export class BrowseQueryModule {
