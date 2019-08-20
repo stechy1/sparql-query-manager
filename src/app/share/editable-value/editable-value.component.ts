@@ -10,6 +10,8 @@ export class EditableValueComponent implements OnInit {
 
   // Vstupní parametr, pomocí kterého určím, zda-li mám zobrazit text area, nebo standartní input
   @Input() useTextarea: boolean;
+  // Parametr určující, zda-li je editovaná hodnota povinná, či nikoliv
+  @Input() required = true;
   // Událost, která se zavolá vždy, když se změní hodnota
   @Output() valueChanged = new EventEmitter<string|number>();
 
