@@ -57,9 +57,7 @@ export class ResultViewerComponent implements OnInit {
     // Pokud není v navigaci uložena hodnota 'tab'
     if (!this._route.snapshot.queryParams['tab']) {
       // Přesměruji na stejnou stránku, pouze přidám do parametrů hodnotu pro tab
-      // this._router.navigate(['result-viewer', resultId], {queryParams: {tab: 'source'}});
       this._location.replaceState(`result-viewer/${resultId}`, 'tab=source');
-      return;
     }
     // Postarám se o načtení dotazu
     this._loadQueryResult(resultId);
