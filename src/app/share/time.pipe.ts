@@ -13,20 +13,23 @@ export interface TimeFormat {
 export class TimePipe implements PipeTransform {
 
   transform(value: number, format: TimeFormat): any {
-    const date = new Date(value);
+    const milliseconds = Math.floor((value % 1000) / 100);
+    const seconds = Math.floor((value / 1000) % 60);
+    const minutes = Math.floor((value / (1000 * 60)) % 60);
+    const hours = Math.floor(((value / (1000 * 60 * 60)) % 24));
     let result = '';
 
     if (format.showHours) {
-      result += `${date.getHours()}h `;
+      result += `${hours}h `;
     }
     if (format.showMinutes) {
-      result += `${date.getMinutes()}m `;
+      result += `${minutes}m `;
     }
     if (format.showSeconds) {
-      result += `${date.getSeconds()}s `;
+      result += `${seconds}s `;
     }
     if (format.showMiliseconds) {
-      result += `${date.getMilliseconds()}ms`;
+      result += `${milliseconds}ms`;
     }
 
     if (!result || result === '' || result.length === 0) {
