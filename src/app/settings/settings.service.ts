@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { LocalStorageService } from 'angular-2-local-storage';
-import { TimeFormat } from '../share/time.pipe';
+import { DateTimeFormat } from '../share/date-time-format';
 
 interface Settings {
   suffix: string;
   serverTimeout: number;
   useSaveDelay: boolean;
   saveDelay: number;
-  queryResultTimeFormat: TimeFormat;
+  queryResultTimeFormat: DateTimeFormat;
   queryParameterFormat: QueryParameterFormat;
   defaultExportFileName: string;
   fuseKeys: string[];
@@ -134,11 +134,11 @@ export class SettingsService {
     this._settings.saveDelay = delay;
   }
 
-  get queryResultTimeFormat(): TimeFormat {
+  get queryResultTimeFormat(): DateTimeFormat {
     return this._settings.queryResultTimeFormat;
   }
 
-  set queryResultTimeFormat(format: TimeFormat) {
+  set queryResultTimeFormat(format: DateTimeFormat) {
     this._settings.queryResultTimeFormat = format;
   }
 

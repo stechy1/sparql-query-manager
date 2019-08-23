@@ -107,6 +107,34 @@ export class EndpointCommunicatorService {
   }
 
   /**
+   * Otestuje adresu endpointu v dotazu
+   *
+   * @param endpoint Adresa endpointu, která se má otestovat
+   */
+  ping(endpoint: string): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const lastSlash = endpoint.lastIndexOf('/');
+      endpoint = endpoint.substring(0, lastSlash + 1);
+      endpoint = endpoint + 'get';
+      // Sestavení adresy, kam se bude odesílat dotaz
+      const address = EndpointCommunicatorService._buildAddress(endpoint, this._settings.corsHack, this._settings.corsURL);
+
+      // Vytvořím kopii objektu s hlavičkami
+      const headers = JSON.parse(JSON.stringify(EndpointCommunicatorService.HEADERS));
+      // Připojím hlavičku s definicí formátu odpovědi
+      headers['Accept'] = ResponceFormat[this.responceFormat];
+      headers['Timeout'] = this._settings.serverTimeout;
+      headers['X-Requested-With'] = 'XMLHttpRequest';
+
+      this._http
+        .get(address, {headers: new HttpHeaders(headers), responseType: 'text'})
+        .toPromise()
+        .catch(reason => reject())
+        .then(value => resolve());
+    });
+  }
+
+  /**
    * Vytvoří dotaz na server
    *
    * @param query Instance třídy {@link Query}, pro kterou se posílá požadavek na server

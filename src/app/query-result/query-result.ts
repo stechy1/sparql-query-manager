@@ -6,7 +6,7 @@ export class QueryResult {
 
   constructor(private _id, private _name: string, private _content: string, private _result: string, private _params: {},
               private _resultState: ResultState, private _dateOfRun: number, private _runLength: number,
-              private _countOfTriples: TripleType = undefined, private _format) {
+              private _countOfTriples: TripleType, private _format) {
     this._tripleType = findTripleType(_content);
   }
 
@@ -56,6 +56,10 @@ export class QueryResult {
 
   get isOk(): boolean {
     return this._resultState === ResultState.OK;
+  }
+
+  get dateOfRunAsDate(): Date {
+    return new Date(this.dateOfRun);
   }
 }
 

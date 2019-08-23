@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Query } from '../query/query';
 import * as Fuse from 'fuse.js';
 import { FuseOptions } from 'fuse.js';
 import { QueryService } from '../query/query.service';
 import { TypeOfQueryChange } from '../query/query-storage-provider';
 import { SettingsService } from '../settings/settings.service';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class QueryFilterGroupSortService {
   private readonly _fuseQueries: Query[];
   // Způsob seskupování
   private _selectedGroup: string;
+  private _orderBy$: EventEmitter<string> = new EventEmitter<string>();
 
   constructor(private _qservice: QueryService, private _settings: SettingsService) {
     this._selectedGroup = 'none';
@@ -65,6 +67,7 @@ export class QueryFilterGroupSortService {
     if (orderType === 'descending') {
       this._fuseQueries.reverse();
     }
+    this._orderBy$.next(orderBy);
   }
 
   /**
@@ -107,6 +110,10 @@ export class QueryFilterGroupSortService {
 
   get fuseQueries(): Query[] {
     return this._fuseQueries;
+  }
+
+  get sortedBy(): Observable<string> {
+    return this._orderBy$;
   }
 }
 

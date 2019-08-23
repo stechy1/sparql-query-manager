@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Query } from '../query';
 import { Observable } from 'rxjs';
+import { EndpointCommunicatorService } from '../../share/endpoint-communicator.service';
 
 @Component({
   selector: 'app-q-endpoint',
@@ -13,8 +14,9 @@ export class QEndpointComponent implements OnInit {
   @Output() dataChanged = new EventEmitter<Query>();
 
   private _query: Query;
+  remaining: number;
 
-  constructor() { }
+  constructor(private _communicator: EndpointCommunicatorService) { }
 
   ngOnInit() {
     this.query.subscribe(value => {

@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 
 import { Query } from '../../query/query';
 import { DeleteHandler, FirebaseHandler, FirebaseHandlerType } from '../handlers';
 import { animation, swipeLeft } from './q-entry.animation';
 import { SettingsService } from '../../settings/settings.service';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-q-entry',
@@ -14,8 +15,10 @@ import { SettingsService } from '../../settings/settings.service';
     swipeLeft
   ]
 })
-export class QEntryComponent implements OnInit, AfterViewInit {
+export class QEntryComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  // Podle čeho je dotaz seřazen
+  @Input() sortedBy: Observable<string>;
   // Událost, která se zavolá v případě, že uživatel bude chtít smazat dotaz
   @Output() deleteRequest = new EventEmitter<DeleteHandler>();
   // Událost, která se zavolá v případě, že uživatel chce komunikovat s firebase
@@ -27,17 +30,39 @@ export class QEntryComponent implements OnInit, AfterViewInit {
 
   // Stav pro animaci
   querySwipe: string;
+  orderedByValue: Date|number;
+  showOrderedBy = false;
 
   // Lokální reference na dotaz
   private _query: Query;
   // True, pokud jsou povolená gesta, jinak false
   private _enableGestures: boolean;
+  private _orderedBySubscription: Subscription;
 
   constructor(private _settings: SettingsService) {
     this._enableGestures = false;
   }
 
   ngOnInit() {
+    this._orderedBySubscription = this.sortedBy.subscribe(sortedBy => {
+      switch (sortedBy) {
+        case 'last_run':
+          this.orderedByValue = new Date(this._query.lastRun);
+          break;
+        case 'date_of_creation':
+          this.orderedByValue = new Date(this._query.created);
+          break;
+        case 'count_of_run':
+          this.orderedByValue = this._query.runCount;
+          break;
+        default:
+          this.orderedByValue = 0;
+          break;
+      }
+      this.showOrderedBy = sortedBy === 'last_run'
+        || sortedBy === 'date_of_creation'
+        || sortedBy === 'count_of_run';
+    });
   }
 
   ngAfterViewInit(): void {
@@ -50,6 +75,10 @@ export class QEntryComponent implements OnInit, AfterViewInit {
         this._enableGestures = true;
       }, 1000);
     }
+  }
+
+  ngOnDestroy(): void {
+    this._orderedBySubscription.unsubscribe();
   }
 
   /**

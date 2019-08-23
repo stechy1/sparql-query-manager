@@ -3,16 +3,22 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { EditableValueComponent } from './editable-value/editable-value.component';
-import { TimePipe } from './time.pipe';
+import { DurationPipe } from './duration.pipe';
 import { ModalComponent } from './modal/modal.component';
 import { ConfirmDialogComponent } from './modal/confirm-dialog/confirm-dialog.component';
+import { TimePipe } from './time.pipe';
+import { DatePipe } from './date.pipe';
+import { DateTimePipe } from './date-time.pipe';
 
 @NgModule({
   declarations: [
     EditableValueComponent,
     ModalComponent,
+    DurationPipe,
+    ConfirmDialogComponent,
     TimePipe,
-    ConfirmDialogComponent
+    DatePipe,
+    DateTimePipe
   ],
   imports: [
     CommonModule,
@@ -25,8 +31,9 @@ import { ConfirmDialogComponent } from './modal/confirm-dialog/confirm-dialog.co
     ReactiveFormsModule,
     EditableValueComponent,
     ModalComponent,
-    TimePipe,
-    ConfirmDialogComponent
+    DurationPipe,
+    ConfirmDialogComponent,
+    DateTimePipe
   ]
 })
 export class ShareModule {

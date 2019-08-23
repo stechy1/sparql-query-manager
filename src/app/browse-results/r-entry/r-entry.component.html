@@ -14,12 +14,12 @@
 
   <!-- Spuštěno -->
   <div class="col s3">
-    {{queryResult.dateOfRun | date}}
+    {{queryResult.dateOfRunAsDate | dateTime:dateOfRunFormat}}
   </div>
 
   <!-- Doba běhu -->
   <div class="col s2">
-    {{queryResult.runLength | time:timeFormat}}
+    {{queryResult.runLength | duration:timeFormat}}
   </div>
 
   <!-- Počet trojic -->

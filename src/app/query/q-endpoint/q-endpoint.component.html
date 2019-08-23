@@ -3,4 +3,11 @@
     <span class="card-title">URL Endpoint</span>
     <app-editable-value [value]="endpoint" (valueChanged)="endpointChanged($event)"></app-editable-value>
   </div>
+  <div class="card-action">
+    <div>
+      <i class="material-icons right rotating" [style.display]="remaining > 0 ? 'block' : 'none'">autorenew</i>
+      <span class="btn btn-tiny text-primary">Otestovat</span>
+      <span *ngIf="remaining > 0"> - {{remaining | duration:{showHours: false, showMinutes: true, showSeconds: true, showMiliseconds: false} }}</span>
+    </div>
+  </div>
 </div>

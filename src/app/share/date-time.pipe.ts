@@ -2,15 +2,33 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { DateTimeFormat } from './date-time-format';
 
 @Pipe({
-  name: 'time'
+  name: 'dateTime'
 })
-export class TimePipe implements PipeTransform {
+export class DateTimePipe implements PipeTransform {
 
   transform(value: Date|any, format: DateTimeFormat): string {
     if (!(value instanceof Date)) {
       return value;
     }
     let result = '';
+
+    if (format.showDays) {
+      result += `${value.getDate()}.`;
+    }
+    if (format.showMonths) {
+      if (format.showDays) {
+        result += ' ';
+      }
+      result += `${value.getMonth()}.`;
+    }
+    if (format.showYears) {
+      if (format.showDays || format.showMonths) {
+        result += ' ';
+      }
+      result += value.getFullYear();
+    }
+
+    result += ' ';
 
     if (format.showHours) {
       result += value.getHours();

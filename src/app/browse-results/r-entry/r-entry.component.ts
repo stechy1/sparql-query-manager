@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { QueryResult } from '../../query-result/query-result';
 import { SettingsService } from '../../settings/settings.service';
-import { TimeFormat } from '../../share/time.pipe';
+import { DateTimeFormat } from '../../share/date-time-format';
 import { animation } from './r-entry.animation';
 
 @Component({
@@ -21,8 +21,19 @@ export class REntryComponent implements OnInit {
   ngOnInit() {
   }
 
-  get timeFormat(): TimeFormat {
+  get timeFormat(): DateTimeFormat {
     return this._settings.queryResultTimeFormat;
+  }
+
+  get dateOfRunFormat(): DateTimeFormat {
+    return {
+      showYears: true,
+      showMonths: true,
+      showDays: true,
+      showHours: true,
+      showMinutes: true,
+      showSeconds: true
+    } as DateTimeFormat;
   }
 
 }
