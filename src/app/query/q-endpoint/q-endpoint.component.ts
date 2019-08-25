@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Query } from '../query';
 import { Observable } from 'rxjs';
 import { EndpointCommunicatorService } from '../../share/endpoint-communicator.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-q-endpoint',
@@ -14,9 +15,10 @@ export class QEndpointComponent implements OnInit {
   @Output() dataChanged = new EventEmitter<Query>();
 
   private _query: Query;
-  remaining: number;
+  private _testEndpoint: boolean;
 
-  constructor(private _communicator: EndpointCommunicatorService) { }
+  constructor(private _communicator: EndpointCommunicatorService, private _toaster: ToastrService) {
+  }
 
   ngOnInit() {
     this.query.subscribe(value => {
@@ -33,5 +35,23 @@ export class QEndpointComponent implements OnInit {
 
   get endpoint() {
     return (this._query) ? this._query.endpoint : '';
+  }
+
+  get working() {
+    return this._testEndpoint && this._communicator.working;
+  }
+
+  handlePing() {
+    this._testEndpoint = true;
+    this._communicator.ping(this._query.endpoint)
+        .then(() => {
+          this._toaster.success('Endpoint je aktivní');
+        })
+        .catch(() => {
+          this._toaster.error('Endpoint neodpovídá!');
+        })
+        .finally(() => {
+          this._testEndpoint = false;
+        });
   }
 }

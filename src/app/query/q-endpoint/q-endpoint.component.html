@@ -5,9 +5,10 @@
   </div>
   <div class="card-action">
     <div>
-      <i class="material-icons right rotating" [style.display]="remaining > 0 ? 'block' : 'none'">autorenew</i>
-      <span class="btn btn-tiny text-primary">Otestovat</span>
-      <span *ngIf="remaining > 0"> - {{remaining | duration:{showHours: false, showMinutes: true, showSeconds: true, showMiliseconds: false} }}</span>
+      <button class="btn btn-tiny green" (click)="handlePing()" [disabled]="working || (query | async)?.content.length === 0">
+        Vykonat
+        <i class="material-icons right rotating" [style.display]="working ? 'block' : 'none'">autorenew</i>
+      </button>
     </div>
   </div>
 </div>

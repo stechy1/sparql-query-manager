@@ -26,6 +26,14 @@ export class EndpointCommunicatorService {
   static readonly BODY_FORMAT = 'query=';
   // Regulární výraz pro řetězec: "http://localhost:3030"
   static readonly LOCALHOST_REGEX = new RegExp('(http:\/\/)?localhost(:[0-9]+)?\/');
+  static readonly PING_BODY_SPARQL_QUERY = 'query=prefix owl: <http://www.w3.org/2002/07/owl#>\n' +
+    'prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n' +
+    '\n' +
+    'SELECT *\n' +
+    'WHERE {\n' +
+    ' ?s  ?p ?o.\n' +
+    '}\n' +
+    'LIMIT 25';
 
   // Příznak, zda-li se zpracovává požadavek na server
   private _working: boolean;
@@ -113,24 +121,25 @@ export class EndpointCommunicatorService {
    */
   ping(endpoint: string): Promise<void> {
     return new Promise<void>((resolve, reject) => {
-      const lastSlash = endpoint.lastIndexOf('/');
-      endpoint = endpoint.substring(0, lastSlash + 1);
-      endpoint = endpoint + 'get';
+      this._working = true;
       // Sestavení adresy, kam se bude odesílat dotaz
       const address = EndpointCommunicatorService._buildAddress(endpoint, this._settings.corsHack, this._settings.corsURL);
-
+      console.log(address);
       // Vytvořím kopii objektu s hlavičkami
       const headers = JSON.parse(JSON.stringify(EndpointCommunicatorService.HEADERS));
       // Připojím hlavičku s definicí formátu odpovědi
-      headers['Accept'] = ResponceFormat[this.responceFormat];
+      headers['Accept'] = 'text/csv';
       headers['Timeout'] = this._settings.serverTimeout;
-      headers['X-Requested-With'] = 'XMLHttpRequest';
+      console.log(EndpointCommunicatorService.PING_BODY_SPARQL_QUERY);
 
       this._http
-        .get(address, {headers: new HttpHeaders(headers), responseType: 'text'})
-        .toPromise()
-        .catch(reason => reject())
-        .then(value => resolve());
+          .post(address, EndpointCommunicatorService.PING_BODY_SPARQL_QUERY, {'headers': new HttpHeaders(headers), 'responseType': 'text'})
+          .toPromise()
+          .catch(reason => reject())
+          .then(value => resolve())
+          .finally(() => {
+            this._working = false;
+          });
     });
   }
 
@@ -162,44 +171,44 @@ export class EndpointCommunicatorService {
 
     // Budu vracet výsledek z dotazu jako Promise
     return this._http
-    // POST požadavek na query.endpoint
-    .post(address, body, {'headers': new HttpHeaders(headers), 'responseType': 'text'})
-    // Převedu na Promise
-    .toPromise()
-    // Pokud se požadavek úspěšně vykoná a příjdou validní data
-    .then(responce => {
-      console.log('Přišla nějaká data.');
-      console.log(responce);
-      const end = Date.now();
-      const responceParser = getResponceParser(body, responce, ResponceFormat[this.responceFormat]);
-      const qresult = new QueryResult(query.id, query.name, query.content, responce, query.usedParams(),
-        ResultState.OK, end, end - start, responceParser.countOfTriples(), this.responceFormat);
-      // Pokud se má výsledek započítat do statistik
-      if (!ignoreStatistics) {
-        // Uložím výsledek
-        this._saveResponce(qresult);
-      }
-      return qresult;
-    })
-    // Pokud se vykonání požadavku nezdařilo, v proměnné "reason" budu mít uložený důvod neúspěchu
-    .catch((reason: HttpErrorResponse) => {
-      console.log('Nastala nějaká chyba.');
-      console.error(reason);
-      const end = Date.now();
-      const qresult = new QueryResult(query.id, query.name, query.content, reason.statusText, query.usedParams(),
-        ResultState.KO, end, end - start, 0, this.responceFormat);
-      // Pokud se má výsledek započítat do statistik
-      if (!ignoreStatistics) {
-        // Zpracuji neúspěšný výsledek
-        this._saveResponce(qresult);
-      }
-      // Vrátím důvod neúspěchu, aby se zobrazil v GUI
-      return qresult;
-    })
-    // Nakonec zruším přízak, že komunikuji se serverem...
-    .finally(() => {
-      this._working = false;
-    });
+               // POST požadavek na query.endpoint
+               .post(address, body, {'headers': new HttpHeaders(headers), 'responseType': 'text'})
+               // Převedu na Promise
+               .toPromise()
+               // Pokud se požadavek úspěšně vykoná a příjdou validní data
+               .then(responce => {
+                 console.log('Přišla nějaká data.');
+                 console.log(responce);
+                 const end = Date.now();
+                 const responceParser = getResponceParser(body, responce, ResponceFormat[this.responceFormat]);
+                 const qresult = new QueryResult(query.id, query.name, query.content, responce, query.usedParams(),
+                   ResultState.OK, end, end - start, responceParser.countOfTriples(), this.responceFormat);
+                 // Pokud se má výsledek započítat do statistik
+                 if (!ignoreStatistics) {
+                   // Uložím výsledek
+                   this._saveResponce(qresult);
+                 }
+                 return qresult;
+               })
+               // Pokud se vykonání požadavku nezdařilo, v proměnné "reason" budu mít uložený důvod neúspěchu
+               .catch((reason: HttpErrorResponse) => {
+                 console.log('Nastala nějaká chyba.');
+                 console.error(reason);
+                 const end = Date.now();
+                 const qresult = new QueryResult(query.id, query.name, query.content, reason.statusText, query.usedParams(),
+                   ResultState.KO, end, end - start, 0, this.responceFormat);
+                 // Pokud se má výsledek započítat do statistik
+                 if (!ignoreStatistics) {
+                   // Zpracuji neúspěšný výsledek
+                   this._saveResponce(qresult);
+                 }
+                 // Vrátím důvod neúspěchu, aby se zobrazil v GUI
+                 return qresult;
+               })
+               // Nakonec zruším přízak, že komunikuji se serverem...
+               .finally(() => {
+                 this._working = false;
+               });
   }
 
   /**
