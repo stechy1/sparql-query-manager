@@ -6,7 +6,8 @@
                [formControl]="inputElement"
                [ngClass]="(inputElement.valid)?'valid':'invalid'"
                [(ngModel)]="value"
-               (keydown)="onKeyDown($event)">
+               (keydown)="onKeyDown($event)"
+               (focusout)="save()">
         <span class="helper-text" data-error="vyplňte" data-success=""></span>
       </div>
       <textarea *ngIf="useTextarea" [(ngModel)]="value"></textarea>
