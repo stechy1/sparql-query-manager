@@ -15,7 +15,7 @@ import { ResponceFormat } from '../../share/responce.format';
 export class QActionsComponent implements OnInit {
 
   @Input() query: Observable<Query>;
-  @Output() doQuery = new EventEmitter();
+  @Output() doQuery = new EventEmitter<boolean>();
 
   ignoreStatistics: boolean;
 
