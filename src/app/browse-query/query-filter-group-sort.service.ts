@@ -20,12 +20,12 @@ export class QueryFilterGroupSortService {
   private _selectedGroup: string;
   private _orderBy$: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private _qservice: QueryService, private _settings: SettingsService) {
+  constructor(private _qservice: QueryService) {
     this._selectedGroup = 'none';
     // Uložení dotazů do lokální proměnné
     const queries = this._qservice.allQueries();
     // Iniciaizace instance pro fulltextové vyhledávání
-    this._fusejs = new Fuse(queries, {keys: this._settings.fuseKeys});
+    this._fusejs = new Fuse(queries, {keys: ['name', 'tags']});
     // Vytvoření nové kolekce se všemi dotazy
     this._fuseQueries = [...queries];
     // Registrace změn v původní koleci dotazů

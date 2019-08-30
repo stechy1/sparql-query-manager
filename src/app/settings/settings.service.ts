@@ -10,7 +10,6 @@ interface Settings {
   queryResultTimeFormat: DateTimeFormat;
   queryParameterFormat: QueryParameterFormat;
   defaultExportFileName: string;
-  fuseKeys: string[];
   useGestures: boolean;
   alwaysShowImportDialog: boolean;
   corsHack: boolean;
@@ -49,7 +48,6 @@ export class SettingsService {
         suffix: '$'
       },
       defaultExportFileName: 'queries.json',
-      fuseKeys: ['name', 'tags'],
       useGestures: true,
       alwaysShowImportDialog: false,
       corsHack: true,
@@ -157,14 +155,6 @@ export class SettingsService {
   set defaultExportFileName(fileName: string) {
     this._settings.defaultExportFileName = fileName;
 }
-
-  get fuseKeys(): string[] {
-    return this._settings.fuseKeys;
-  }
-
-  set fuseKeys(keys: string[]) {
-    this._settings.fuseKeys = keys;
-  }
 
   get useGestures(): boolean {
     return this._settings.useGestures;
