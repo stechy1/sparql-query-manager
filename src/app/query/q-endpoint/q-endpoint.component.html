@@ -6,7 +6,7 @@
   <div class="card-action">
     <div>
       <button class="btn btn-tiny green" (click)="handlePing()" [disabled]="working || (query | async)?.content.length === 0">
-        Vykonat
+        Otestovat
         <i class="material-icons right rotating" [style.display]="working ? 'block' : 'none'">autorenew</i>
       </button>
     </div>
