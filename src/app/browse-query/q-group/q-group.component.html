@@ -11,6 +11,7 @@
       <ul>
         <li *ngFor="let query of getQueries(value)" class="q-entry-border">
           <app-q-entry [query]="query"
+                       [sortedBy]="sortedBy"
                        (deleteRequest)="handleDeleteRequest($event)"
                        (firebaseRequest)="handleFirebaseRequest($event)"
                        (editRequest)="handleEditRequest($event)"></app-q-entry>

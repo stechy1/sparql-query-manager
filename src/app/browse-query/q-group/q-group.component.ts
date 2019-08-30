@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Query } from '../../query/query';
 import { DeleteHandler, FirebaseHandler } from '../handlers';
+import { Observable } from 'rxjs';
 
 export class GroupInfo {
   checked: string;
@@ -17,6 +18,8 @@ export class QGroupComponent implements OnInit {
   @Input() values: string[];
   // Pole dotazů
   @Input() queries: Query[];
+  // Podle čeho je dotaz seřazen
+  @Input() sortedBy: Observable<string>;
   // Filtrovací funkce
   @Input() filterFunction: Function;
   // Událost, která se zavolá v případě, že uživatel bude chtít smazat dotaz

@@ -24,6 +24,7 @@
         </div>
         <app-q-group [values]="endpoints"
                      [queries]="queries"
+                     [sortedBy]="qFilterGroupSortingService.sortedBy"
                      [filterFunction]="filterByEndpoint"
                      (deleteRequest)="handleDeleteRequest($event)"
                      (firebaseRequest)="handleFirebaseRequest($event)"
@@ -31,6 +32,7 @@
                      *ngIf="qFilterGroupSortingService.selectedGroup === 'endpoint'"></app-q-group>
         <app-q-group [values]="tags"
                      [queries]="queries"
+                     [sortedBy]="qFilterGroupSortingService.sortedBy"
                      [filterFunction]="filterByTag"
                      (deleteRequest)="handleDeleteRequest($event)"
                      (firebaseRequest)="handleFirebaseRequest($event)"
