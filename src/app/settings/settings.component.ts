@@ -23,7 +23,6 @@ export class SettingsComponent implements OnInit {
 
   ngOnInit() {
     this.testTime = Date.now();
-    this.tags = this.settings.fuseKeys;
   }
 
   refreshTime() {
@@ -31,7 +30,6 @@ export class SettingsComponent implements OnInit {
   }
 
   handleSave() {
-    this.settings.fuseKeys = this.tags;
     this.settings.save();
     this._toastr.success('Nastavení bylo uloženo.');
   }
