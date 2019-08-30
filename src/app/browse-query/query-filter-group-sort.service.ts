@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { Query } from '../query/query';
 import * as Fuse from 'fuse.js';
-import { FuseOptions } from 'fuse.js';
+import { FuseOptions, FuseResult } from 'fuse.js';
 import { QueryService } from '../query/query.service';
 import { TypeOfQueryChange } from '../query/query-storage-provider';
 import { SettingsService } from '../settings/settings.service';
@@ -11,6 +11,18 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class QueryFilterGroupSortService {
+
+  private static readonly FUSEJS_SETTINGS = {
+    tokenize: true,
+    includeScore: true,
+    includeMatches: true,
+    threshold: 0.4,
+    location: 0,
+    distance: 100,
+    maxPatternLength: 32,
+    minMatchCharLength: 1,
+    keys: ['name', 'tags']
+  };
 
   // Fusejs instance pro fulltextové vyhledávání
   private readonly _fusejs: Fuse<Query, FuseOptions<Query>>;
@@ -25,7 +37,7 @@ export class QueryFilterGroupSortService {
     // Uložení dotazů do lokální proměnné
     const queries = this._qservice.allQueries();
     // Iniciaizace instance pro fulltextové vyhledávání
-    this._fusejs = new Fuse(queries, {keys: ['name', 'tags']});
+    this._fusejs = new Fuse(queries, QueryFilterGroupSortService.FUSEJS_SETTINGS);
     // Vytvoření nové kolekce se všemi dotazy
     this._fuseQueries = [...queries];
     // Registrace změn v původní koleci dotazů
@@ -87,12 +99,16 @@ export class QueryFilterGroupSortService {
    */
   filterBy(searchedValue: string) {
     // Hodnota není prázdná, jdu najít všechny odpovídající dotazy
-    const fuseQueries = this._fusejs.search(searchedValue);
+    // @ts-ignore
+    const fuseResult = this._fusejs.search(searchedValue) as FuseResult<Query>[];
+    console.log(fuseResult);
     // Vymažu všechny záznamy v pracovní kolekci
     this._fuseQueries.splice(0);
     // Přidám všechny nalezené záznamy do pracovní kolekce
-    for (const query of fuseQueries) {
-      this._fuseQueries.push(query);
+    for (const result of fuseResult) {
+      if (result.score < 0.4) {
+        this._fuseQueries.push(result.item);
+      }
     }
   }
 
