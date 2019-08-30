@@ -75,7 +75,7 @@ export class ResultViewerComponent implements OnInit {
    */
   handleCopyResult() {
     // Zavolám univerzální funkci pro zkopírování dotazu do schránky uživatele
-    copyToClipboard(this.queryResult);
+    copyToClipboard(this.queryResult.content);
     // Informuji uživatele, o úspěchu
     this._toaster.success('Výsledek dotazu byl zkopírován');
   }
