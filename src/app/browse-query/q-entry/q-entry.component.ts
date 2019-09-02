@@ -45,6 +45,7 @@ export class QEntryComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this._orderedBySubscription = this.sortedBy.subscribe(sortedBy => {
+      console.log(sortedBy);
       switch (sortedBy) {
         case 'last_run':
           this.orderedByValue = new Date(this._query.lastRun);

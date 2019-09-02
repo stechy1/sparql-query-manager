@@ -28,6 +28,6 @@
     <span title="Stáhnout z cloudu" class="right"><i class="material-icons q-icon" *ngIf="!query.downloaded" (click)="handleDownload()">cloud_download</i></span>
     <span title="Nahrát do cloudu" class="right"><i class="material-icons q-icon" *ngIf="!query.uploaded" (click)="handleUpload()">cloud_upload</i></span>
     <span title="Editovat" class="right"><i class="material-icons q-icon" (click)="handleEdit()">edit</i></span>
-    <span title="Řazeno podle: {{sortedBy}}" *ngIf="showOrderedBy">{{orderedByValue|dateTime:{showYears: true, showMonths: true, showDays: true, showHours: true, showMinutes: true, showSeconds: true } | usageCutter }}</span>
+    <span title="Řazeno podle: {{sortedBy|translateSotingMethod|async}}" *ngIf="showOrderedBy">{{orderedByValue|dateTime:{showYears: true, showMonths: true, showDays: true, showHours: true, showMinutes: true, showSeconds: true } | usageCutter }}</span>
   </div>
 </div>

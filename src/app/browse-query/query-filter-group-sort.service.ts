@@ -79,6 +79,7 @@ export class QueryFilterGroupSortService {
     if (orderType === 'descending') {
       this._fuseQueries.reverse();
     }
+    console.log(orderBy);
     this._orderBy$.next(orderBy);
   }
 
@@ -180,6 +181,19 @@ export class OrderByPosibilities {
 
   get value(): string {
     return this._value;
+  }
+
+  static byValue(value: string): OrderByPosibilities {
+    switch (value) {
+      case 'alphabeticaly':
+        return OrderByPosibilities.ALPHABET;
+      case 'last_run':
+        return OrderByPosibilities.LAST_RUN;
+      case 'date_of_creation':
+        return OrderByPosibilities.CREATION_DATE;
+      case 'count_of_run':
+        return OrderByPosibilities.RUN_COUNT;
+    }
   }
 }
 
