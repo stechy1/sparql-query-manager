@@ -10,6 +10,7 @@ import { QGroupComponent } from './q-group/q-group.component';
 import { SearchComponent } from './search/search.component';
 import { ImportDialogComponent } from './import-dialog/import-dialog.component';
 import { ImportEntryComponent } from './import-dialog/import-entry/import-entry.component';
+import { UsageCutterPipe } from './q-entry/usage-cutter.pipe';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { ImportEntryComponent } from './import-dialog/import-entry/import-entry.
     QGroupComponent,
     SearchComponent,
     ImportDialogComponent,
-    ImportEntryComponent
+    ImportEntryComponent,
+    UsageCutterPipe
   ],
   imports: [
     BrowseQueryRoutingModule,
