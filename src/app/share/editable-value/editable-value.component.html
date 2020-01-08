@@ -1,7 +1,7 @@
   <div class="row">
     <div class="col m12">
       <div *ngIf="!useTextarea">
-        <input type="text" class="tiny-input validate"
+        <input type="text" class="tiny-input"
                [required]="required"
                [formControl]="inputElement"
                [ngClass]="(inputElement.valid)?'valid':'invalid'"

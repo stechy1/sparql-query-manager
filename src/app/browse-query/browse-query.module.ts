@@ -10,6 +10,8 @@ import { QGroupComponent } from './q-group/q-group.component';
 import { SearchComponent } from './search/search.component';
 import { ImportDialogComponent } from './import-dialog/import-dialog.component';
 import { ImportEntryComponent } from './import-dialog/import-entry/import-entry.component';
+import { UsageCutterPipe } from './q-entry/usage-cutter.pipe';
+import { TranslateSotingMethodPipe } from './q-entry/translate-soting-method.pipe';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { ImportEntryComponent } from './import-dialog/import-entry/import-entry.
     QGroupComponent,
     SearchComponent,
     ImportDialogComponent,
-    ImportEntryComponent
+    ImportEntryComponent,
+    UsageCutterPipe,
+    TranslateSotingMethodPipe
   ],
   imports: [
     BrowseQueryRoutingModule,
