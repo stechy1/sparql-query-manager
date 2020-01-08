@@ -23,8 +23,14 @@ export class QResultComponent implements OnInit, AfterViewInit {
   }
 
   handleCopyResult() {
-    copyToClipboard(this.result.content);
-    this._toaster.success('Zpráva byla zkopírována');
+    // Zavolám univerzální funkci pro zkopírování dotazu do schránky uživatele
+    if (!copyToClipboard(this.result.result)) {
+      // Informuji uživatele, o neúspěchu
+      this._toaster.error('Výsledek se nepodařilo zkopírovat do schránky!');
+    } else {
+      // Informuji uživatele, o úspěchu
+      this._toaster.success('Výsledek byl zkopírován do schránky.');
+    }
   }
 
   handleCloseResponce() {

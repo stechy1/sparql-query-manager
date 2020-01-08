@@ -75,8 +75,12 @@ export class ResultViewerComponent implements OnInit {
    */
   handleCopyResult() {
     // Zavolám univerzální funkci pro zkopírování dotazu do schránky uživatele
-    copyToClipboard(this.queryResult.content);
-    // Informuji uživatele, o úspěchu
-    this._toaster.success('Výsledek dotazu byl zkopírován');
+    if (!copyToClipboard(this.queryResult.result)) {
+      // Informuji uživatele, o neúspěchu
+      this._toaster.error('Výsledek se nepodařilo zkopírovat do schránky!');
+    } else {
+      // Informuji uživatele, o úspěchu
+      this._toaster.success('Výsledek byl zkopírován do schránky.');
+    }
   }
 }

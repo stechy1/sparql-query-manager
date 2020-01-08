@@ -1,16 +1,32 @@
 import * as beautify from 'js-beautify';
 
+/**
+ * Funkce je převzata z adresy: https://stackoverflow.com/a/33928558
+ *
+ * @param value Hodnota, která se bude kopírovat
+ */
 export function copyToClipboard(value: {}) {
-  // Vytvoření provizorního elementu 'textarea'
-  const el = document.createElement('textarea');
-  // Nastavení hodnoty
-  el.value = beautify(JSON.stringify(value));
-  // Připnutí elementu do dokumentu
-  document.body.appendChild(el);
-  // Vybrání celého obsahu v elementu
-  el.select();
-  // Zkopírování obsahu do schránky
-  document.execCommand('copy');
-  // Odstranění elementu z dokumentu
-  document.body.removeChild(el);
+  const text = beautify(JSON.stringify(value));
+
+  // Toto je Internet Explorer-specifický kód
+  if (window.clipboardData && window.clipboardData.setData) {
+    // Internet Explorer-specific code path to prevent textarea being shown while dialog is visible.
+    return window.clipboardData.setData('Text', text);
+
+  } else if (document.queryCommandSupported && document.queryCommandSupported('copy')) {
+    const textarea = document.createElement('textarea');
+    textarea.textContent = text;
+    textarea.style.position = 'fixed';  // Prevent scrolling to bottom of page in Microsoft Edge.
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      return document.execCommand('copy');  // Security exception may be thrown by some browsers.
+    } catch (ex) {
+      console.warn('Data se nepodařilo zkopírovat do schránky!', ex);
+      return false;
+    }
+    finally {
+      document.body.removeChild(textarea);
+    }
+  }
 }
