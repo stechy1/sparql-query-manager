@@ -7,7 +7,6 @@ import { DurationPipe } from './duration.pipe';
 import { ModalComponent } from './modal/modal.component';
 import { ConfirmDialogComponent } from './modal/confirm-dialog/confirm-dialog.component';
 import { TimePipe } from './time.pipe';
-import { DatePipe } from './date.pipe';
 import { DateTimePipe } from './date-time.pipe';
 
 @NgModule({
@@ -17,7 +16,6 @@ import { DateTimePipe } from './date-time.pipe';
     DurationPipe,
     ConfirmDialogComponent,
     TimePipe,
-    DatePipe,
     DateTimePipe
   ],
   imports: [

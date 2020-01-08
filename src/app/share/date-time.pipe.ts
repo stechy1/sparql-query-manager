@@ -1,50 +1,56 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { DateTimeFormat } from './date-time-format';
+import { DatePipe } from '@angular/common';
 
 @Pipe({
   name: 'dateTime'
 })
 export class DateTimePipe implements PipeTransform {
 
+  private readonly pipe: DatePipe = new DatePipe('cs_cz');
+
+  constructor() {}
+
   transform(value: Date|any, format: DateTimeFormat): string {
     if (!(value instanceof Date)) {
       return value;
     }
-    let result = '';
+    let template = '';
 
     if (format.showDays) {
-      result += `${value.getDate()}.`;
+      template += `dd.`;
     }
     if (format.showMonths) {
       if (format.showDays) {
-        result += ' ';
       }
-      result += `${value.getMonth()}.`;
+      template += `MM.`;
     }
     if (format.showYears) {
       if (format.showDays || format.showMonths) {
-        result += ' ';
       }
-      result += value.getFullYear();
+      template += `yyyy`;
     }
 
-    result += ' ';
+    template += ' ';
 
     if (format.showHours) {
-      result += value.getHours();
+      template += `HH`;
     }
     if (format.showMinutes) {
       if (format.showHours) {
-        result += ':';
+        template += ':';
       }
-      result += value.getMinutes();
+      template += `mm`;
     }
     if (format.showSeconds) {
       if (format.showHours || format.showMinutes) {
-        result += ':';
+        template += ':';
       }
-      result += value.getSeconds();
+      template += `ss`;
     }
+
+    let result = this.pipe.transform(value, template);
+
     if (format.showMiliseconds) {
       if (format.showHours || format.showMinutes || format.showSeconds) {
         result += ':';
