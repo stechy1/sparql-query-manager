@@ -6,7 +6,7 @@ export class QueryResult {
 
   constructor(private _id, private _name: string, private _content: string, private _result: string, private _params: {},
               private _resultState: ResultState, private _dateOfRun: number, private _runLength: number,
-              private _countOfTriples: TripleType, private _format) {
+              private _countOfTriples: number, private _format) {
     this._tripleType = findTripleType(_content);
   }
 
